@@ -1146,7 +1146,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.23.82';
+  const APP_VERSION = 'v2026.11.23.83';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4258,8 +4258,16 @@
         kitHtml = `<div style="margin-top:8px;font-size:12.5px;"><b>${paredeEsc(kit.rotulo)} × ${r.total}</b>${kit.producao ? ` · Produção HAB - FUNDACAO: <b>${r.total} BL</b>` : ''}
           <table class="dob-custo-tab" style="margin-top:4px;"><tbody>${kit.itens.map(it => `<tr><td>${paredeEsc(it[0])}</td><td class="num">${beediaFmt(it[2] / 36 * r.total)} ${paredeEsc(it[1])}</td></tr>`).join('')}</tbody></table></div>`;
       }
+      // Trava de Produção: o acumulado do BEE nunca pode passar do que o app tem concluído até a data (nem do total de blocos).
+      let travaHtml = '';
+      if(kit && kit.producao){
+        const ate = (mapaState.estados || []).filter(e => e.servico === sv && e.cor === 'verde' && e.dataConclusao && e.dataConclusao <= beediaData).length;
+        const total = (mapaState.estados || []).filter(e => e.servico === sv && e.cor === 'verde' && e.dataConclusao).length;
+        const lim = Math.min(36, ate);
+        travaHtml = `<div style="margin-top:8px;padding:8px 10px;border:1px solid #c4662f;background:rgba(196,102,47,.08);border-radius:8px;font-size:12.5px;">⚠ <b>Confira a Produção acumulada no BEE</b> antes de lançar: no app há <b>${ate}</b> concluídos até esta data (${total} no total, de 36 blocos). A Produção acumulada em HAB - FUNDACAO não pode passar de <b>${lim}</b>. Se já estiver em ${lim} ou mais, <b>não lance</b> estes ${r.total} de novo (o mesmo bloco pode ter sido lançado em outra data).</div>`;
+      }
       return `<div style="border:1px solid var(--line, #ddd);border-radius:8px;padding:10px 12px;margin-bottom:8px;">
-        <div style="font-weight:700;">${paredeEsc(sv)} <span style="font-weight:400;opacity:.7;">· ${r.total} concluído(s)${macro ? ' · macro ' + paredeEsc(rotuloMacro(macro)) : ''}</span></div>
+        <div style="font-weight:700;">${paredeEsc(sv)} <span style="font-weight:400;opacity:.7;">· ${r.total} concluído(s)${macro ? ' · macro ' + paredeEsc(rotuloMacro(macro)) : ''}</span></div>${travaHtml}
         ${linhasObra}${(() => { const l = (mapaState.beeLancado || {})[beediaData + '|' + sv]; return l ? `<div style="margin-top:6px;font-size:12px;color:#2f7d4f;">✔ Lançado no BEE em ${paredeEsc(String(l.em || '').slice(0, 10).split('-').reverse().join('/'))}${l.qtd != null ? ' · qtd ' + paredeEsc(l.qtd) : ''}</div>` : `<div style="margin-top:6px;font-size:12px;color:#c4662f;">Pendente de lançar no BEE</div>`; })()}${kitHtml}</div>`;
     }).join('');
     c.innerHTML = `<div class="dob-card" style="margin-top:14px;">
