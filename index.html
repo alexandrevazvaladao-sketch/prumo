@@ -948,25 +948,8 @@
 </style>
 
 <style id="dob-skin">
-/* ===== Tema profissional (sobrepõe o padrão): neutros frios, azul institucional, cantos discretos ===== */
-:root{ --paper:#f3f4f6; --line:#dde1e7; --clay:#1f4e8c; --clay-dark:#173d70; --sand:#8a6d2f; --radius:8px; --radius-sm:6px;
-  --shadow:0 1px 2px rgba(16,24,40,.05); --shadow-sm:0 1px 1px rgba(16,24,40,.06); --ink:#111c33; --muted:#6b7380; }
-body{ letter-spacing:-.003em; }
-.dob-btn{ border-radius:6px; box-shadow:none; font-weight:600; letter-spacing:0; }
-.dob-btn:hover{ transform:none; box-shadow:none; }
-.dob-btn.secundario:hover{ background:#eceff3; }
-.dob-input:focus,.dob-select:focus,.dob-textarea:focus{ border-color:var(--clay); box-shadow:0 0 0 3px rgba(31,78,140,.14); }
-.dob-input,.dob-select,.dob-textarea{ border-radius:6px; }
-.dob-card-form h3,.dob-side-brand{ font-family:inherit !important; letter-spacing:-.01em; }
-.dob-card-form{ box-shadow:none; }
-.dob-side-item{ border-radius:6px !important; }
-.dob-side-item.active{ border-left-color:#fff; background:rgba(255,255,255,.12); }
-.dob-saudacao-titulo{ font-family:inherit !important; font-weight:650; letter-spacing:-.02em; }
-.dob-saudacao-titulo .nome{ color:var(--ink); }
-.dob-header{ border-radius:8px !important; box-shadow:none !important; }
-.dob-header::after{ display:none !important; }
-.dob-header h1,.dob-header h2{ font-family:inherit !important; letter-spacing:-.015em; }
-/* Visitas */
+/* Visitas (cores do app preservadas) */
+.vis-wrap{ --muted:#6b7380; }
 .vis-wrap{ display:flex; flex-direction:column; gap:16px; margin-top:14px; color:var(--ink-text); }
 .vis-topo{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; }
 .vis-tit{ margin:0; font-size:18px; font-weight:650; color:var(--ink); }
@@ -1163,7 +1146,7 @@ body{ letter-spacing:-.003em; }
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.19.81';
+  const APP_VERSION = 'v2026.11.23.82';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
