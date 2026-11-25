@@ -1112,6 +1112,29 @@
   .pd-nome{ padding-left:18px; font-size:12.5px; } .pd-nome span{ color:#6b7380; font-size:11.5px; }
   .pd-fim{ padding-left:18px; font-size:11.5px; color:#6b7380; font-style:italic; }
   @media (max-width:760px){ .pd-grade{ grid-template-columns:1fr; } }
+
+  /* ===== Tipografia padronizada ===== */
+  body *{ text-transform:none !important; }
+  .dob-campo label, .dob-custo-sug .cat, .dob-custo-resumo .rot, .dob-stat-label, .dob-daypill .dow, .dob-entry-secao-label, .dob-mapa-fotos-label,
+  .dob-mapa-status-label, .dob-crono-grupo2 > h5, .dob-crono-status, .dob-mapa-atualizando .rot, .dob-crono-ppc-txt .titulo, .dob-resumo-semana-card .l,
+  .dob-pd-filtros label, .dob-pd-th-desc, .dob-pd-th-un, .dob-pd-th-dia .dw, .dob-pd-th-total, .dob-pd-sub td, .vis-r-meta, .vis-cab,
+  .dob-cat .lista h2, .dob-cat .kpi small, .dob-cat h3, .dob-cat th, .dob-entry-tag, .dob-stamp, .lg-btn{ letter-spacing:0 !important; }
+  .dob-campo label{ font-size:12.5px !important; font-weight:600 !important; color:#3a4660 !important; }
+  .dob-entry-secao-label, .dob-mapa-fotos-label{ font-size:12px !important; font-weight:600 !important; color:#6b7380 !important; }
+  .dob-crono-grupo2 > h5, .dob-crono-ppc-txt .titulo{ font-size:13px !important; font-weight:600 !important; color:#3a4660 !important; }
+  .dob-pd-th-desc, .dob-pd-th-un, .dob-pd-th-total, .vis-cab, .dob-cat th{ font-size:11.5px !important; font-weight:600 !important; }
+  .dob-dica{ font-size:12.5px !important; color:#6b7380 !important; line-height:1.55 !important; font-style:normal; }
+  .dob-card-form{ padding:22px 24px !important; }
+  .dob-card-form h3{ font-size:18px !important; font-weight:650 !important; letter-spacing:-.015em !important; margin:0 0 14px !important; padding-bottom:12px !important; border-bottom:1px solid #eef0f3 !important; }
+  .dob-card-form h3 small, .dob-card-form h3 span{ font-weight:400; color:#6b7380; font-size:12.5px; letter-spacing:0; }
+  .dob-card-form h4{ font-weight:600 !important; letter-spacing:-.01em; }
+  .dob-btn{ font-weight:600; letter-spacing:0 !important; }
+  .dob-btn.secundario{ font-weight:500 !important; }
+  .dob-select, .dob-input, .dob-textarea{ font-size:13.5px; }
+  @media (max-width:720px){
+    .dob-card-form{ padding:16px 14px !important; }
+    .dob-card-form h3{ font-size:17px !important; }
+  }
 </style>
 
 <style id="dob-skin">
@@ -1315,7 +1338,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.104';
+  const APP_VERSION = 'v2026.11.25.105';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -10331,6 +10354,55 @@
         btnFiltros.textContent = abertos ? '🔍 Filtros ✓' : '🔍 Filtros';
       });
     }
+  })();
+
+
+  // ===== Nomes em MAIÚSCULAS (vindos das planilhas/UAU) aparecem em formato normal na tela =====
+  (function normalizarMaiusculas(){
+    const SIGLAS = new Set(['LTDA','ME','EPP','EIRELI','SA','PNE','UH','BEE','UAU','PPC','CNPJ','CPF','INSS','FGTS','NR','EPI','EPC','ART','RRT','CB','GS','SM','CCB','CEF','PCMSO','PGR','ASO','FCK','CA','CP','PVC','PPR','PEAD','PEX','TV','CFTV','SPDA','QDC','QGBT','RJ','GO','SP','DF','MG','I','II','III','IV','VI','OK']);
+    const MINUS = new Set(['DE','DA','DO','DAS','DOS','E','EM','NO','NA','NOS','NAS','A','O','AS','OS','COM','POR','PARA','SOBRE','AO','AOS']);
+    const temMinuscula = t => /[a-zà-ÿ]/.test(t);
+    function converter(t){
+      if(temMinuscula(t)){
+        // texto misto (ex.: "Rosa ANGELICA GOMES"): só ajusta palavras longas todas em maiúsculas
+        return t.replace(/[A-ZÀ-Ý]{4,}/g, w => SIGLAS.has(w) ? w : w.charAt(0) + w.slice(1).toLowerCase());
+      }
+      let primeira = true;
+      return t.replace(/[A-Za-zÀ-ÿ]+/g, (w, pos) => {
+        const ini = primeira; primeira = false;
+        if(SIGLAS.has(w)) return w;
+        if(!ini && MINUS.has(w)) return w.toLowerCase();
+        return w.charAt(0) + w.slice(1).toLowerCase();
+      });
+    }
+    function precisa(t){
+      if(!t || t.length < 4) return false;
+      const palavras = t.match(/[A-ZÀ-Ý]{3,}/g);
+      if(!palavras) return false;
+      const longas = palavras.filter(w => !SIGLAS.has(w) && w.length >= 4);
+      return longas.length >= 1;
+    }
+    const PULAR = /^(SCRIPT|STYLE|TEXTAREA|INPUT|OPTION|CODE|PRE)$/;
+    function tratar(raiz){
+      if(!raiz) return;
+      if(raiz.nodeType === 3){ ajustar(raiz); return; }
+      if(raiz.nodeType !== 1 || PULAR.test(raiz.nodeName) || raiz.isContentEditable || raiz.closest && raiz.closest('svg,[data-sem-normalizar]')) return;
+      const w = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, { acceptNode: n => { const p = n.parentNode; return (p && !PULAR.test(p.nodeName) && !(p.closest && p.closest('svg,[contenteditable="true"],[data-sem-normalizar]'))) ? 1 : 2; } });
+      let n; while((n = w.nextNode())) ajustar(n);
+    }
+    function ajustar(n){
+      const t = n.nodeValue;
+      if(!precisa(t)) return;
+      const novo = converter(t);
+      if(novo !== t) n.nodeValue = novo;
+    }
+    let fila = new Set(), agendado = false;
+    const obs = new MutationObserver(ms => {
+      ms.forEach(m => { if(m.type === 'characterData') fila.add(m.target); else m.addedNodes.forEach(x => fila.add(x)); });
+      if(!agendado){ agendado = true; requestAnimationFrame(() => { agendado = false; const itens = Array.from(fila); fila = new Set(); obs.disconnect(); try{ itens.forEach(tratar); } finally { obs.observe(document.body, { childList:true, subtree:true, characterData:true }); } }); }
+    });
+    const iniciar = () => { try{ tratar(document.body); }catch(e){} obs.observe(document.body, { childList:true, subtree:true, characterData:true }); };
+    if(document.body) iniciar(); else document.addEventListener('DOMContentLoaded', iniciar);
   })();
 
   // ===== Atualização automática do app =====
