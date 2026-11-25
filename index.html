@@ -24,39 +24,39 @@
   :root{
     --ink:#16233d;
     --ink-soft:#2c3c5c;
-    --paper:#f5f3ee;
+    --paper:#f2f3f6;
     --card:#ffffff;
-    --line:#e7e3d8;
-    --clay:#d9662f;
-    --clay-dark:#c2551f;
+    --line:#e3e6eb;
+    --clay:#24518f;
+    --clay-dark:#1b3f71;
     --sand:#c99a3d;
     --moss:#3f7d5c;
     --brick:#b8462f;
     --ink-text:#232a35;
     --muted:#767e8c;
-    --radius:14px;
-    --radius-sm:9px;
-    --shadow: 0 1px 2px rgba(22,35,61,0.06), 0 8px 20px -12px rgba(22,35,61,0.18);
-    --shadow-sm: 0 1px 2px rgba(22,35,61,0.08);
+    --radius:10px;
+    --radius-sm:7px;
+    --shadow: 0 1px 2px rgba(16,24,40,0.04);
+    --shadow-sm: none;
   }
   *{box-sizing:border-box;}
   .dob-oculto{ display:none !important; }
   .dob-side-item[data-nivel="dono"]::after{ content:"🔒"; margin-left:auto; font-size:11px; opacity:.85; }
   .dob-side-item[data-nivel="editores"]::after{ content:"✎"; margin-left:auto; font-size:12px; opacity:.85; }
   #dob-gate{ position:fixed; inset:0; z-index:10000; overflow:auto; display:flex; align-items:center; justify-content:center; padding:20px;
-    background: radial-gradient(900px 500px at 85% 10%, rgba(217,102,47,.35), transparent 60%), linear-gradient(155deg, #16233d 0%, #1e3050 60%, #24395c 100%); font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
-  #dob-gate .lg-carregando{ color:#fff; text-align:center; font-family:Georgia,serif; }
+    background: radial-gradient(900px 500px at 85% 10%, rgba(36,81,143,.35), transparent 60%), linear-gradient(155deg, #16233d 0%, #1e3050 60%, #24395c 100%); font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  #dob-gate .lg-carregando{ color:#fff; text-align:center; font-family:inherit; }
   #dob-gate .lg-carregando b{ display:block; font-size:28px; margin-bottom:6px; }
   #dob-gate .lg-carregando span{ font-size:13px; opacity:.75; font-family:inherit; }
   .lg-card{ display:flex; width:100%; max-width:900px; min-height:540px; background:#fff; border-radius:22px; overflow:hidden; box-shadow:0 30px 70px -20px rgba(0,0,0,.55); }
   .lg-arte{ flex:1.05; background: linear-gradient(160deg,#1e3050 0%,#16233d 100%); position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px; color:#fff; overflow:hidden; }
-  .lg-arte::before{ content:""; position:absolute; width:340px; height:340px; border-radius:50%; background:rgba(217,102,47,.22); right:-110px; top:-110px; }
+  .lg-arte::before{ content:""; position:absolute; width:340px; height:340px; border-radius:50%; background:rgba(36,81,143,.22); right:-110px; top:-110px; }
   .lg-arte::after{ content:""; position:absolute; width:260px; height:260px; border-radius:50%; background:rgba(201,154,61,.16); left:-90px; bottom:-90px; }
   .lg-arte svg{ width:100%; max-width:330px; height:auto; position:relative; z-index:1; }
-  .lg-arte h2{ position:relative; z-index:1; margin:16px 0 4px; font-family:Georgia,serif; font-size:24px; text-align:center; }
+  .lg-arte h2{ position:relative; z-index:1; margin:16px 0 4px; font-family:inherit; font-size:24px; text-align:center; }
   .lg-arte p{ position:relative; z-index:1; margin:0; font-size:13px; opacity:.8; text-align:center; letter-spacing:.04em; }
   .lg-form{ flex:1; padding:38px 36px; display:flex; flex-direction:column; justify-content:center; color:#232a35; }
-  .lg-form h1{ margin:0 0 4px; text-align:center; font-family:Georgia,serif; font-size:27px; color:#d9662f; }
+  .lg-form h1{ margin:0 0 4px; text-align:center; font-family:inherit; font-size:27px; color:#24518f; }
   .lg-form .lg-sub{ margin:0 0 18px; text-align:center; font-size:13px; color:#767e8c; }
   .lg-abas{ display:flex; background:#eef1f6; border-radius:999px; padding:4px; margin-bottom:18px; }
   .lg-abas button{ flex:1; border:0; background:transparent; padding:9px; border-radius:999px; font:600 13px inherit; color:#2c3c5c; cursor:pointer; }
@@ -64,10 +64,10 @@
   .lg-form label{ display:block; font-size:12.5px; font-weight:600; color:#2c3c5c; }
   .lg-form label .lg-dica{ display:block; font-weight:400; font-size:11.5px; color:#767e8c; margin-top:1px; }
   .lg-form input[type=text], .lg-form input[type=password]{ width:100%; padding:11px 16px; border:1px solid #d9dde5; background:#f1f3f8; border-radius:999px; font:15px inherit; margin:5px 0 12px; outline:none; }
-  .lg-form input:focus{ border-color:#d9662f; background:#fff; box-shadow:0 0 0 3px rgba(217,102,47,.15); }
+  .lg-form input:focus{ border-color:#24518f; background:#fff; box-shadow:0 0 0 3px rgba(36,81,143,.15); }
   .lg-form .lg-ver{ display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:500; margin:0 0 12px; }
-  .lg-btn{ width:100%; border:0; border-radius:999px; background:#d9662f; color:#fff; font:700 14px inherit; letter-spacing:.06em; text-transform:uppercase; padding:13px; cursor:pointer; box-shadow:0 8px 18px -8px rgba(217,102,47,.8); }
-  .lg-btn:hover{ background:#c2551f; } .lg-btn:disabled{ opacity:.6; cursor:wait; }
+  .lg-btn{ width:100%; border:0; border-radius:999px; background:#24518f; color:#fff; font:700 14px inherit; letter-spacing:.06em; text-transform:uppercase; padding:13px; cursor:pointer; box-shadow:0 8px 18px -8px rgba(36,81,143,.8); }
+  .lg-btn:hover{ background:#1b3f71; } .lg-btn:disabled{ opacity:.6; cursor:wait; }
   .lg-msg{ min-height:18px; font-size:13px; margin:0 0 8px; color:#b3261e; text-align:center; }
   .lg-nota{ margin:12px 0 0; font-size:11.5px; line-height:1.5; color:#767e8c; text-align:center; }
   .lg-dono{ margin-top:14px; text-align:center; } .lg-dono button{ background:none; border:0; color:#767e8c; font:12px inherit; text-decoration:underline; cursor:pointer; }
@@ -92,7 +92,7 @@
   .dob-side-top{ display:flex; align-items:center; gap:10px; padding:0 18px 16px; border-bottom:1px solid rgba(255,255,255,0.12); margin-bottom:10px; }
   #dob-sidebar.recolhida .dob-side-top{ padding:0 0 16px; justify-content:center; }
   .dob-side-hamburguer{ background:none; border:none; color:#fff; font-size:18px; cursor:pointer; padding:4px 6px; line-height:1; flex-shrink:0; }
-  .dob-side-brand{ color:#fff; font-family:Georgia, "Iowan Old Style", serif; font-size:16px; font-weight:700; white-space:nowrap; overflow:hidden; }
+  .dob-side-brand{ color:#fff; font-family:inherit"Iowan Old Style", serif; font-size:16px; font-weight:700; white-space:nowrap; overflow:hidden; }
   #dob-sidebar.recolhida .dob-side-brand{ display:none; }
   .dob-side-item{
     display:flex; align-items:center; gap:10px; padding:10px 18px; color:rgba(255,255,255,0.75);
@@ -109,7 +109,7 @@
   .dob-side-recolher:hover{ color:#fff; }
   #dob-root{ flex:1; min-width:0; padding: 28px 22px 60px; }
   .dob-saudacao{ margin-bottom:14px; }
-  .dob-saudacao-titulo{ font-family:Georgia, "Iowan Old Style", serif; font-size:24px; font-weight:700; color:var(--ink); margin:0; }
+  .dob-saudacao-titulo{ font-family:inherit"Iowan Old Style", serif; font-size:24px; font-weight:700; color:var(--ink); margin:0; }
   .dob-saudacao-titulo .nome{ color:var(--clay-dark); }
   .dob-saudacao-data{ font-size:13px; color:var(--muted); margin:2px 0 0; }
   .mono{ font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace; }
@@ -138,7 +138,7 @@
     background: linear-gradient(90deg, var(--clay), var(--sand) 45%, transparent);
   }
   .dob-title{
-    font-family: Georgia, "Iowan Old Style", serif;
+    font-family:inherit"Iowan Old Style", serif;
     font-weight:600;
     font-size:19px;
     letter-spacing:0.2px;
@@ -165,9 +165,9 @@
   .dob-stamp{
     font-family: "SF Mono", ui-monospace, monospace;
     font-size:10.5px;
-    background: rgba(217,102,47,0.16);
+    background: rgba(36,81,143,0.16);
     color: #f3b98a;
-    border: 1px solid rgba(217,102,47,0.4);
+    border: 1px solid rgba(36,81,143,0.4);
     padding:6px 12px;
     border-radius:999px;
     letter-spacing:1.2px;
@@ -207,9 +207,9 @@
     padding:7px 14px; border:1px solid var(--line); border-radius:999px; white-space:nowrap;
   }
   .dob-status-mais > summary::-webkit-details-marker{ display:none; }
-  .dob-status-mais > summary:hover{ background:#f0ede4; }
+  .dob-status-mais > summary:hover{ background:#eef0f3; }
   .dob-status-mais[open]{ width:100%; }
-  .dob-status-mais[open] > summary{ background:#f0ede4; }
+  .dob-status-mais[open] > summary{ background:#eef0f3; }
   .dob-status-mais-botoes{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; width:100%; }
   @media (max-width: 640px){ .dob-status-mais{ margin-left:0; width:100%; } .dob-status-mais > summary{ display:block; text-align:center; } }
 
@@ -221,9 +221,9 @@
     border-radius:999px; cursor:pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.08);
     transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
   }
-  .dob-btn:hover{ background: var(--clay-dark); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(217,102,47,0.28); }
+  .dob-btn:hover{ background: var(--clay-dark); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(36,81,143,0.28); }
   .dob-btn.secundario{ background: transparent; color: var(--ink-soft); border:1px solid var(--line); box-shadow:none; }
-  .dob-btn.secundario:hover{ background: #f0ede4; transform:none; box-shadow:none; }
+  .dob-btn.secundario:hover{ background: #eef0f3; transform:none; box-shadow:none; }
   .dob-btn.perigo{ background:transparent; color:var(--brick); border:1px solid #ecd3cb; box-shadow:none; }
   .dob-btn.perigo:hover{ background:#fbeeea; transform:none; box-shadow:none; }
   .dob-btn.pequeno{ padding:7px 14px; font-size:12px; }
@@ -238,7 +238,7 @@
     border-radius:8px; font-size:13.5px; color: var(--ink-text);
   }
   .dob-input:focus, .dob-select:focus, .dob-textarea:focus{
-    outline:none; border-color: var(--clay); box-shadow: 0 0 0 3px rgba(217,102,47,0.12);
+    outline:none; border-color: var(--clay); box-shadow: 0 0 0 3px rgba(36,81,143,0.12);
   }
   .dob-textarea{ width:100%; min-height:100px; resize:vertical; font-family:inherit; }
 
@@ -248,7 +248,7 @@
     padding:22px; margin-bottom:22px; box-shadow: var(--shadow);
   }
   .dob-card-form h3{
-    margin:0 0 16px; font-family: Georgia, serif; color:var(--ink); font-weight:600;
+    margin:0 0 16px; font-family:inherit; color:var(--ink); font-weight:600;
     font-size:17px; padding-bottom:12px; border-bottom:1px solid var(--line);
   }
   .dob-linha{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
@@ -257,7 +257,7 @@
   .dob-dica{ font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5; }
 
   .dob-custo-sugestoes{ display:flex; flex-direction:column; gap:4px; margin-bottom:8px; }
-  .dob-custo-sug{ text-align:left; background:var(--paper2,#f3ede1); border:1px solid var(--line); border-radius:8px; padding:7px 10px; font-size:12.5px; cursor:pointer; }
+  .dob-custo-sug{ text-align:left; background:var(--paper2,#eef1f6); border:1px solid var(--line); border-radius:8px; padding:7px 10px; font-size:12.5px; cursor:pointer; }
   .dob-custo-sug .cat{ color:var(--muted); font-size:10.5px; text-transform:uppercase; margin-right:6px; }
   .dob-custo-empresas{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; }
   .dob-custo-emp{ border:1px solid var(--line); border-radius:10px; padding:12px; background:#fff; }
@@ -268,7 +268,7 @@
   .dob-custo-emp .add{ display:flex; gap:6px; margin-top:8px; }
   .dob-custo-adic-del{ background:none; border:none; color:var(--brick,#b4472e); cursor:pointer; font-size:12px; }
   .dob-custo-resumo{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:10px 0; }
-  .dob-custo-resumo > div{ background:var(--paper2,#f3ede1); border:1px solid var(--line); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:2px; }
+  .dob-custo-resumo > div{ background:var(--paper2,#eef1f6); border:1px solid var(--line); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:2px; }
   .dob-custo-resumo .rot{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
   .dob-custo-resumo .val{ font-size:19px; font-weight:800; color:var(--ink); }
   .dob-custo-card{ border:1px solid var(--line); border-radius:10px; background:#fff; margin-bottom:10px; }
@@ -282,7 +282,7 @@
   .dob-custo-barra{ height:6px; background:var(--paper2,#eee); border-radius:99px; margin:8px 0; overflow:hidden; }
   .dob-custo-barra > div{ height:100%; background:var(--moss,#3f7d5c); }
   .dob-custo-chips{ display:flex; flex-wrap:wrap; gap:6px; }
-  .dob-custo-chip{ font-size:11.5px; background:var(--paper2,#f3ede1); border:1px solid var(--line); border-radius:99px; padding:2px 9px; }
+  .dob-custo-chip{ font-size:11.5px; background:var(--paper2,#eef1f6); border:1px solid var(--line); border-radius:99px; padding:2px 9px; }
   .dob-custo-corpo{ padding:0 14px 14px; }
   .dob-custo-vinculo{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:10px; font-size:13px; }
   .dob-custo-tab{ width:100%; border-collapse:collapse; font-size:12.5px; }
@@ -290,7 +290,7 @@
   .dob-custo-tab td{ padding:5px 8px; border-bottom:1px solid var(--line); }
   .dob-custo-tab .num{ text-align:right; white-space:nowrap; }
   .dob-custo-tab .cat{ color:var(--muted); white-space:nowrap; }
-  .dob-custo-tab tr.comp td{ background:var(--paper2,#f3ede1); font-weight:700; }
+  .dob-custo-tab tr.comp td{ background:var(--paper2,#eef1f6); font-weight:700; }
   .dob-fotos-preview{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
   .dob-thumb-wrap{ position:relative; }
   .dob-thumb{ width:76px; height:76px; object-fit:cover; border-radius:10px; border:1px solid var(--line); cursor:pointer; display:block; box-shadow: var(--shadow-sm); }
@@ -307,7 +307,7 @@
   .dob-thumb-uploading{
     width:76px; height:76px; border-radius:10px; border:1.5px dashed #c9c2b0;
     display:flex; align-items:center; justify-content:center; font-size:9px; text-align:center; color:var(--muted);
-    background: #f0ede4;
+    background: #eef0f3;
   }
 
   /* ---------- Lista de registros ---------- */
@@ -378,9 +378,9 @@
   .dob-status-msg.erro{ background:#fbe9e4; color:var(--brick); }
 
   .dob-setup{ background: var(--card); border:1px solid var(--line); border-top:3px solid var(--clay); border-radius:var(--radius); padding:24px; margin-bottom:22px; box-shadow: var(--shadow); }
-  .dob-setup h3{ margin:0 0 10px; color:var(--ink); font-family:Georgia,serif; font-size:18px; }
+  .dob-setup h3{ margin:0 0 10px; color:var(--ink); font-family:inherit; font-size:18px; }
   .dob-setup p{ font-size:13px; margin:8px 0; color:#4b5361; line-height:1.55; }
-  .dob-setup code{ background:#f0ede4; padding:2px 6px; border-radius:4px; font-size:12px; }
+  .dob-setup code{ background:#eef0f3; padding:2px 6px; border-radius:4px; font-size:12px; }
 
   /* ---------- Cards de estatística ---------- */
   .dob-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
@@ -396,7 +396,7 @@
     font-family:inherit; white-space:nowrap;
   }
   .dob-modo-compacto-toggle:hover{ background:rgba(255,255,255,0.14); }
-  .dob-modo-compacto-toggle.ativo{ background:rgba(217,102,47,0.4); border-color:rgba(217,102,47,0.7); color:#fff; }
+  .dob-modo-compacto-toggle.ativo{ background:rgba(36,81,143,0.4); border-color:rgba(36,81,143,0.7); color:#fff; }
   .dob-stats-resumo{
     display:none; align-items:center; gap:6px; font-size:12.5px; color:var(--muted);
     margin:-10px 0 18px; cursor:pointer; user-select:none; padding:2px 2px;
@@ -467,33 +467,33 @@
   .dob-chip.mini{ padding:2px 9px; font-size:10.5px; }
   .dob-card-bloco-linha{ display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
   .dob-card-bloco-linha:last-child{ border-bottom:none; }
-  .dob-card-bloco-linha span{ color:#8a8272; }
+  .dob-card-bloco-linha span{ color:#6b7380; }
   .dob-kanban-board{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
-  .dob-kanban-col{ background:var(--paper2,#f3ede1); border-radius:10px; padding:8px; min-width:0; }
+  .dob-kanban-col{ background:var(--paper2,#eef1f6); border-radius:10px; padding:8px; min-width:0; }
   .dob-kanban-item{ background:#fff; border-radius:7px; margin-bottom:4px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,0.08); white-space:normal; }
   .dob-kanban-item:last-child{ margin-bottom:0; }
   .dob-kanban-card-compacta{ display:flex; align-items:center; gap:7px; padding:6px 9px; cursor:pointer; font-size:11.5px; }
   .dob-kanban-card-compacta:hover{ background:#faf8f4; }
   .dob-kanban-card-compacta .dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
   .dob-kanban-card-compacta .nome{ font-weight:600; color:var(--ink,#16233d); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .dob-kanban-card-compacta .qtd{ font-size:10.5px; color:#8a8272; white-space:nowrap; flex-shrink:0; }
-  .dob-kanban-card-compacta .chevron{ font-size:9px; color:#8a8272; flex-shrink:0; transition:transform .15s ease; }
+  .dob-kanban-card-compacta .qtd{ font-size:10.5px; color:#6b7380; white-space:nowrap; flex-shrink:0; }
+  .dob-kanban-card-compacta .chevron{ font-size:9px; color:#6b7380; flex-shrink:0; transition:transform .15s ease; }
   .dob-kanban-item.open .chevron{ transform:rotate(90deg); }
   .dob-kanban-detail{ display:none; padding:2px 9px 10px; border-top:1px solid var(--line); }
   .dob-kanban-item.open .dob-kanban-detail{ display:block; }
   .dob-mapa-blocos{ display:flex; flex-wrap:wrap; gap:5px; margin:8px 0; }
   .dob-mapa-bloco-chip{ font-size:10.5px; font-weight:600; padding:3px 9px; border-radius:999px; }
-  .dob-mapa-fotos-label{ font-size:10px; font-weight:700; letter-spacing:.03em; color:#8a8272; text-transform:uppercase; margin:10px 0 6px; }
+  .dob-mapa-fotos-label{ font-size:10px; font-weight:700; letter-spacing:.03em; color:#6b7380; text-transform:uppercase; margin:10px 0 6px; }
   .dob-mapa-fotos-strip{ display:grid; grid-template-columns:repeat(auto-fill,minmax(64px,1fr)); gap:6px; }
   .dob-mapa-foto-item{ position:relative; border-radius:6px; overflow:hidden; border:1px solid var(--line); background:#fff; }
   .dob-mapa-foto-desvincular{ position:absolute; top:3px; right:3px; z-index:1; width:18px; height:18px; line-height:16px; padding:0; border-radius:50%; border:none; background:rgba(20,20,20,0.65); color:#fff; font-size:11px; cursor:pointer; text-align:center; }
   .dob-mapa-foto-desvincular:hover{ background:rgba(192,82,47,0.9); }
   .dob-mapa-foto-item img{ width:100%; aspect-ratio:1; object-fit:cover; display:block; background:#eee; cursor:pointer; }
-  .dob-mapa-foto-data{ display:block; font-size:9px; color:#8a8272; text-align:center; padding:2px 3px; }
-  .dob-mapa-sem-foto{ font-size:11px; color:#8a8272; padding:6px 0; }
+  .dob-mapa-foto-data{ display:block; font-size:9px; color:#6b7380; text-align:center; padding:2px 3px; }
+  .dob-mapa-sem-foto{ font-size:11px; color:#6b7380; padding:6px 0; }
   .dob-mapa-detail-acoes{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:8px; }
   .dob-mapa-detail-acoes .dob-btn.pequeno{ padding:5px 10px; font-size:10.5px; }
-  .dob-mapa-ver-mapa{ display:inline-block; font-size:11px; font-weight:600; color:var(--clay-dark,#c2551f); text-decoration:underline; text-decoration-style:dotted; text-underline-offset:2px; cursor:pointer; }
+  .dob-mapa-ver-mapa{ display:inline-block; font-size:11px; font-weight:600; color:var(--clay-dark,#1b3f71); text-decoration:underline; text-decoration-style:dotted; text-underline-offset:2px; cursor:pointer; }
   @media (max-width: 480px){
     .dob-kanban-board{ grid-template-columns:1fr; }
     /* Em telas estreitas, "13 blocos · desde 17/09/2026" some com quase todo
@@ -511,17 +511,17 @@
   .dob-chip-x{ background:rgba(255,255,255,0.25); border:none; color:#fff; width:16px; height:16px; border-radius:50%; font-size:11px; line-height:1; cursor:pointer; padding:0; }
 
   .dob-macro-grupo{ margin-bottom:18px; }
-  .dob-macro-grupo h4{ font-family:Georgia,serif; color:var(--ink); font-size:15px; margin:0 0 10px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+  .dob-macro-grupo h4{ font-family:inherit; color:var(--ink); font-size:15px; margin:0 0 10px; padding-bottom:8px; border-bottom:1px solid var(--line); }
   .dob-macro-registro{ display:flex; gap:10px; padding:6px 0; font-size:12.5px; color:#3a4250; border-bottom:1px dashed var(--line); }
   .dob-macro-data{ font-family:"SF Mono",ui-monospace,monospace; color:var(--muted); min-width:70px; flex-shrink:0; }
 
   /* ---------- Cronograma ---------- */
   .dob-crono-resumo{ display:flex; gap:10px; flex-wrap:wrap; margin:14px 0; }
-  .dob-crono-resumo .pill{ font-size:12.5px; padding:6px 12px; border-radius:999px; background:#f0ede4; color:var(--ink-soft); border:1px solid var(--line); }
+  .dob-crono-resumo .pill{ font-size:12.5px; padding:6px 12px; border-radius:999px; background:#eef0f3; color:var(--ink-soft); border:1px solid var(--line); }
   .dob-crono-resumo .pill.ok{ background:#e6f2ea; color:#2f6b45; border-color:#cfe6d7; }
   .dob-crono-resumo .pill.atraso{ background:#fbe9e4; color:var(--brick); border-color:#f2d2c7; }
   .dob-crono-grupo1{ margin-top:22px; }
-  .dob-crono-grupo1 > h4{ font-family:Georgia,serif; color:var(--ink); font-size:16px; margin:0 0 4px; }
+  .dob-crono-grupo1 > h4{ font-family:inherit; color:var(--ink); font-size:16px; margin:0 0 4px; }
   .dob-crono-grupo2{ margin:10px 0 14px; }
   .dob-crono-grupo2 > h5{ font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--muted); margin:0 0 8px; padding-bottom:6px; border-bottom:1px solid var(--line); }
   .dob-crono-item{ display:flex; align-items:flex-start; gap:10px; padding:8px 6px; border-bottom:1px dashed var(--line); }
@@ -530,18 +530,18 @@
   .dob-crono-info{ flex:1; min-width:0; }
   .dob-crono-desc{ font-size:13px; color:var(--ink-text); }
   .dob-crono-meta{ font-size:11.5px; color:var(--muted); margin-top:2px; }
-  .dob-campo-progresso{ display:flex; align-items:center; justify-content:center; gap:10px; font-size:13.5px; font-weight:600; color:var(--ink-soft); background:#f0ede4; border-radius:8px; padding:10px 14px; margin-bottom:14px; }
-  .dob-campo-spinner{ width:16px; height:16px; border-radius:50%; border:2.5px solid var(--line); border-top-color:var(--clay, #d9662f); animation:dob-spin 0.8s linear infinite; flex-shrink:0; }
+  .dob-campo-progresso{ display:flex; align-items:center; justify-content:center; gap:10px; font-size:13.5px; font-weight:600; color:var(--ink-soft); background:#eef0f3; border-radius:8px; padding:10px 14px; margin-bottom:14px; }
+  .dob-campo-spinner{ width:16px; height:16px; border-radius:50%; border:2.5px solid var(--line); border-top-color:var(--clay, #24518f); animation:dob-spin 0.8s linear infinite; flex-shrink:0; }
   @keyframes dob-spin{ to{ transform:rotate(360deg); } }
 
-  .dob-crono-barra{ height:5px; border-radius:999px; background:#e9e4d6; margin-top:6px; overflow:hidden; max-width:260px; }
-  .dob-crono-barra-fill{ height:100%; background:var(--clay, #d9662f); border-radius:999px; }
+  .dob-crono-barra{ height:5px; border-radius:999px; background:#e3e6eb; margin-top:6px; overflow:hidden; max-width:260px; }
+  .dob-crono-barra-fill{ height:100%; background:var(--clay, #24518f); border-radius:999px; }
   .dob-crono-item.concluido .dob-crono-barra-fill{ background:#3f7d5c; }
   .dob-crono-status{ font-size:10.5px; font-weight:700; letter-spacing:.02em; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap; flex-shrink:0; margin-top:1px; }
   .dob-crono-status.concluido{ background:#e6f2ea; color:#2f6b45; }
   .dob-crono-status.atrasado{ background:#fbe9e4; color:var(--brick); }
   .dob-crono-status.andamento{ background:#eaf1f7; color:#2f5f8a; }
-  .dob-crono-status.naoiniciado{ background:#f0ede4; color:var(--muted); }
+  .dob-crono-status.naoiniciado{ background:#eef0f3; color:var(--muted); }
   .dob-crono-item.concluido .dob-crono-desc{ text-decoration:line-through; color:var(--muted); }
 
   .dob-mapa-atualizando{ position:sticky; top:0; z-index:60; display:flex; align-items:center; gap:10px; padding:10px 14px; background:#274b74; color:#fff; border-radius:8px; margin-bottom:10px; box-shadow:0 3px 10px rgba(0,0,0,0.18); box-sizing:border-box; max-width:100%; }
@@ -563,14 +563,14 @@
   .dob-mapa-novo-serv #dob-mapa-add-servico{ font-weight:700; }
   .dob-crono-geral{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin:14px 0 4px; }
   .dob-crono-geral .gcard{ display:flex; align-items:center; gap:14px; background:#f7f4ec; border:1px solid var(--line); border-radius:10px; padding:12px 14px; cursor:pointer; }
-  .dob-crono-geral .gcard.sel{ border-color:var(--clay, #d9662f); box-shadow:0 0 0 1px var(--clay, #d9662f) inset; }
+  .dob-crono-geral .gcard.sel{ border-color:var(--clay, #24518f); box-shadow:0 0 0 1px var(--clay, #24518f) inset; }
   .dob-crono-geral .gcard .dob-crono-ppc-aro{ width:64px; height:64px; } .dob-crono-geral .gcard .dob-crono-ppc-aro svg{ width:64px; height:64px; }
   .dob-crono-geral .gtit{ font-weight:700; font-size:15px; } .dob-crono-geral .gsub{ font-size:12.5px; color:var(--muted); margin-top:2px; }
   .dob-crono-ppc-card{ display:flex; align-items:center; gap:18px; background:#f7f4ec; border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin:14px 0; flex-wrap:wrap; }
   .dob-crono-ppc-aro{ position:relative; width:72px; height:72px; flex-shrink:0; }
   .dob-crono-ppc-aro svg{ width:72px; height:72px; transform:rotate(-90deg); }
-  .dob-crono-ppc-aro .fundo{ fill:none; stroke:#e9e4d6; stroke-width:7; }
-  .dob-crono-ppc-aro .frente{ fill:none; stroke:var(--clay, #d9662f); stroke-width:7; stroke-linecap:round; transition:stroke-dashoffset .3s ease; }
+  .dob-crono-ppc-aro .fundo{ fill:none; stroke:#e3e6eb; stroke-width:7; }
+  .dob-crono-ppc-aro .frente{ fill:none; stroke:var(--clay, #24518f); stroke-width:7; stroke-linecap:round; transition:stroke-dashoffset .3s ease; }
   .dob-crono-ppc-aro.bom .frente{ stroke:#3f7d5c; }
   .dob-crono-ppc-aro .valor{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; color:var(--ink); }
   .dob-crono-ppc-txt{ flex:1; min-width:160px; }
@@ -657,7 +657,7 @@
   .dob-resumo-semana-card.alerta{ background:#faece7; border-color:#b8462f; }
   .dob-resumo-semana-card.alerta .v{ color:#993c1d; }
   .dob-pd-in{ width:100%; min-width:46px; border:none; background:transparent; text-align:center; font:inherit; padding:7px 2px; color:var(--ink); }
-  .dob-pd-in:focus{ outline:2px solid var(--clay,#d9662f); background:#fff; }
+  .dob-pd-in:focus{ outline:2px solid var(--clay,#24518f); background:#fff; }
   .dob-pd-cel.hoje, .dob-pd-th-dia.hoje{ background:#fff6e5; }
   .dob-pd-prev{ text-align:center; font-weight:700; color:var(--ink-soft); padding:0 6px; }
   .dob-pd-ok{ text-align:center; padding:4px 8px; white-space:nowrap; }
@@ -676,10 +676,10 @@
   .dob-pd-compacto .dob-pd-un{ text-align:center; padding:0 6px; font-size:11px; }
   .dob-pd-num{ text-align:center; padding:0 5px !important; font-variant-numeric:tabular-nums; color:var(--ink-soft); white-space:nowrap; font-size:11.5px; }
   .dob-pd-real{ font-weight:700; color:var(--ink); }
-  .dob-pd-mini{ height:3px; background:#e9e4d6; border-radius:2px; margin:0 0 2px; overflow:hidden; }
-  .dob-pd-mini i{ display:block; height:100%; background:var(--clay,#d9662f); }
+  .dob-pd-mini{ height:3px; background:#e3e6eb; border-radius:2px; margin:0 0 2px; overflow:hidden; }
+  .dob-pd-mini i{ display:block; height:100%; background:var(--clay,#24518f); }
   .dob-pd-cel.fds, .dob-pd-th-dia.fds{ background:#f6f4ee; }
-  .dob-pd-item.comprometido td.desc .cod{ color:var(--clay,#d9662f); }
+  .dob-pd-item.comprometido td.desc .cod{ color:var(--clay,#24518f); }
   .dob-pd-sit{ display:inline-flex; align-items:center; gap:4px; cursor:pointer; font-size:11px; }
   .dob-pd-sit input{ width:14px; height:14px; }
   .dob-pd-sit .ok{ color:#2f6b45; font-weight:700; } .dob-pd-sit .atraso{ color:var(--brick); font-weight:700; } .dob-pd-sit .plan{ color:#2f5f8a; }
@@ -699,7 +699,7 @@
   .dob-pd-th-dia .dt{ font-size:11.5px; font-weight:700; color:var(--ink); }
   .dob-pd-th-dia .dw{ font-size:9.5px; color:var(--muted); text-transform:uppercase; }
   .dob-pd-th-total{ padding:8px; text-align:center; background:#fff4e9; font-size:10.5px; color:var(--clay); font-weight:700; text-transform:uppercase; min-width:68px; }
-  .dob-pd-macro td{ background:var(--ink); color:#fff; font-weight:700; padding:8px 12px; font-family:Georgia,serif; font-size:12.5px; }
+  .dob-pd-macro td{ background:var(--ink); color:#fff; font-weight:700; padding:8px 12px; font-family:inherit; font-size:12.5px; }
   .dob-pd-sub td{ background:#f0ede6; color:var(--muted); font-weight:600; padding:6px 12px; font-size:10.5px; text-transform:uppercase; letter-spacing:.3px; }
   .dob-pd-item td.desc{ padding:7px 12px; position:sticky; left:0; background:#fff; z-index:1; }
   .dob-pd-item:nth-child(even) td.desc{ background:#fbfaf7; }
@@ -852,7 +852,7 @@
   .dob-side-item{ border-left:0; border-radius:10px; margin:1px 0; padding:9px 12px; gap:12px; font-size:13.5px; font-weight:500; position:relative; transition:background .12s ease, color .12s ease; }
   .dob-side-item .ic{ width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:0; }
   .dob-side-item:hover{ background:rgba(255,255,255,0.07); }
-  .dob-side-item.active{ background:rgba(217,102,47,0.17); font-weight:600; }
+  .dob-side-item.active{ background:rgba(36,81,143,0.17); font-weight:600; }
   .dob-side-item.active .ic-svg{ stroke:#f29a68; }
   .dob-side-item.active::before{ content:""; position:absolute; left:-10px; top:9px; bottom:9px; width:3px; border-radius:0 3px 3px 0; background:var(--clay); }
   .dob-side-sep{ height:1px; background:rgba(255,255,255,0.08); margin:8px 10px; }
@@ -873,11 +873,11 @@
   .dob-daypill:hover{ box-shadow:var(--shadow); }
   .dob-daypill .dow{ text-transform:none; letter-spacing:0; font-size:11px; }
   .dob-daypill.hoje{ border-color:var(--clay); }
-  .dob-daypill.ativo{ box-shadow:0 6px 14px -6px rgba(217,102,47,0.55); }
+  .dob-daypill.ativo{ box-shadow:0 6px 14px -6px rgba(36,81,143,0.55); }
   .dob-entry{ border-radius:14px; border-color:transparent; border-left-width:3px; padding:20px 24px; box-shadow:var(--shadow); }
   .dob-entry-tag{ text-transform:none; letter-spacing:0; font-size:12px; font-weight:600; }
   .dob-entry-secao-label{ text-transform:none; letter-spacing:0.1px; font-size:12px; }
-  .dob-entry-secao-colapsavel > summary{ border-radius:10px; background:#faf8f3; }
+  .dob-entry-secao-colapsavel > summary{ border-radius:10px; background:#f8f9fb; }
   .dob-side-item:focus-visible, .dob-btn:focus-visible, .dob-daypill:focus-visible, #dob-m-bar button:focus-visible{ outline:2px solid #f29a68; outline-offset:2px; }
   #dob-m-bar button .ic{ display:flex; font-size:0; }
   #dob-m-bar button .ic-svg{ width:22px; height:22px; }
@@ -922,22 +922,22 @@
   .dob-cat .lista h2, .dob-cat h3, .dob-cat th, .dob-cat label, .dob-cat .kpi small, .dob-cat-macro{ text-transform:none; letter-spacing:0.1px; font-size:12px; font-weight:600; }
   .dob-cat .kpi small{ font-weight:500; }
   .dob-pd-filtros label, .dob-pd-th-desc, .dob-pd-th-un, .dob-pd-th-total, .dob-pd-sub td{ text-transform:none; letter-spacing:0; font-size:11.5px; }
-  .dob-mapa-macro{ font-size:12px; color:var(--muted,#6b6455); margin:2px 0 8px; }
+  .dob-mapa-macro{ font-size:12px; color:var(--muted,#5d6675); margin:2px 0 8px; }
   .dob-eqemp-lista{ display:flex; flex-direction:column; gap:6px; }
   .dob-eqemp-linha{ display:flex; align-items:center; justify-content:space-between; gap:10px; background:#fff; border:1px solid var(--line,#e4dfd3); border-radius:12px; padding:8px 10px; }
   .dob-eqemp-obra{ margin:14px 0 6px; padding:6px 10px; border-radius:8px; font-size:13px; font-weight:700; color:#fff; background:#5b6b86; }
   .dob-eqemp-obra-p{ background:#2f5f45; } .dob-eqemp-obra-b{ background:#a97f2a; }
   .dob-eqemp-nome{ display:flex; flex-direction:column; min-width:0; }
   .dob-eqemp-nome b{ font-size:13.5px; color:var(--ink,#16233d); }
-  .dob-eqemp-nome span{ font-size:12px; color:var(--muted,#6b6455); white-space:normal; overflow-wrap:anywhere; line-height:1.3; }
+  .dob-eqemp-nome span{ font-size:12px; color:var(--muted,#5d6675); white-space:normal; overflow-wrap:anywhere; line-height:1.3; }
   .dob-eqemp-passo{ display:flex; align-items:center; gap:4px; flex:none; }
-  .dob-eqemp-passo button{ width:36px; height:36px; border-radius:10px; border:1px solid var(--line,#d9d3c4); background:#faf8f3; font-size:18px; line-height:1; cursor:pointer; color:var(--ink,#16233d); }
+  .dob-eqemp-passo button{ width:36px; height:36px; border-radius:10px; border:1px solid var(--line,#d3d8e0); background:#f8f9fb; font-size:18px; line-height:1; cursor:pointer; color:var(--ink,#16233d); }
   .dob-eqemp-passo button:active{ background:#efeadd; }
-  .dob-eqemp-passo input{ width:52px; height:36px; text-align:center; border:1px solid var(--line,#d9d3c4); border-radius:10px; font-size:15px; font-weight:600; background:#fff; }
-  .dob-eqemp-total{ font-size:12.5px; color:var(--muted,#6b6455); padding:2px 4px; }
-  .dob-eqemp-extra{ margin-top:6px; font-size:12.5px; color:var(--muted,#6b6455); }
+  .dob-eqemp-passo input{ width:52px; height:36px; text-align:center; border:1px solid var(--line,#d3d8e0); border-radius:10px; font-size:15px; font-weight:600; background:#fff; }
+  .dob-eqemp-total{ font-size:12.5px; color:var(--muted,#5d6675); padding:2px 4px; }
+  .dob-eqemp-extra{ margin-top:6px; font-size:12.5px; color:var(--muted,#5d6675); }
   .dob-eqemp-extra summary{ cursor:pointer; }
-  .dob-eqemp-x{ flex:none; width:28px; height:28px; border-radius:50%; border:1px solid var(--line,#d9d3c4); background:#faf8f3; color:var(--muted,#6b6455); font-size:17px; line-height:1; cursor:pointer; padding:0; }
+  .dob-eqemp-x{ flex:none; width:28px; height:28px; border-radius:50%; border:1px solid var(--line,#d3d8e0); background:#f8f9fb; color:var(--muted,#5d6675); font-size:17px; line-height:1; cursor:pointer; padding:0; }
   .dob-eqemp-x:hover{ background:#f3e3dc; color:#b4492a; border-color:#e3b9a8; }
   .dob-eqemp-linha .dob-eqemp-nome{ flex:1; }
   .dob-eqemp-ocultas-t{ font-size:12px; font-weight:600; color:var(--ink,#16233d); margin-bottom:4px; }
@@ -1147,7 +1147,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.88';
+  const APP_VERSION = 'v2026.11.25.89';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -3060,7 +3060,7 @@
     const ov = document.createElement('div');
     ov.style.cssText = 'position:fixed;inset:0;background:rgba(22,35,61,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;';
     ov.innerHTML = `<div style="background:var(--card,#fff);color:var(--ink-text,#232a35);max-width:460px;width:100%;max-height:88vh;overflow:auto;border-radius:14px;padding:22px;box-shadow:0 20px 50px -12px rgba(0,0,0,.4);">
-      <h3 style="margin:0 0 6px;font-family:Georgia,serif;font-size:20px;">Quem vê cada seção</h3>
+      <h3 style="margin:0 0 6px;font-family:inherit;font-size:20px;">Quem vê cada seção</h3>
       <p style="margin:0 0 10px;font-size:13px;line-height:1.5;color:var(--muted,#767e8c);">Para o que está em desenvolvimento: escolha <b>Só eu</b> e libere quando estiver pronto. Aparece 🔒 no menu lateral nas seções restritas (só você vê o cadeado). Isto esconde a tela; os valores de contratos e UAU já ficam bloqueados no banco para quem não é editor.</p>
       ${VIS_SECOES.map(([k, t]) => `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid #e4e7ec;"><div style="flex:1;font-size:14px;">${t}</div>
         <select data-k="${k}" style="padding:7px;border:1px solid #c8cdd6;border-radius:8px;">${[['todos', 'Todos'], ['editores', 'Só editores'], ['dono', 'Só eu']].map(([v, tx]) => `<option value="${v}"${nivelSecao(k) === v ? ' selected' : ''}>${tx}</option>`).join('')}</select></div>`).join('')}
@@ -3244,7 +3244,7 @@
     const ov = document.createElement('div');
     ov.style.cssText = 'position:fixed;inset:0;background:rgba(22,35,61,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;';
     ov.innerHTML = `<div style="background:var(--card,#fff);color:var(--ink-text,#232a35);max-width:460px;width:100%;border-radius:14px;padding:22px;box-shadow:0 20px 50px -12px rgba(0,0,0,.4);">
-      <h3 style="margin:0 0 6px;font-family:Georgia,serif;font-size:20px;">Quem pode editar</h3>
+      <h3 style="margin:0 0 6px;font-family:inherit;font-size:20px;">Quem pode editar</h3>
       <p style="margin:0 0 10px;font-size:13px;line-height:1.5;color:var(--muted,#767e8c);">Um e-mail Google por linha. Quem estiver aqui consegue alterar Mapa, Catálogo, Método e Custos. Todos os outros só visualizam. Você (dono) sempre pode editar.</p>
       <textarea id="dob-editores-txt" rows="7" style="width:100%;box-sizing:border-box;font:14px/1.4 inherit;padding:8px;border:1px solid #c8cdd6;border-radius:8px;" placeholder="nome@gmail.com"></textarea>
       <div id="dob-editores-msg" style="min-height:18px;font-size:13px;margin:6px 0;"></div>
@@ -3298,12 +3298,12 @@
   var LG_SVG = '<svg viewBox="0 0 340 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
     + '<rect x="0" y="228" width="340" height="6" rx="3" fill="#c99a3d" opacity=".55"/>'
     + '<g stroke="#8fa3c4" stroke-width="2.2" fill="none" opacity=".9"><path d="M214 228V28h8v200"/><path d="M200 28h100l-6 12H206z" fill="#2c3c5c"/><path d="M222 28l-6-14M300 28l-20-14M222 14h58"/><path d="M286 40v40" stroke-dasharray="3 4"/></g>'
-    + '<rect x="278" y="80" width="16" height="12" rx="2" fill="#d9662f"/>'
+    + '<rect x="278" y="80" width="16" height="12" rx="2" fill="#24518f"/>'
     + '<g fill="#2c3c5c" stroke="#8fa3c4" stroke-width="2"><rect x="228" y="128" width="84" height="100"/><rect x="246" y="100" width="48" height="28"/></g>'
     + '<g fill="#16233d" opacity=".9"><rect x="238" y="140" width="14" height="14"/><rect x="262" y="140" width="14" height="14"/><rect x="286" y="140" width="14" height="14"/><rect x="238" y="168" width="14" height="14"/><rect x="262" y="168" width="14" height="14"/><rect x="286" y="168" width="14" height="14"/><rect x="238" y="196" width="14" height="14"/><rect x="262" y="196" width="14" height="14"/></g>'
     + '<rect x="30" y="204" width="150" height="24" rx="4" fill="#24395c" stroke="#8fa3c4" stroke-width="2"/><path d="M42 204v24M70 204v24M98 204v24M126 204v24M154 204v24" stroke="#8fa3c4" stroke-width="1.5" opacity=".6"/>'
     + '<path d="M70 118V92a40 40 0 0 1 80 0v26" fill="none" stroke="#f0c777" stroke-width="13" stroke-linecap="round"/>'
-    + '<rect x="46" y="112" width="128" height="96" rx="16" fill="#d9662f"/><rect x="46" y="112" width="128" height="30" rx="16" fill="#e47a45"/>'
+    + '<rect x="46" y="112" width="128" height="96" rx="16" fill="#24518f"/><rect x="46" y="112" width="128" height="30" rx="16" fill="#e47a45"/>'
     + '<circle cx="110" cy="154" r="13" fill="#16233d"/><rect x="104" y="158" width="12" height="28" rx="5" fill="#16233d"/>'
     + '<path d="M232 228c0-18 8-26 22-26s22 8 22 26z" fill="#f0c777"/><rect x="230" y="224" width="48" height="5" rx="2" fill="#c99a3d"/></svg>';
   function esconderGate(){ const g = document.getElementById('dob-gate'); if(g) g.style.display = 'none'; }
@@ -3375,7 +3375,7 @@
     ov.style.cssText = 'position:fixed;inset:0;background:rgba(22,35,61,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;';
     const fmt = (t) => { const d = new Date(t); return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); };
     ov.innerHTML = `<div style="background:var(--card,#fff);color:var(--ink-text,#232a35);max-width:640px;width:100%;max-height:88vh;overflow:auto;border-radius:14px;padding:22px;box-shadow:0 20px 50px -12px rgba(0,0,0,.4);">
-      <h3 style="margin:0 0 6px;font-family:Georgia,serif;font-size:20px;">Histórico de atividades</h3>
+      <h3 style="margin:0 0 6px;font-family:inherit;font-size:20px;">Histórico de atividades</h3>
       <p style="margin:0 0 10px;font-size:13px;color:var(--muted,#767e8c);">Cadastros, acessos e edições de outras pessoas (as suas não aparecem). Só você vê isto. Últimos ${lista.length} registros.</p>
       ${lista.length ? lista.map(h => `<div style="padding:7px 0;border-top:1px solid #e4e7ec;font-size:13px;"><span style="color:var(--muted,#767e8c);">${fmt(h.em)}</span> · <b>${escapeHtmlSaud(h.nome || h.usuario || '?')}</b> <span style="color:var(--muted,#767e8c);">@${escapeHtmlSaud(h.usuario || '')} (${escapeHtmlSaud(h.papel || '')})</span><br>${escapeHtmlSaud(h.resumo || '')}</div>`).join('') : '<p style="font-size:13px;">Nada registrado ainda.</p>'}
       <div style="display:flex;justify-content:flex-end;margin-top:12px;"><button type="button" class="dob-btn" id="dob-hi-fechar">Fechar</button></div></div>`;
@@ -3393,7 +3393,7 @@
     ov.style.cssText = 'position:fixed;inset:0;background:rgba(22,35,61,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;';
     const papeis = [['visualizador', 'Visualizador'], ['editor', 'Editor'], ['admin', 'Administrador']];
     ov.innerHTML = `<div style="background:var(--card,#fff);color:var(--ink-text,#232a35);max-width:520px;width:100%;max-height:88vh;overflow:auto;border-radius:14px;padding:22px;box-shadow:0 20px 50px -12px rgba(0,0,0,.4);">
-      <h3 style="margin:0 0 6px;font-family:Georgia,serif;font-size:20px;">Usuários e permissões</h3>
+      <h3 style="margin:0 0 6px;font-family:inherit;font-size:20px;">Usuários e permissões</h3>
       <p style="margin:0 0 12px;font-size:13px;line-height:1.5;color:var(--muted,#767e8c);"><b>Visualizador</b> só vê. <b>Editor</b> também salva apontamentos, mapa, custos e fotos. <b>Administrador</b> edita e gerencia usuários. A mudança vale para a pessoa na próxima abertura (ou na hora, se ela estiver com o site aberto).</p>
       <div id="dob-us-lista">${lista.length ? lista.map(u => `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid #e4e7ec;flex-wrap:wrap;">
           <div style="flex:1;min-width:140px;"><b>${escapeHtmlSaud(u.nome || '')}</b><br><span style="font-size:12px;color:var(--muted,#767e8c);">@${escapeHtmlSaud(u.usuario || '')}</span></div>
@@ -4138,7 +4138,7 @@
         const feitos = cs.filter(c => c && c.status === 'concluido').length;
         return `<tr><td style="padding:6px 8px;border-top:1px solid #e4e7ec;font-weight:700;white-space:nowrap;">Bloco ${nome}<div style="font-size:11px;font-weight:400;color:#767e8c;">${feitos}/4 pav.</div></td>${cs.map(celula).join('')}<td style="padding:6px 8px;border-top:1px solid #e4e7ec;font-size:12.5px;white-space:nowrap;${feitos === 4 ? 'color:#1b6e3c;font-weight:700;' : 'color:#767e8c;font-style:italic;'}">${fim ? fmtDate(fim) : '—'}</td></tr>`;
       }).join('');
-      return `<h4 style="margin:18px 0 6px;font-family:Georgia,serif;">Solar dos ${obra} <span style="font-size:13px;font-weight:400;color:#767e8c;">· término previsto ${fimObra(obra)}</span></h4>
+      return `<h4 style="margin:18px 0 6px;font-family:inherit;">Solar dos ${obra} <span style="font-size:13px;font-weight:400;color:#767e8c;">· término previsto ${fimObra(obra)}</span></h4>
         <div style="overflow-x:auto;"><table style="border-collapse:collapse;width:100%;"><thead><tr style="text-align:left;font-size:12px;color:#767e8c;"><th style="padding:4px 8px;">Bloco</th><th style="padding:4px 8px;">1º pav.</th><th style="padding:4px 8px;">2º pav.</th><th style="padding:4px 8px;">3º pav.</th><th style="padding:4px 8px;">4º pav.</th><th style="padding:4px 8px;">Fim do bloco</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
     };
     const card = (titulo, valor, sub) => `<div style="flex:1;min-width:140px;background:var(--card-2,#f6f7f9);border-radius:10px;padding:10px 12px;"><div style="font-size:12px;color:#767e8c;">${titulo}</div><div style="font-size:22px;font-weight:700;">${valor}</div><div style="font-size:11.5px;color:#767e8c;">${sub || ''}</div></div>`;
@@ -4163,7 +4163,7 @@
           </div>
           <p class="dob-dica">Ciclo = dias úteis do início das instalações até a concretagem do pavimento. "Em paralelo" = quantos pavimentos podem estar em ciclo ao mesmo tempo (jogos de forma/equipes). O 1º pavimento de cada bloco só entra depois do lajão concluído mais a cura.</p>
         </details>
-        <h4 style="margin:14px 0 6px;font-family:Georgia,serif;">Próximos ciclos</h4>
+        <h4 style="margin:14px 0 6px;font-family:inherit;">Próximos ciclos</h4>
         ${proximos.length ? `<div style="display:flex;flex-direction:column;gap:6px;">${proximos.map(c => `<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:7px 10px;border-radius:8px;background:${c.status === 'andamento' ? '#fff4d6' : '#f1f3f6'};font-size:13.5px;"><b>${c.obra} · Bloco ${c.nome} · ${c.pav}º pav.</b><span style="color:#767e8c;">${c.status === 'andamento' ? 'em andamento desde ' + pCurta(c.ini) + ' · concretagem prevista ' + pCurta(c.prevFim) : 'início previsto ' + pCurta(c.prevIni) + ' · concretagem ' + pCurta(c.prevFim)}</span>${c.aguardaLajao ? '<span style="color:#b3261e;font-size:12px;">aguarda lajão</span>' : ''}</div>`).join('')}</div>` : '<p class="dob-dica">Todos os ciclos estão concluídos.</p>'}
         ${tabela('Buritis')}
         ${tabela('Pequis')}
@@ -4244,7 +4244,7 @@
     if(!beediaData) beediaData = beediaHoje();
     const por = beediaConcluidos(beediaData);
     const semData = beediaSemData();
-    const alertaData = semData.length ? `<div style="border:1px solid #c4662f;background:rgba(196,102,47,.08);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12.5px;"><b>⚠ Concluídos sem data (${semData.reduce((n, x) => n + x.itens.length, 0)})</b> — não aparecem no BEE do dia. Informe a data para eu lançar.<ul style="margin:4px 0 0;padding-left:18px;">${semData.map(x => `<li>${paredeEsc(x.servico)} · ${paredeEsc(x.obra)}: ${x.itens.map(paredeEsc).join(', ')}</li>`).join('')}</ul></div>` : '';
+    const alertaData = semData.length ? `<div style="border:1px solid #24518f;background:rgba(196,102,47,.08);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12.5px;"><b>⚠ Concluídos sem data (${semData.reduce((n, x) => n + x.itens.length, 0)})</b> — não aparecem no BEE do dia. Informe a data para eu lançar.<ul style="margin:4px 0 0;padding-left:18px;">${semData.map(x => `<li>${paredeEsc(x.servico)} · ${paredeEsc(x.obra)}: ${x.itens.map(paredeEsc).join(', ')}</li>`).join('')}</ul></div>` : '';
     const nomes = Object.keys(por).sort((a, b) => (macroDoServico(a) || 'zz').localeCompare(macroDoServico(b) || 'zz') || a.localeCompare(b));
     const blocos = nomes.map(sv => {
       const r = por[sv];
@@ -4265,11 +4265,11 @@
         const ate = (mapaState.estados || []).filter(e => e.servico === sv && e.cor === 'verde' && e.dataConclusao && e.dataConclusao <= beediaData).length;
         const total = (mapaState.estados || []).filter(e => e.servico === sv && e.cor === 'verde' && e.dataConclusao).length;
         const lim = Math.min(36, ate);
-        travaHtml = `<div style="margin-top:8px;padding:8px 10px;border:1px solid #c4662f;background:rgba(196,102,47,.08);border-radius:8px;font-size:12.5px;">⚠ <b>Confira a Produção acumulada no BEE</b> antes de lançar: no app há <b>${ate}</b> concluídos até esta data (${total} no total, de 36 blocos). A Produção acumulada em HAB - FUNDACAO não pode passar de <b>${lim}</b>. Se já estiver em ${lim} ou mais, <b>não lance</b> estes ${r.total} de novo (o mesmo bloco pode ter sido lançado em outra data).</div>`;
+        travaHtml = `<div style="margin-top:8px;padding:8px 10px;border:1px solid #24518f;background:rgba(196,102,47,.08);border-radius:8px;font-size:12.5px;">⚠ <b>Confira a Produção acumulada no BEE</b> antes de lançar: no app há <b>${ate}</b> concluídos até esta data (${total} no total, de 36 blocos). A Produção acumulada em HAB - FUNDACAO não pode passar de <b>${lim}</b>. Se já estiver em ${lim} ou mais, <b>não lance</b> estes ${r.total} de novo (o mesmo bloco pode ter sido lançado em outra data).</div>`;
       }
       return `<div style="border:1px solid var(--line, #ddd);border-radius:8px;padding:10px 12px;margin-bottom:8px;">
         <div style="font-weight:700;">${paredeEsc(sv)} <span style="font-weight:400;opacity:.7;">· ${r.total} concluído(s)${macro ? ' · macro ' + paredeEsc(rotuloMacro(macro)) : ''}</span></div>${travaHtml}
-        ${linhasObra}${(() => { const l = (mapaState.beeLancado || {})[beediaData + '|' + sv]; return l ? `<div style="margin-top:6px;font-size:12px;color:#2f7d4f;">✔ Lançado no BEE em ${paredeEsc(String(l.em || '').slice(0, 10).split('-').reverse().join('/'))}${l.qtd != null ? ' · qtd ' + paredeEsc(l.qtd) : ''}</div>` : `<div style="margin-top:6px;font-size:12px;color:#c4662f;">Pendente de lançar no BEE</div>`; })()}${kitHtml}</div>`;
+        ${linhasObra}${(() => { const l = (mapaState.beeLancado || {})[beediaData + '|' + sv]; return l ? `<div style="margin-top:6px;font-size:12px;color:#2f7d4f;">✔ Lançado no BEE em ${paredeEsc(String(l.em || '').slice(0, 10).split('-').reverse().join('/'))}${l.qtd != null ? ' · qtd ' + paredeEsc(l.qtd) : ''}</div>` : `<div style="margin-top:6px;font-size:12px;color:#24518f;">Pendente de lançar no BEE</div>`; })()}${kitHtml}</div>`;
     }).join('');
     c.innerHTML = `<div class="dob-card" style="margin-top:14px;">
       <h3>BEE do dia</h3>
@@ -5191,18 +5191,18 @@
           </div>
           <div style="padding:14px 18px; display:flex; flex-direction:column; gap:10px;">
             <div>
-              <label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Status</label>
+              <label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Status</label>
               <div style="display:flex; gap:8px;">
                 <button type="button" data-st="amarelo" class="dob-tr-st" style="flex:1; padding:8px; border-radius:8px; border:2px solid #a97f2a; font-size:13px; cursor:pointer;">🟡 Em execução</button>
                 <button type="button" data-st="verde" class="dob-tr-st" style="flex:1; padding:8px; border-radius:8px; border:2px solid #2f5f45; font-size:13px; cursor:pointer;">🟢 Concluído</button>
               </div>
             </div>
             <div style="display:flex; gap:8px;">
-              <div style="flex:1;"><label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Data de início</label><input type="date" id="dob-tr-ini" class="dob-input" value="${ini}" style="width:100%;" /></div>
-              <div style="flex:1;" id="dob-tr-conc-wrap"><label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Data de conclusão</label><input type="date" id="dob-tr-conc" class="dob-input" value="${conc}" style="width:100%;" /></div>
+              <div style="flex:1;"><label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Data de início</label><input type="date" id="dob-tr-ini" class="dob-input" value="${ini}" style="width:100%;" /></div>
+              <div style="flex:1;" id="dob-tr-conc-wrap"><label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Data de conclusão</label><input type="date" id="dob-tr-conc" class="dob-input" value="${conc}" style="width:100%;" /></div>
             </div>
             <div>
-              <label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Empreiteira</label>
+              <label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Empreiteira</label>
               <select id="dob-tr-emp" class="dob-select" style="width:100%;">
                 <option value="">— não informada —</option>
                 ${empresas.map(n => `<option value="${n.replace(/"/g,'&quot;')}" ${n === empresaInicial ? 'selected' : ''}>${n}</option>`).join('')}
@@ -5210,10 +5210,10 @@
               <input id="dob-tr-emp-outra" class="dob-input" placeholder="ou digite outra empresa" style="width:100%; margin-top:6px; font-size:12.5px;" />
             </div>
           </div>
-          <div style="display:flex; gap:8px; padding:12px 18px; background:#f3ede1; border-top:1px solid #e7e3d8;">
+          <div style="display:flex; gap:8px; padding:12px 18px; background:#eef1f6; border-top:1px solid #e3e6eb;">
             <button type="button" id="dob-tr-cancelar" style="flex:1; padding:9px; border-radius:8px; border:1px solid #ccc; background:#fff; font-size:13px; cursor:pointer;">Cancelar</button>
-            ${novo ? '' : '<button type="button" id="dob-tr-apagar" style="flex:1; padding:9px; border-radius:8px; border:1px solid #c0522f; background:#fff; color:#c0522f; font-weight:600; font-size:13px; cursor:pointer;">Apagar</button>'}
-            <button type="button" id="dob-tr-salvar" style="flex:1; padding:9px; border-radius:8px; border:none; background:#c0522f; color:#fff; font-weight:600; font-size:13px; cursor:pointer;">Salvar</button>
+            ${novo ? '' : '<button type="button" id="dob-tr-apagar" style="flex:1; padding:9px; border-radius:8px; border:1px solid #24518f; background:#fff; color:#24518f; font-weight:600; font-size:13px; cursor:pointer;">Apagar</button>'}
+            <button type="button" id="dob-tr-salvar" style="flex:1; padding:9px; border-radius:8px; border:none; background:#24518f; color:#fff; font-weight:600; font-size:13px; cursor:pointer;">Salvar</button>
           </div>
         </div>`;
       document.body.appendChild(overlay);
@@ -5282,7 +5282,7 @@
           <p style="margin:0 0 16px; font-size:14px; color:#222; line-height:1.4;">${msg}</p>
           <div style="display:flex; gap:8px; justify-content:flex-end;">
             <button type="button" id="dob-confirm-cancelar" style="padding:8px 14px; border-radius:6px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:13px;">Cancelar</button>
-            <button type="button" id="dob-confirm-ok" style="padding:8px 14px; border-radius:6px; border:none; background:#c0522f; color:#fff; cursor:pointer; font-size:13px; font-weight:600;">Confirmar</button>
+            <button type="button" id="dob-confirm-ok" style="padding:8px 14px; border-radius:6px; border:none; background:#24518f; color:#fff; cursor:pointer; font-size:13px; font-weight:600;">Confirmar</button>
           </div>
         </div>`;
       document.body.appendChild(overlay);
@@ -5300,7 +5300,7 @@
         <div style="background:#fff; border-radius:10px; padding:20px; max-width:320px; width:100%; box-shadow:0 10px 30px rgba(0,0,0,0.3); font-family:inherit;">
           <p style="margin:0 0 16px; font-size:14px; color:#222; line-height:1.4;">${msg}</p>
           <div style="display:flex; justify-content:flex-end;">
-            <button type="button" id="dob-aviso-ok" style="padding:8px 14px; border-radius:6px; border:none; background:#c0522f; color:#fff; cursor:pointer; font-size:13px; font-weight:600;">Entendi</button>
+            <button type="button" id="dob-aviso-ok" style="padding:8px 14px; border-radius:6px; border:none; background:#24518f; color:#fff; cursor:pointer; font-size:13px; font-weight:600;">Entendi</button>
           </div>
         </div>`;
       document.body.appendChild(overlay);
@@ -5319,7 +5319,7 @@
     toast.style.cssText = `position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:99999; background:${erro ? 'var(--brick,#b4472e)' : 'var(--ink,#16233d)'}; color:#fff; padding:10px 10px 10px 16px; border-radius:999px; box-shadow:0 8px 24px rgba(0,0,0,0.3); font-size:13px; display:flex; align-items:center; gap:10px; max-width:92vw;`;
     toast.innerHTML = `
       <span>${erro ? '⚠️' : '✅'} ${msg || 'Salvo'}</span>
-      ${semDrive ? `<button type="button" id="dob-toast-conectar" style="background:var(--clay,#d9662f); color:#fff; border:none; padding:6px 13px; border-radius:999px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;">Conectar Drive</button>` : ''}
+      ${semDrive ? `<button type="button" id="dob-toast-conectar" style="background:var(--clay,#24518f); color:#fff; border:none; padding:6px 13px; border-radius:999px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;">Conectar Drive</button>` : ''}
     `;
     document.body.appendChild(toast);
     if(semDrive){
@@ -5352,8 +5352,8 @@
       const editarDatas = !!(mapaModoEdicao && estado && atual !== '');
       if(editarDatas){
         linhas.push(`<div style="display:flex; gap:8px; margin:8px 0 2px;">
-          <div style="flex:1;"><label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Início</label><input type="date" id="dob-card-dini" class="dob-input" value="${estado.dataInicio || ''}" style="width:100%;" /></div>
-          ${atual === 'verde' ? `<div style="flex:1;"><label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Concluído em</label><input type="date" id="dob-card-dconc" class="dob-input" value="${estado.dataConclusao || ''}" style="width:100%;" /></div>` : ''}
+          <div style="flex:1;"><label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Início</label><input type="date" id="dob-card-dini" class="dob-input" value="${estado.dataInicio || ''}" style="width:100%;" /></div>
+          ${atual === 'verde' ? `<div style="flex:1;"><label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Concluído em</label><input type="date" id="dob-card-dconc" class="dob-input" value="${estado.dataConclusao || ''}" style="width:100%;" /></div>` : ''}
         </div>`);
       } else {
         if(estado?.dataInicio) linhas.push(`<div class="dob-card-bloco-linha"><span>Início</span><b>${fmtDate(estado.dataInicio)}</b></div>`);
@@ -5367,7 +5367,7 @@
       const empresaInicial = estado?.empresa || (empresaPadraoLer()[servico + '|' + obra] || '');
       const empresaHtml = mapaModoEdicao ? `
               <div style="margin-top:10px;">
-                <label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Empresa que executa neste bloco</label>
+                <label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Empresa que executa neste bloco</label>
                 <select id="dob-card-emp" class="dob-select" style="width:100%;">
                   <option value="">— não informada —</option>
                   ${empresasOpc.map(n => `<option value="${n.replace(/"/g,'&quot;')}" ${n === empresaInicial ? 'selected' : ''}>${n}</option>`).join('')}
@@ -5391,17 +5391,17 @@
             ${empresaHtml}
             ${pedirResponsavel ? `
               <div style="margin-top:10px;">
-                <label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Responsável</label>
+                <label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Responsável</label>
                 <select id="dob-card-resp" class="dob-select" style="width:100%;">
                   <option value="">— sem responsável —</option>
                   ${respOptions}
                 </select>
               </div>` : ''}
           </div>
-          <div style="display:flex; gap:8px; padding:12px 18px; background:#f3ede1; border-top:1px solid #e7e3d8;">
+          <div style="display:flex; gap:8px; padding:12px 18px; background:#eef1f6; border-top:1px solid #e3e6eb;">
             <button type="button" id="dob-card-cancelar" style="flex:1; padding:9px; border-radius:8px; border:1px solid #ccc; background:#fff; font-size:13px; cursor:pointer;">${mapaModoEdicao ? 'Cancelar' : 'Fechar'}</button>
-            ${mapaModoEdicao && atual !== '' ? `<button type="button" id="dob-card-so-empresa" style="flex:1; padding:9px; border-radius:8px; border:1px solid #c0522f; background:#fff; color:#c0522f; font-weight:600; font-size:12.5px; cursor:pointer;">Só salvar (datas e empresa)</button>` : ''}
-            ${mapaModoEdicao ? `<button type="button" id="dob-card-confirmar" style="flex:1; padding:9px; border-radius:8px; border:none; background:#c0522f; color:#fff; font-weight:600; font-size:13px; cursor:pointer;">${botaoLabel}</button>` : ''}
+            ${mapaModoEdicao && atual !== '' ? `<button type="button" id="dob-card-so-empresa" style="flex:1; padding:9px; border-radius:8px; border:1px solid #24518f; background:#fff; color:#24518f; font-weight:600; font-size:12.5px; cursor:pointer;">Só salvar (datas e empresa)</button>` : ''}
+            ${mapaModoEdicao ? `<button type="button" id="dob-card-confirmar" style="flex:1; padding:9px; border-radius:8px; border:none; background:#24518f; color:#fff; font-weight:600; font-size:13px; cursor:pointer;">${botaoLabel}</button>` : ''}
           </div>
         </div>`;
       document.body.appendChild(overlay);
@@ -5497,12 +5497,12 @@
             <div style="padding:14px 18px;">
               <div class="dob-card-bloco-linha"><span>Obra</span><b>${obraLabel}</b></div>
               <div style="display:flex; gap:8px; margin:10px 0 2px;">
-                <div style="flex:1;"><label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Início</label><input type="date" id="dob-cb-dini" class="dob-input" value="${draft.dini || ''}" style="width:100%;" /></div>
-                <div style="flex:1;"><label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Concluído em</label><input type="date" id="dob-cb-dconc" class="dob-input" value="${draft.dconc || ''}" style="width:100%;" /></div>
+                <div style="flex:1;"><label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Início</label><input type="date" id="dob-cb-dini" class="dob-input" value="${draft.dini || ''}" style="width:100%;" /></div>
+                <div style="flex:1;"><label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Concluído em</label><input type="date" id="dob-cb-dconc" class="dob-input" value="${draft.dconc || ''}" style="width:100%;" /></div>
               </div>
-              <div style="font-size:11px; color:#8a8272; margin:2px 0 4px;">Ao marcar Concluído sem data de conclusão, vale o dia de hoje (começou e terminou no mesmo dia).</div>
+              <div style="font-size:11px; color:#6b7380; margin:2px 0 4px;">Ao marcar Concluído sem data de conclusão, vale o dia de hoje (começou e terminou no mesmo dia).</div>
               <div style="margin-top:10px;">
-                <label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Empresa que executa neste bloco</label>
+                <label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Empresa que executa neste bloco</label>
                 <select id="dob-cb-emp" class="dob-select" style="width:100%;">
                   <option value="">— não informada —</option>
                   ${empOpts.map(n => `<option value="${esc(n)}" ${n === draft.emp ? 'selected' : ''}>${n}</option>`).join('')}
@@ -5510,7 +5510,7 @@
                 <input id="dob-cb-emp-outra" class="dob-input" placeholder="ou digite outra empresa" value="${esc(draft.outra)}" style="width:100%; margin-top:6px; font-size:12.5px;" />
               </div>
               <div style="margin-top:10px;">
-                <label style="font-size:12px; color:#8a8272; display:block; margin-bottom:4px;">Responsável</label>
+                <label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Responsável</label>
                 <select id="dob-cb-resp" class="dob-select" style="width:100%;">
                   <option value="">— sem responsável —</option>
                   ${respOptions}
@@ -5522,9 +5522,9 @@
                 ${btn('verde', '🟢 Concluído', '#2f7a52')}
               </div>
             </div>
-            <div style="display:flex; gap:8px; padding:12px 18px; background:#f3ede1; border-top:1px solid #e7e3d8;">
-              <button type="button" id="dob-cb-salvar" ${atual === '' ? 'disabled' : ''} style="flex:1; padding:9px; border-radius:8px; border:1px solid #c0522f; background:#fff; color:#c0522f; font-weight:600; font-size:12.5px; cursor:pointer; ${atual === '' ? 'opacity:.4; cursor:not-allowed;' : ''}">Salvar datas e empresa</button>
-              <button type="button" id="dob-cb-fechar" style="flex:1; padding:9px; border-radius:8px; border:none; background:#c0522f; color:#fff; font-weight:600; font-size:13px; cursor:pointer;">Fechar</button>
+            <div style="display:flex; gap:8px; padding:12px 18px; background:#eef1f6; border-top:1px solid #e3e6eb;">
+              <button type="button" id="dob-cb-salvar" ${atual === '' ? 'disabled' : ''} style="flex:1; padding:9px; border-radius:8px; border:1px solid #24518f; background:#fff; color:#24518f; font-weight:600; font-size:12.5px; cursor:pointer; ${atual === '' ? 'opacity:.4; cursor:not-allowed;' : ''}">Salvar datas e empresa</button>
+              <button type="button" id="dob-cb-fechar" style="flex:1; padding:9px; border-radius:8px; border:none; background:#24518f; color:#fff; font-weight:600; font-size:13px; cursor:pointer;">Fechar</button>
             </div>
           </div>`;
         overlay.querySelectorAll('[data-cb-cor]').forEach(b => b.addEventListener('click', () => aplicar(b.dataset.cbCor)));
@@ -5591,7 +5591,7 @@
           <input type="date" id="dob-prompt-data" class="dob-input" value="${valorAtual || todayStr()}" style="width:100%; margin-bottom:16px;" />
           <div style="display:flex; gap:8px; justify-content:flex-end;">
             <button type="button" id="dob-prompt-cancelar" style="padding:8px 14px; border-radius:6px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:13px;">Cancelar</button>
-            <button type="button" id="dob-prompt-ok" style="padding:8px 14px; border-radius:6px; border:none; background:#c0522f; color:#fff; cursor:pointer; font-size:13px; font-weight:600;">Salvar data</button>
+            <button type="button" id="dob-prompt-ok" style="padding:8px 14px; border-radius:6px; border:none; background:#24518f; color:#fff; cursor:pointer; font-size:13px; font-weight:600;">Salvar data</button>
           </div>
         </div>`;
       document.body.appendChild(overlay);
@@ -5956,7 +5956,7 @@
             <span class="dob-dica" style="margin:0 0 0 auto;">arraste a imagem pra navegar quando der zoom</span>
           </div>
           ${barraExtra}
-          <div id="dob-mapa-zoomouter" style="overflow-x:auto; max-width:100%; box-sizing:border-box; padding:6px; border:1px solid var(--line); border-radius:10px; background:var(--paper2,#f3ede1);${mapaZoomAtual === 1 ? ' display:flex; justify-content:center; align-items:center;' : ''}">
+          <div id="dob-mapa-zoomouter" style="overflow-x:auto; max-width:100%; box-sizing:border-box; padding:6px; border:1px solid var(--line); border-radius:10px; background:var(--paper2,#eef1f6);${mapaZoomAtual === 1 ? ' display:flex; justify-content:center; align-items:center;' : ''}">
           <div id="dob-mapa-zoomwrap" style="transform:scale(${mapaZoomAtual}); transform-origin:top left; display:inline-block;">
             <div id="dob-mapa-girowrap" style="position:relative;">
               <div id="dob-mapa-rot-inner">
@@ -6117,7 +6117,7 @@
 
         const dataAlvoLabel = dataForcadaMapa ? fmtDate(dataForcadaMapa) : 'hoje (' + fmtDate(todayStr()) + ')';
 
-        const grp = 'display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:6px 10px; background:var(--paper2, #f3ede1); border-radius:8px; border:1px solid var(--line);';
+        const grp = 'display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:6px 10px; background:var(--paper2, #eef1f6); border-radius:8px; border:1px solid var(--line);';
         const rot = 'font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.03em;';
         const fbtn = (id, ativo, txt, tit) => `<button type="button" class="dob-btn ${ativo ? '' : 'secundario'} pequeno" id="${id}" title="${tit || ''}">${txt}</button>`;
         const empresasBarra = empresasDaObra(obra);
@@ -7202,7 +7202,7 @@
     ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true');
     ov.style.cssText = 'position:fixed;inset:0;background:rgba(22,35,61,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;';
     ov.innerHTML = `<div style="background:var(--card,#fff);color:var(--ink-text,#232a35);max-width:420px;width:100%;border-radius:14px;padding:24px;box-shadow:0 20px 50px -12px rgba(0,0,0,.4);">
-      <h3 style="margin:0 0 8px;font-family:Georgia,serif;font-size:21px;">Conecte ao Google Drive</h3>
+      <h3 style="margin:0 0 8px;font-family:inherit;font-size:21px;">Conecte ao Google Drive</h3>
       <p style="margin:0 0 16px;font-size:14px;line-height:1.5;color:var(--muted,#767e8c);">Para ver e salvar seus apontamentos, fotos e mapas, conecte sua conta do Google. O app só acessa os arquivos que ele mesmo cria no seu Drive.</p>
       <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;">
         <button type="button" class="dob-btn secundario" id="dob-popup-agora-nao">Agora não</button>
@@ -7437,7 +7437,7 @@
     let driveFotos = 0; try{ entries.forEach(e => (e.fotos || []).forEach(f => { const nf = normalizeFoto(f); if(nf && nf.type === 'drive') driveFotos++; })); }catch(e){ /* ignora */ }
     const inp = 'width:100%;box-sizing:border-box;padding:9px;border:1px solid #c8cdd6;border-radius:8px;font:14px inherit;margin:4px 0;';
     ov.innerHTML = `<div style="background:var(--card,#fff);color:var(--ink-text,#232a35);max-width:420px;width:100%;border-radius:14px;padding:22px;box-shadow:0 20px 50px -12px rgba(0,0,0,.4);">
-      <h3 style="margin:0 0 6px;font-family:Georgia,serif;font-size:20px;">Configurações</h3>
+      <h3 style="margin:0 0 6px;font-family:inherit;font-size:20px;">Configurações</h3>
       <p style="margin:0 0 14px;font-size:13px;color:var(--muted,#767e8c);">${quem ? 'Conta: <b>' + quem + '</b> (' + papelTxt + ')' : 'Você não está logado (somente visualização).'}</p>
       ${nuvem.user ? `<div style="margin-bottom:12px;"><label style="font-size:13px;font-weight:600;">Meu nome (saudação)</label>
         <div style="display:flex;gap:6px;"><input id="dob-cfg-nome" value="${escapeHtmlSaud(nuvem.nomeCad || (nuvem.user.displayName || ''))}" style="${inp}flex:1;" /><button type="button" class="dob-btn secundario pequeno" id="dob-cfg-nome-salvar">Salvar</button></div>
@@ -7632,7 +7632,7 @@
 
     const marcacoesNoDia = marcacoesMapaDoDia(draft.date);
     const painelMapaHtml = `
-      <div class="dob-campo" style="margin-bottom:10px; border:1px solid var(--line); border-radius:8px; padding:10px; background:var(--paper2, #f3ede1);" id="dob-f-painel-mapa">
+      <div class="dob-campo" style="margin-bottom:10px; border:1px solid var(--line); border-radius:8px; padding:10px; background:var(--paper2, #eef1f6);" id="dob-f-painel-mapa">
         <label>Mapa de Acompanhamento</label>
         <div id="dob-f-painel-mapa-conteudo">
           ${marcacoesNoDia.length ? `<div style="font-size:13px; margin:4px 0;">${linhasMapaParaHtml(marcacoesNoDia, draft.date)}</div>` : '<div class="dob-dica" style="margin:4px 0;">Nada marcado no mapa pra esse dia ainda.</div>'}
@@ -8593,7 +8593,7 @@
             <div class="dob-escolha-foto" data-i="${i}" style="cursor:pointer; border-radius:8px; overflow:hidden; border:2px solid var(--line); background:#fff; position:relative;">
               <span class="dob-escolha-foto-check" style="position:absolute; top:4px; right:4px; width:20px; height:20px; border-radius:50%; background:#fff; border:2px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; font-weight:700; box-shadow:0 1px 3px rgba(0,0,0,0.25); z-index:1;"></span>
               <img loading="lazy" decoding="async" src="${x.foto.thumb || x.foto.data || FOTO_SEM_THUMB}" onerror="this.onerror=null;this.src='${FOTO_SEM_THUMB}';" style="width:100%; aspect-ratio:1/1; object-fit:cover; display:block; background:#eee;" />
-              <div style="padding:3px 5px; font-size:9.5px; color:#8a8272; text-align:center;">${fmtDate(x.data)}</div>
+              <div style="padding:3px 5px; font-size:9.5px; color:#6b7380; text-align:center;">${fmtDate(x.data)}</div>
             </div>`).join('')}</div>`
         : `<p class="dob-dica" style="margin:0;">Nenhuma foto sem vínculo no momento. Tire fotos no Modo Campo primeiro.</p>`;
       let tamanhoSalvo = null;
@@ -8620,7 +8620,7 @@
             <button type="button" id="dob-escolha-foto-cancelar" style="padding:9px 14px; border-radius:6px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:13px;">Fechar</button>
             ${lista.length ? `<button type="button" id="dob-escolha-foto-confirmar" disabled style="padding:9px 14px; border-radius:6px; border:none; background:var(--ink,#16233d); color:#fff; cursor:pointer; font-size:13px; opacity:.4;">Vincular</button>` : ''}
           </div>
-          <div id="dob-escolha-foto-handle" title="Arraste pra redimensionar" style="position:absolute; right:-6px; bottom:-6px; width:44px; height:44px; cursor:nwse-resize; touch-action:none; display:flex; align-items:flex-end; justify-content:flex-end; padding:6px 8px; color:#8a8272; font-size:18px; line-height:1; user-select:none; -webkit-user-select:none;">⌟</div>
+          <div id="dob-escolha-foto-handle" title="Arraste pra redimensionar" style="position:absolute; right:-6px; bottom:-6px; width:44px; height:44px; cursor:nwse-resize; touch-action:none; display:flex; align-items:flex-end; justify-content:flex-end; padding:6px 8px; color:#6b7380; font-size:18px; line-height:1; user-select:none; -webkit-user-select:none;">⌟</div>
         </div>`;
       document.body.appendChild(overlay);
       const caixa = overlay.querySelector('#dob-escolha-foto-box');
@@ -8753,7 +8753,7 @@
             <div style="position:relative; border-radius:8px; overflow:hidden; border:1px solid var(--line); background:#fff;">
               <button type="button" data-ger-desvincular="${x.entryId}|||${x.idx}" title="Desvincular esta foto" style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:rgba(0,0,0,0.55); color:#fff; border:none; font-size:13px; line-height:1; cursor:pointer; z-index:1;">✕</button>
               <img loading="lazy" decoding="async" src="${x.foto.thumb || x.foto.data || FOTO_SEM_THUMB}" onerror="this.onerror=null;this.src='${FOTO_SEM_THUMB}';" data-ger-abrir="${i}" style="width:100%; aspect-ratio:1/1; object-fit:cover; display:block; background:#eee; cursor:pointer;" />
-              <div style="padding:3px 5px; font-size:9.5px; color:#8a8272; text-align:center;">${fmtDate(x.data)}</div>
+              <div style="padding:3px 5px; font-size:9.5px; color:#6b7380; text-align:center;">${fmtDate(x.data)}</div>
             </div>`).join('')}</div>`
         : `<p class="dob-dica" style="margin:0;">Nenhuma foto vinculada a "${servico}" ainda.</p>`;
       corpo.querySelectorAll('[data-ger-desvincular]').forEach(el => {
@@ -8897,7 +8897,7 @@
                 </div>
               </div>
             </div>`;
-        }).join('') : `<div style="font-size:11px; color:#8a8272; padding:6px 2px;">Nada aqui.</div>`;
+        }).join('') : `<div style="font-size:11px; color:#6b7380; padding:6px 2px;">Nada aqui.</div>`;
         return `
           <div class="dob-kanban-col">
             <div style="font-size:11px; font-weight:700; letter-spacing:.03em; color:${info.cor}; background:${info.bg}; display:inline-block; padding:3px 11px; border-radius:999px; margin-bottom:6px;"><span class="dob-pt" style="background:${info.cor};"></span>${info.label}</div>
@@ -9191,7 +9191,7 @@
     container.innerHTML = `
       <div class="dob-card" style="padding:16px 18px; margin-top:14px;">
         <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px;">
-          <h3 style="margin:0; font-family:Georgia,serif; font-size:20px; flex:1; min-width:160px;">Fotos da obra <span style="font-size:13px; color:#8a8272; font-family:inherit;">(${lista.length})</span></h3>
+          <h3 style="margin:0; font-family:inherit; font-size:20px; flex:1; min-width:160px;">Fotos da obra <span style="font-size:13px; color:#6b7380; font-family:inherit;">(${lista.length})</span></h3>
           <select class="dob-select" id="dob-fotos-filtro-obra">
             <option value="">Todas as obras</option>
             <option value="Pequis"${fotosObraFiltro === 'Pequis' ? ' selected' : ''}>Solar dos Pequis</option>
@@ -9302,27 +9302,27 @@
       <style>
         .rg-card{ max-width:560px; margin:14px auto 0; padding:18px; }
         .rg-topo{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; }
-        .rg-topo h3{ margin:0; font-family:Georgia,serif; font-size:22px; }
-        .rg-sub{ font-size:13px; color:#8a8272; text-transform:capitalize; }
+        .rg-topo h3{ margin:0; font-family:inherit; font-size:22px; }
+        .rg-sub{ font-size:13px; color:#6b7380; text-transform:capitalize; }
         .rg-semana{ display:flex; gap:6px; margin:14px 0 4px; }
-        .rg-semana span{ flex:1; text-align:center; font-size:11px; color:#8a8272; }
-        .rg-semana i{ display:block; height:10px; border-radius:5px; background:#e6e1d4; margin-top:4px; }
+        .rg-semana span{ flex:1; text-align:center; font-size:11px; color:#6b7380; }
+        .rg-semana i{ display:block; height:10px; border-radius:5px; background:#e3e6eb; margin-top:4px; }
         .rg-semana i.p{ background:#c9b98a; } .rg-semana i.f{ background:#2f5d3a; }
         .rg-semana .hj{ font-weight:700; color:#222; }
         .rg-seq{ font-size:13px; color:#555; margin-bottom:16px; }
         .rg-passo{ border:1px solid var(--line); border-radius:12px; padding:18px; background:#fff; }
-        .rg-bloco{ font-size:13px; color:#8a8272; }
+        .rg-bloco{ font-size:13px; color:#6b7380; }
         .rg-hora{ display:inline-block; margin-left:8px; font-weight:700; color:#2f5d3a; }
-        .rg-texto{ font-family:Georgia,serif; font-size:21px; line-height:1.3; margin:8px 0 18px; }
+        .rg-texto{ font-family:inherit; font-size:21px; line-height:1.3; margin:8px 0 18px; }
         .rg-acoes{ display:flex; gap:10px; flex-wrap:wrap; }
         .rg-acoes .dob-btn{ min-height:48px; }
         .rg-ok{ flex:1; min-width:180px; background:#2f5d3a; color:#fff; border-color:#2f5d3a; font-size:16px; }
-        .rg-prog{ height:6px; border-radius:3px; background:#e6e1d4; margin:14px 0 6px; overflow:hidden; }
+        .rg-prog{ height:6px; border-radius:3px; background:#e3e6eb; margin:14px 0 6px; overflow:hidden; }
         .rg-prog i{ display:block; height:100%; background:#2f5d3a; transition:width .25s; }
         .rg-fim{ text-align:center; padding:10px 0 4px; }
         .rg-fim .rg-texto{ margin-bottom:8px; }
         .rg-rodape{ display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
-        .rg-prox{ margin-top:14px; font-size:13px; color:#8a8272; }
+        .rg-prox{ margin-top:14px; font-size:13px; color:#6b7380; }
         .rg-prox div{ padding:3px 0; }
       </style>
       <div class="dob-card rg-card">
@@ -9399,20 +9399,20 @@
       <style>
         .rot-card{ max-width:760px; margin:14px auto 0; }
         .rot-topo{ display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; justify-content:space-between; margin-bottom:10px; }
-        .rot-topo h3{ margin:0; font-family:Georgia,serif; font-size:22px; }
-        .rot-data{ font-size:13px; color:#8a8272; text-transform:capitalize; }
+        .rot-topo h3{ margin:0; font-family:inherit; font-size:22px; }
+        .rot-data{ font-size:13px; color:#6b7380; text-transform:capitalize; }
         .rot-modos{ display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
         .rot-modos button{ border:0; background:transparent; padding:8px 12px; font:inherit; font-size:13px; cursor:pointer; min-height:40px; }
         .rot-modos button[aria-pressed="true"]{ background:#2f5d3a; color:#fff; }
-        .rot-prog{ height:6px; border-radius:3px; background:#e6e1d4; margin:6px 0 14px; overflow:hidden; }
+        .rot-prog{ height:6px; border-radius:3px; background:#e3e6eb; margin:6px 0 14px; overflow:hidden; }
         .rot-prog i{ display:block; height:100%; background:#2f5d3a; transition:width .25s; }
         .rot-bloco{ margin-top:16px; }
         .rot-bloco h4{ margin:0 0 6px; font-size:15px; }
-        .rot-bloco h4 span{ font-weight:400; font-size:12px; color:#8a8272; margin-left:6px; }
+        .rot-bloco h4 span{ font-weight:400; font-size:12px; color:#6b7380; margin-left:6px; }
         .rot-item{ display:flex; gap:8px; align-items:center; padding:2px 0; border-bottom:1px solid var(--line); }
         .rot-item label{ flex:1; display:flex; gap:10px; align-items:flex-start; padding:10px 2px; cursor:pointer; line-height:1.35; }
         .rot-item input[type=checkbox]{ width:22px; height:22px; flex:none; margin-top:1px; accent-color:#2f5d3a; }
-        .rot-item.ok label span{ text-decoration:line-through; color:#8a8272; }
+        .rot-item.ok label span{ text-decoration:line-through; color:#6b7380; }
         .rot-item.fora{ opacity:.6; }
         .rot-txt{ flex:1; min-width:0; }
         .rot-novo{ display:flex; gap:8px; margin-top:8px; }
@@ -9534,14 +9534,14 @@
             <p style="margin:0; font-size:16px; font-weight:700; color:var(--ink,#16233d);">Vincular foto a qual atividade?</p>
             <button type="button" id="dob-escolha-x" aria-label="Fechar" style="border:none; background:#f1ece1; width:32px; height:32px; border-radius:50%; font-size:16px; cursor:pointer;">✕</button>
           </div>
-          <div id="dob-escolha-sel" style="margin:0 18px 8px; padding:8px 10px; border-radius:8px; background:var(--paper2,#f3ede1); font-size:12.5px; display:flex; align-items:center; justify-content:space-between; gap:8px;"></div>
+          <div id="dob-escolha-sel" style="margin:0 18px 8px; padding:8px 10px; border-radius:8px; background:var(--paper2,#eef1f6); font-size:12.5px; display:flex; align-items:center; justify-content:space-between; gap:8px;"></div>
           <div id="dob-escolha-lista" style="padding:0 18px; overflow-y:auto; flex:1; -webkit-overflow-scrolling:touch;">${opcoesHtml}
             <input type="text" id="dob-escolha-outra" class="dob-input" placeholder="Ou digite outra atividade..." style="width:100%; margin:2px 0 10px; font-size:16px;" value="${outraJaEhCustom ? esc(valorAtual) : ''}" />
           </div>
           <div style="padding:12px 18px calc(14px + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--line); display:flex; gap:8px;">
-            <button type="button" id="dob-escolha-remover" style="padding:11px 12px; border-radius:8px; border:1px solid var(--line); background:#fff; color:#8a8272; cursor:pointer; font-size:13px;">Remover vínculo</button>
+            <button type="button" id="dob-escolha-remover" style="padding:11px 12px; border-radius:8px; border:1px solid var(--line); background:#fff; color:#6b7380; cursor:pointer; font-size:13px;">Remover vínculo</button>
             <button type="button" id="dob-escolha-cancelar" style="margin-left:auto; padding:11px 14px; border-radius:8px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:13px;">Cancelar</button>
-            <button type="button" id="dob-escolha-ok" style="padding:11px 18px; border-radius:8px; border:none; background:#c0522f; color:#fff; cursor:pointer; font-size:14px; font-weight:700;">Salvar</button>
+            <button type="button" id="dob-escolha-ok" style="padding:11px 18px; border-radius:8px; border:none; background:#24518f; color:#fff; cursor:pointer; font-size:14px; font-weight:700;">Salvar</button>
           </div>
         </div>`;
       document.body.appendChild(overlay);
@@ -9552,14 +9552,14 @@
         overlay.querySelectorAll('.dob-escolha-item').forEach(b => {
           const on = b.dataset.valor === escolhida;
           b.setAttribute('aria-pressed', on ? 'true' : 'false');
-          b.style.background = on ? '#fbf3e6' : '#fff';
-          b.style.borderColor = on ? '#c0522f' : 'var(--line)';
+          b.style.background = on ? '#eef3fb' : '#fff';
+          b.style.borderColor = on ? '#24518f' : 'var(--line)';
           const c = b.querySelector('.dob-esc-check');
-          c.style.background = on ? '#c0522f' : 'transparent'; c.style.borderColor = on ? '#c0522f' : '#c9c2b2'; c.textContent = on ? '✓' : '';
+          c.style.background = on ? '#24518f' : 'transparent'; c.style.borderColor = on ? '#24518f' : '#c9c2b2'; c.textContent = on ? '✓' : '';
         });
         const atual = (inp.value.trim()) || escolhida;
         selBox.innerHTML = atual
-          ? `<span style="min-width:0;">Selecionada: <b>${esc(bonito(partes(atual).local))}</b>${partes(atual).serv ? ' · ' + esc(tituloServico(partes(atual).serv)) : ''}</span><button type="button" id="dob-escolha-limpar" style="border:none; background:none; color:#c0522f; font-weight:700; font-size:12.5px; cursor:pointer; flex:0 0 auto;">Desmarcar</button>`
+          ? `<span style="min-width:0;">Selecionada: <b>${esc(bonito(partes(atual).local))}</b>${partes(atual).serv ? ' · ' + esc(tituloServico(partes(atual).serv)) : ''}</span><button type="button" id="dob-escolha-limpar" style="border:none; background:none; color:#24518f; font-weight:700; font-size:12.5px; cursor:pointer; flex:0 0 auto;">Desmarcar</button>`
           : `<span style="color:#6f6858;">Nenhuma selecionada — toque numa atividade</span>`;
         const l = selBox.querySelector('#dob-escolha-limpar');
         if(l) l.addEventListener('click', () => { escolhida = null; inp.value = ''; pintar(); });
@@ -9593,7 +9593,7 @@
       <div class="dob-campo-thumb" data-idx="${i}" style="position:relative; cursor:pointer; border-radius:8px; overflow:hidden; border:1px solid var(--line); background:#fff;">
         <button type="button" class="dob-mapa-foto-desvincular dob-campo-foto-excluir" data-idx="${i}" title="Excluir esta foto">✕</button>
         <img loading="lazy" decoding="async" src="${src}" style="width:100%; height:90px; object-fit:cover; display:block; background:#eee;" />
-        <div style="padding:4px 6px; font-size:10px; line-height:1.3; ${legenda ? 'color:var(--clay-dark,#c2551f); font-weight:600;' : 'color:#8a8272;'} white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${legenda ? '🔗 ' + legenda : 'Toque pra vincular'}</div>
+        <div style="padding:4px 6px; font-size:10px; line-height:1.3; ${legenda ? 'color:var(--clay-dark,#1b3f71); font-weight:600;' : 'color:#6b7380;'} white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${legenda ? '🔗 ' + legenda : 'Toque pra vincular'}</div>
       </div>`;
   }
 
@@ -9642,7 +9642,7 @@
         <label id="dob-campo-tirar-foto" class="dob-btn" ${enviando ? '' : 'for="dob-campo-file-input"'} style="display:block; text-align:center; width:100%; padding:18px; font-size:17px; font-weight:700; margin-bottom:10px; box-sizing:border-box; ${enviando ? 'opacity:0.5; cursor:not-allowed;' : 'cursor:pointer;'}">📸 Tirar Foto</label>
         <label id="dob-campo-enviar-foto" class="dob-btn secundario" ${enviando ? '' : 'for="dob-campo-file-input-upload"'} style="display:block; text-align:center; width:100%; padding:14px; font-size:14.5px; font-weight:700; margin-bottom:16px; box-sizing:border-box; ${enviando ? 'opacity:0.5; cursor:not-allowed;' : 'cursor:pointer;'}">🖼️ Enviar fotos da galeria</label>
         ${progressoHtml}
-        <div style="font-size:13px; font-weight:700; color:var(--clay-dark,#c2551f); margin-bottom:10px;">${fotos.length} foto${fotos.length === 1 ? '' : 's'} hoje</div>
+        <div style="font-size:13px; font-weight:700; color:var(--clay-dark,#1b3f71); margin-bottom:10px;">${fotos.length} foto${fotos.length === 1 ? '' : 's'} hoje</div>
         ${fotos.length === 0 ? '<p class="dob-dica">Nenhuma foto ainda hoje.</p>' : `<div id="dob-campo-galeria" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px;">${fotos.map((f, i) => fotoCampoThumbHtml(f, i)).join('')}</div>`}
       </div>
     `;
