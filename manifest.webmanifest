@@ -1,6 +1,6 @@
 {
-  "name": "Prumo — Gestão de Obras",
-  "short_name": "Prumo",
+  "name": "Gestão de Obra",
+  "short_name": "Gestão de Obra",
   "description": "Acompanhamento e gestão de obras",
   "start_url": ".",
   "display": "standalone",
