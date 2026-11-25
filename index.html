@@ -992,6 +992,16 @@
   .pn-dia-b.nao{ background:#f2f4f8; color:#9aa3b2; font-weight:600; }
   .pn-hero .pn-dias{ margin-top:10px; } .pn-hero .pn-dia-b{ height:16px; max-width:16px; border-radius:50%; }
   @media (max-width:640px){ .pn-det{ padding-left:14px; } .pn-dia-d{ font-size:9px; } .pn-dia-d b{ font-size:10px; } .pn-dias{ gap:2px; } }
+  .pn-lc{ margin-top:8px; } .pn-lc-rot{ margin:0 17px; }
+  .pn-lc-labs{ position:relative; height:15px; }
+  .pn-lc-lab{ position:absolute; top:0; transform:translateX(-50%); font-size:10px; color:#6b7380; white-space:nowrap; line-height:1; } .pn-lc-lab b{ color:#16233d; font-size:11px; }
+  .pn-lc-lab.sel b{ color:#0f6fb5; text-decoration:underline; }
+  .pn-lc-plot{ position:relative; margin-top:4px; }
+  .pn-lc-plot svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .pn-lc-dot{ position:absolute; width:16px; height:16px; margin:-8px 0 0 -8px; padding:0; border-radius:50%; background:#fff; border:2.5px solid #16233d; cursor:pointer; box-shadow:0 0 0 2px #fff; }
+  .pn-lc-dot.tem{ background:#1f9d57; border-color:#12783f; } .pn-lc-dot:hover{ transform:scale(1.25); box-shadow:0 0 0 4px #d6e9f7; }
+  .pn-lc-dot.sel{ box-shadow:0 0 0 2px #fff, 0 0 0 5px #0f6fb5; }
+  @media (max-width:640px){ .pn-lc-lab{ font-size:8.5px; } .pn-lc-lab b{ font-size:9px; } .pn-lc-dot{ width:14px; height:14px; margin:-7px 0 0 -7px; } .pn-lc-rot{ margin:0 12px; } }
   .pn-spark{ display:block; width:100%; height:46px; margin-top:6px; }
   .pn-row{ display:flex; align-items:center; gap:12px; padding:11px 16px; position:relative; }
   .pn-row + .pn-row{ border-top:1px solid #eef0f3; }
@@ -1379,7 +1389,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.123';
+  const APP_VERSION = 'v2026.11.25.124';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9428,6 +9438,16 @@
       return `<div class="pn-dia${it.iso === atual ? ' sel' : ''}"><span class="pn-dia-d"><b>${dd}</b>/${mm}</span><button type="button" class="pn-dia-b ${it.classe || ''}" data-ir-dia="${it.iso}" title="${it.titulo || ''}">${it.rotulo}</button></div>`;
     }).join('')}</div>`;
   }
+  // gráfico de linha com uma bolinha clicável em cada dia (data em texto em cima)
+  function pnLinhaDias(serie, atual, diaISO){
+    const n = serie.length, mx = Math.max(1, ...serie), mn = Math.min(...serie), rg = Math.max(1, mx - mn);
+    const H = 64, top = 8, bot = 8, util = H - top - bot;
+    const yPx = v => top + (1 - (v - mn) / rg) * util;
+    const xs = serie.map((_, i) => i / (n - 1) * 100);
+    const pts = serie.map((v, i) => `${(xs[i] * 3).toFixed(1)},${yPx(v).toFixed(1)}`);
+    const linha = 'M' + pts.join(' L');
+    return `<div class="pn-lc"><div class="pn-lc-rot"><div class="pn-lc-labs">${serie.map((_, i) => `<span class="pn-lc-lab${diaISO(n - 1 - i) === atual ? ' sel' : ''}" style="left:${xs[i].toFixed(2)}%"><b>${diaISO(n - 1 - i).slice(8,10)}</b>/${diaISO(n - 1 - i).slice(5,7)}</span>`).join('')}</div><div class="pn-lc-plot" style="height:${H}px"><svg viewBox="0 0 300 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${linha} L300,${H} L0,${H} Z" fill="rgba(22,35,61,.07)"/><path d="${linha}" fill="none" stroke="#16233d" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>${serie.map((v, i) => { const iso = diaISO(n - 1 - i); const tem = entries.some(e => e.date === iso); return `<button type="button" class="pn-lc-dot${tem ? ' tem' : ''}${iso === atual ? ' sel' : ''}" style="left:${xs[i].toFixed(2)}%; top:${yPx(v).toFixed(1)}px" data-ir-dia="${iso}" title="${iso.slice(8,10)}/${iso.slice(5,7)} · ${v} frente(s) em execução${tem ? ' · com apontamento' : ' · sem apontamento'} — clique pra abrir o dia"></button>`; }).join('')}</div></div></div>`;
+  }
   function renderPanorama(){
     const el = document.getElementById('dob-panorama');
     if(!el) return;
@@ -9492,8 +9512,7 @@
           <div>
             <div class="pn-lbl"><span>Frentes em execução${ehHoje ? '' : ' em ' + dataBonita}</span><span>14 dias</span></div>
             <div class="pn-big">${emExec.length}${delta ? `<small class="${delta > 0 ? 'up' : 'down'}">${delta > 0 ? '▲ +' : '▼ '}${delta} em 7 dias</small>` : '<small>igual a 7 dias atrás</small>'}</div>
-            ${spark}
-            ${pnGradeDias(serFrentes.map((n, k) => ({ iso: diaISO(13 - k), rotulo: '', classe: (entries.some(e => e.date === diaISO(13 - k)) ? 'tem' : 'nao'), titulo: n + ' frente(s) em execução' + (entries.some(e => e.date === diaISO(13 - k)) ? ' · com apontamento' : ' · sem apontamento') + ' — clique pra abrir o dia' })), data)}
+            ${pnLinhaDias(serFrentes, data, diaISO)}
           </div>
           <div class="pn-kpi"><div class="pn-lbl">Pessoas no dia</div><div class="pn-mid">${pessoas || '—'}</div><div class="pn-sub">${empresas.length ? 'em ' + empresas.length + (empresas.length === 1 ? ' empresa' : ' empresas') : 'sem equipe lançada'} · ${deltaTxt(pessoas, serPessoas[12], 'ontem')}</div>${miniLinha(serPessoas)}</div>
           <div class="pn-kpi"><div class="pn-lbl">Equipamentos</div><div class="pn-mid ${equipTot ? (equipOk === equipTot ? 'ok' : 'alerta') : ''}">${equipTot ? equipOk + '/' + equipTot : '—'}</div><div class="pn-sub">${equipTot ? (equipOk === equipTot ? '✓ todos operando' : '⚠ ' + (equipTot - equipOk) + (equipTot - equipOk === 1 ? ' parado' : ' parados')) : 'nenhum lançado'}</div><div class="pn-pts">${eqPontos}</div></div>
