@@ -1146,7 +1146,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.84';
+  const APP_VERSION = 'v2026.11.25.85';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -7449,6 +7449,8 @@
         ${nuvem.dono ? '<button type="button" class="dob-btn secundario" id="dob-cfg-visibilidade">Quem vê cada seção</button>' : ''}
         ${nuvem.dono ? '<button type="button" class="dob-btn secundario" id="dob-cfg-historico">Histórico de atividades</button>' : ''}
         ${(nuvem.editor && driveFotos && accessToken) ? '<button type="button" class="dob-btn secundario" id="dob-cfg-migrar">☁️ Mover ' + driveFotos + ' foto(s) do Drive para o banco</button>' : ''}
+        <button type="button" class="dob-btn secundario" id="dob-cfg-atualizar">🔄 Procurar atualização do app</button>
+        <div id="dob-cfg-atualizar-msg" style="min-height:16px;font-size:12px;color:var(--muted,#767e8c);">Versão instalada: ${APP_VERSION}</div>
         <button type="button" class="dob-btn secundario" id="dob-cfg-fechar">Fechar</button>
       </div></div>`;
     document.body.appendChild(ov);
@@ -7456,6 +7458,28 @@
     const $ = (id) => ov.querySelector('#' + id);
     const msg = (t, ok) => { const m = $('dob-cfg-msg'); if(m){ m.style.color = ok ? '#1b6e3c' : '#b3261e'; m.textContent = t; } };
     $('dob-cfg-fechar').addEventListener('click', fechar);
+    const bat = $('dob-cfg-atualizar');
+    if(bat) bat.addEventListener('click', async () => {
+      const m = $('dob-cfg-atualizar-msg');
+      const say = (t, cor) => { if(m){ m.style.color = cor || 'var(--muted,#767e8c)'; m.textContent = t; } };
+      bat.disabled = true; say('Procurando...');
+      try{
+        try{ const reg = await navigator.serviceWorker.getRegistration(); if(reg) await reg.update(); }catch(e){ /* sem SW: segue */ }
+        const r = await fetch(location.pathname + '?v=' + Date.now(), { cache: 'no-store' });
+        const html = await r.text();
+        const mm = html.match(/const APP_VERSION = '([^']+)'/);
+        const nova = mm ? mm[1] : '';
+        if(nova && nova !== APP_VERSION){
+          say('Versão nova encontrada (' + nova + '). Atualizando...', '#1b6e3c');
+          try{ const regs = await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(x => x.unregister())); }catch(e){ /* ignora */ }
+          try{ const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }catch(e){ /* ignora */ }
+          setTimeout(() => location.reload(), 600);
+        } else {
+          say('Você já está na versão mais recente (' + APP_VERSION + ').', '#1b6e3c');
+          bat.disabled = false;
+        }
+      }catch(e){ say('Não consegui verificar agora. Confira a internet e tente de novo.', '#b3261e'); bat.disabled = false; }
+    });
     $('dob-cfg-trocar').addEventListener('click', () => { fechar(); trocarConta(); });
     const sr = $('dob-cfg-sair'); if(sr) sr.addEventListener('click', () => { fechar(); nuvemSair(); });
     const vi = $('dob-cfg-visibilidade'); if(vi) vi.addEventListener('click', () => { fechar(); visibilidadeAbrir(); });
