@@ -45,6 +45,8 @@
   .dob-side-item[data-nivel="editores"]::after{ content:"✎"; margin-left:auto; font-size:12px; opacity:.85; }
   /* sem barra de rolagem feia na lateral: a página continua rolando normalmente */
   html, body{ scrollbar-width:none; -ms-overflow-style:none; } html::-webkit-scrollbar, body::-webkit-scrollbar{ width:0; height:0; display:none; }
+  /* 'Modo simples' e 'Mais opções' saíram da tela: agora ficam em Configurações */
+  #dob-modo-compacto-toggle, #dob-status-mais{ display:none !important; }
   #dob-gate{ position:fixed; inset:0; z-index:10000; overflow:auto; display:flex; align-items:center; justify-content:center; padding:20px;
     background: radial-gradient(900px 500px at 85% 10%, rgba(36,81,143,.35), transparent 60%), linear-gradient(155deg, #16233d 0%, #1e3050 60%, #24395c 100%); font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
   #dob-gate .lg-carregando{ color:#fff; text-align:center; font-family:inherit; }
@@ -1352,7 +1354,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.116';
+  const APP_VERSION = 'v2026.11.25.117';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -7740,6 +7742,8 @@
         ${nuvem.dono ? '<button type="button" class="dob-btn secundario" id="dob-cfg-visibilidade">Quem vê cada seção</button>' : ''}
         ${nuvem.dono ? '<button type="button" class="dob-btn secundario" id="dob-cfg-historico">Histórico de atividades</button>' : ''}
         ${(nuvem.editor && driveFotos && accessToken) ? '<button type="button" class="dob-btn secundario" id="dob-cfg-migrar">☁️ Mover ' + driveFotos + ' foto(s) do Drive para o banco</button>' : ''}
+        <button type="button" class="dob-btn secundario" id="dob-cfg-modo">${document.body.classList.contains('dob-compacto') ? 'Modo simples: ligado (desligar)' : 'Modo simples: desligado (ligar)'}</button>
+        ${[['dob-btn-sync-fotos','📤 Sincronizar fotos locais'],['dob-btn-reparar-thumbs','🔧 Reparar miniaturas'],['dob-btn-recuperar-fotos','🔄 Recuperar fotos do Drive']].filter(([id]) => { const el = document.getElementById(id); return el && el.style.display !== 'none'; }).map(([id, t]) => `<button type="button" class="dob-btn secundario" data-cfg-proxy="${id}">${t}</button>`).join('')}
         <button type="button" class="dob-btn secundario" id="dob-cfg-atualizar">🔄 Procurar atualização do app</button>
         <div id="dob-cfg-atualizar-msg" style="min-height:16px;font-size:12px;color:var(--muted,#767e8c);">Versão instalada: ${APP_VERSION}</div>
         <button type="button" class="dob-btn secundario" id="dob-cfg-fechar">Fechar</button>
@@ -7749,6 +7753,9 @@
     const $ = (id) => ov.querySelector('#' + id);
     const msg = (t, ok) => { const m = $('dob-cfg-msg'); if(m){ m.style.color = ok ? '#1b6e3c' : '#b3261e'; m.textContent = t; } };
     $('dob-cfg-fechar').addEventListener('click', fechar);
+    const bmodo = $('dob-cfg-modo');
+    if(bmodo) bmodo.addEventListener('click', () => { const t = document.getElementById('dob-modo-compacto-toggle'); if(t) t.click(); fechar(); });
+    ov.querySelectorAll('[data-cfg-proxy]').forEach(bt => bt.addEventListener('click', () => { const t = document.getElementById(bt.dataset.cfgProxy); fechar(); if(t) t.click(); }));
     const bat = $('dob-cfg-atualizar');
     if(bat) bat.addEventListener('click', async () => {
       const m = $('dob-cfg-atualizar-msg');
