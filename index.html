@@ -1350,7 +1350,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.113';
+  const APP_VERSION = 'v2026.11.25.114';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -6191,6 +6191,7 @@
     function corClasse(cor){ return cor === 'amarelo' ? 'rgba(240,163,10,0.75)' : cor === 'verde' ? 'rgba(31,157,87,0.75)' : 'transparent'; }
 
     let mapaZoomAtual = 1;
+    let mapaAreaInteira = false; try{ mapaAreaInteira = !!localStorage.getItem('dob:mapa_area_inteira'); }catch(e){}
     let modoDesenho = false;
     let desenhoCorAtual = 'amarelo';
     let desenhoFerramenta = 'lapis';
@@ -6627,8 +6628,12 @@
       if(tipoMapa === 'area_comum'){
         const plantasDaObra = Object.entries(AREA_COMUM_PLANTAS).filter(([k, p]) => p.obra === obra);
         if(plantasDaObra.length === 0){ gridEl.innerHTML = '<p class="dob-dica">Nenhuma planta de área comum cadastrada para essa obra ainda.</p>'; return; }
+        // Tamanho natural (px) de cada imagem, pra enquadrar só a região que tem blocos (sem o branco em volta)
+        const AC_IMG = { pequis_completo:[1100,777], buritis:[1000,772], lazer_pequis:[1400,989], lazer_buritis:[1400,989] };
+        const inteira = !!mapaAreaInteira;
 
         const conteudo = plantasDaObra.map(([chave, planta]) => {
+          const rotuloCss = cor => `font-size:clamp(11px, 2.6cqw, 22px); font-weight:700; color:${cor==='transparent' ? '#12315a' : '#fff'}; text-shadow:${cor==='transparent' ? '0 0 3px #fff,0 0 3px #fff,0 0 5px #fff' : '0 1px 3px rgba(0,0,0,0.65)'}; pointer-events:none; text-align:center; line-height:1.1; padding:0 2px;`;
           const overlaysArea = planta.itens.map(it => {
             const cor = corClasse(corDoBloco(servico, obra, it.id));
             const bloqueios = bloqueiosDoBloco(servico, obra, it.id);
@@ -6636,25 +6641,47 @@
             if(it.forma === 'circle'){
               const diam = it.r * 2;
               return `<div class="dob-mapa-svg-bloco" data-bloco="${it.id}"
-                style="position:absolute; left:${it.cx - it.r}%; top:${it.cy - it.r}%; width:${diam}%; height:${diam}%; border-radius:50%; background:${cor}; border:1.5px solid rgba(39,75,116,0.8); cursor:pointer; display:flex; align-items:center; justify-content:center;">
-                <span style="font-size:9px; font-weight:700; color:${cor==='transparent' ? '#274b74' : '#fff'}; text-shadow:0 1px 2px rgba(0,0,0,0.3); pointer-events:none; text-align:center; line-height:1.1;">${rotulo}</span>
+                style="position:absolute; left:${it.cx - it.r}%; top:${it.cy - it.r}%; width:${diam}%; height:${diam}%; border-radius:50%; background:${cor}; border:2px solid rgba(39,75,116,0.9); cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                <span style="${rotuloCss(cor)}">${rotulo}</span>
               </div>`;
             }
             return `<div class="dob-mapa-svg-bloco" data-bloco="${it.id}"
-              style="position:absolute; left:${it.x}%; top:${it.y}%; width:${it.w}%; height:${it.h}%; background:${cor}; border:1.5px solid rgba(39,75,116,0.8); cursor:pointer; display:flex; align-items:center; justify-content:center;">
-              <span style="font-size:9px; font-weight:700; color:${cor==='transparent' ? '#274b74' : '#fff'}; text-shadow:0 1px 2px rgba(0,0,0,0.3); pointer-events:none; text-align:center; line-height:1.1;">${rotulo}</span>
+              style="position:absolute; left:${it.x}%; top:${it.y}%; width:${it.w}%; height:${it.h}%; background:${cor}; border:2px solid rgba(39,75,116,0.9); cursor:pointer; display:flex; align-items:center; justify-content:center;">
+              <span style="${rotuloCss(cor)}">${rotulo}</span>
             </div>`;
           }).join('');
+          const imgHtml = `<img loading="lazy" decoding="async" src="mapa-imgs/area-comum/${chave}.jpg" style="width:100%; display:block;" />`;
+          // caixa que envolve todos os blocos + folga
+          let x0 = 100, x1 = 0, y0 = 100, y1 = 0;
+          planta.itens.forEach(it => {
+            const a = it.forma === 'circle' ? [it.cx - it.r, it.cx + it.r, it.cy - it.r, it.cy + it.r] : [it.x, it.x + it.w, it.y, it.y + it.h];
+            x0 = Math.min(x0, a[0]); x1 = Math.max(x1, a[1]); y0 = Math.min(y0, a[2]); y1 = Math.max(y1, a[3]);
+          });
+          const dim = AC_IMG[chave];
+          let corpo;
+          if(inteira || !dim || x1 <= x0 || y1 <= y0){
+            corpo = `<div style="position:relative; width:100%; container-type:inline-size; border-radius:8px; border:1px solid var(--line); overflow:hidden;">${imgHtml}${overlaysArea}</div>`;
+          } else {
+            const mx = 5, my = 8; // folga em volta (em % da planta)
+            x0 = Math.max(0, x0 - mx); x1 = Math.min(100, x1 + mx); y0 = Math.max(0, y0 - my); y1 = Math.min(100, y1 + my);
+            const bw = x1 - x0, bh = y1 - y0;
+            const ar = (bw * dim[0]) / (bh * dim[1]);
+            corpo = `<div style="position:relative; width:100%; aspect-ratio:${ar.toFixed(4)}; container-type:inline-size; overflow:hidden; border-radius:8px; border:1px solid var(--line);">
+              <div style="position:absolute; width:${(10000 / bw).toFixed(3)}%; left:${(-x0 / bw * 100).toFixed(3)}%; top:${(-y0 / bh * 100).toFixed(3)}%;">
+                ${imgHtml}${overlaysArea}
+              </div>
+            </div>`;
+          }
           return `<div style="margin-bottom:20px;">
-            <div style="font-size:12px; font-weight:600; color:var(--muted); margin-bottom:8px;">${planta.label}</div>
-            <div style="position:relative; width:100%;">
-              <img loading="lazy" decoding="async" src="mapa-imgs/area-comum/${chave}.jpg" style="width:100%; display:block; border-radius:8px; border:1px solid var(--line);" />
-              ${overlaysArea}
-            </div>
+            <div style="font-size:15px; font-weight:700; color:var(--ink,#16233d); margin-bottom:8px;">${planta.label}</div>
+            ${corpo}
           </div>`;
         }).join('');
 
-        gridEl.innerHTML = montarComZoom(conteudo);
+        const btnInteira = `<button type="button" class="dob-btn ${inteira ? '' : 'secundario'} pequeno" id="dob-ac-inteira" title="Mostrar a planta inteira ou só a região dos blocos">${inteira ? '🗺️ Planta inteira' : '🔍 Só os blocos'}</button>`;
+        gridEl.innerHTML = montarComZoom(conteudo, { ferramentasExtras: btnInteira });
+        const bi = document.getElementById('dob-ac-inteira');
+        if(bi) bi.addEventListener('click', () => { mapaAreaInteira = !mapaAreaInteira; try{ localStorage.setItem('dob:mapa_area_inteira', mapaAreaInteira ? '1' : ''); }catch(e){} renderGrid(); });
         gridEl.querySelectorAll('.dob-mapa-svg-bloco').forEach(el => {
           ligarTooltipBloco(el, servico, obra, el.dataset.bloco, tipoMapa, bloqueiosDoBloco(servico, obra, el.dataset.bloco));
           el.addEventListener('click', async () => {
