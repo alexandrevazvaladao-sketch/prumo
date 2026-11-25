@@ -968,11 +968,15 @@
   .pn-hero > div:not(:first-child) .pn-lbl{ font-size:14px; font-weight:600; color:#4b5563; justify-content:center; }
   .pn-hero > div:not(:first-child) .pn-mid{ font-size:46px; font-weight:750; letter-spacing:-.04em; line-height:1.05; margin-top:0; }
   .pn-hero .pn-sub{ font-size:13px; color:#6b7380; font-weight:500; }
+  .pn-d{ font-weight:700; } .pn-d.up{ color:#0f6fb5; } .pn-d.down{ color:#c27300; } .pn-d.igual{ color:#6b7380; font-weight:600; }
+  .pn-mini{ display:block; width:min(150px,80%); height:30px; margin-top:8px; }
+  .pn-pts{ display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-top:10px; min-height:14px; }
+  .pn-pts i{ width:14px; height:14px; border-radius:50%; background:#1f9d57; } .pn-pts i.x{ background:#f0a30a; box-shadow:0 0 0 2px #fde3a6; }
   .pn-hero .pn-mid.ok{ color:#12783f; } .pn-hero .pn-mid.alerta{ color:#c27300; }
   .pn-lbl{ font-size:12.5px; color:#6b7380; display:flex; justify-content:space-between; gap:8px; }
   .pn-big{ font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.15; color:var(--ink-text); font-variant-numeric:tabular-nums; }
   .pn-big small{ font-size:12.5px; font-weight:600; letter-spacing:0; margin-left:8px; color:#6b7380; }
-  .pn-big small.up{ color:#0f7a3c; } .pn-big small.down{ color:#c03a1c; }
+  .pn-big small.up{ color:#0f6fb5; } .pn-big small.down{ color:#c27300; }
   .pn-mid{ font-size:22px; font-weight:650; letter-spacing:-.02em; color:var(--ink-text); font-variant-numeric:tabular-nums; margin-top:2px; }
   .pn-spark{ display:block; width:100%; height:46px; margin-top:6px; }
   .pn-row{ display:flex; align-items:center; gap:12px; padding:11px 16px; position:relative; }
@@ -1361,7 +1365,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.120';
+  const APP_VERSION = 'v2026.11.25.121';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9433,17 +9437,35 @@
       const entradasDia = entries.filter(e => e.date === data && (!filtroObra || e.obra === filtroObra || e.obra === 'Geral'));
       const fotos = []; entradasDia.forEach(e => (e.fotos || []).forEach((f, i) => fotos.push({ e, i, nf: normalizeFoto(f) })));
 
+      // séries curtas pros quadros do resumo (pessoas e concluídas por dia, últimos 14 dias)
+      const diaISO = k => { const d = new Date(data + 'T12:00:00'); d.setDate(d.getDate() - k); return d.toISOString().slice(0,10); };
+      const pessoasDia = iso => (equipeEmpState.registros || []).filter(r => r.data === iso && r.qtd > 0 && (!filtroObra || r.obra === filtroObra || !/^(Pequis|Buritis)$/i.test(r.obra))).reduce((n, r) => n + r.qtd, 0);
+      const serPessoas = [], serConcl = [];
+      for(let k = 13; k >= 0; k--){ const iso = diaISO(k); serPessoas.push(pessoasDia(iso)); serConcl.push(pnFrentes(iso, filtroObra).filter(f => f.status === 'concluido').length); }
+      const miniLinha = (arr) => {
+        const mx = Math.max(1, ...arr), mn = Math.min(...arr), rg = Math.max(1, mx - mn);
+        const pts = arr.map((v, i) => [i * (120/13), 26 - ((v - mn) / rg) * 20 - 3]);
+        const ln = pts.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' ');
+        const u = pts[pts.length - 1];
+        return `<svg class="pn-mini" viewBox="0 0 120 30" preserveAspectRatio="none" aria-hidden="true"><path d="${ln}" fill="none" stroke="#16233d" stroke-width="1.8" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><circle cx="${u[0].toFixed(1)}" cy="${u[1].toFixed(1)}" r="2.6" fill="#16233d"/></svg>`;
+      };
+      const miniBarras = (arr) => {
+        const mx = Math.max(1, ...arr);
+        return `<svg class="pn-mini" viewBox="0 0 120 30" preserveAspectRatio="none" aria-hidden="true">${arr.map((v, i) => { const h = v ? Math.max(3, (v / mx) * 26) : 1.5; return `<rect x="${(i * 8.6 + 1).toFixed(1)}" y="${(29 - h).toFixed(1)}" width="6" height="${h.toFixed(1)}" rx="1.5" fill="${i === 13 ? '#1f9d57' : (v ? '#9bd3b3' : '#e3e7ee')}"/>`; }).join('')}</svg>`;
+      };
+      const deltaTxt = (hoje, antes, rot) => { const d = hoje - antes; return d === 0 ? `<span class="pn-d igual">＝ igual a ${rot}</span>` : `<span class="pn-d ${d > 0 ? 'up' : 'down'}">${d > 0 ? '▲ +' : '▼ '}${d} vs ${rot}</span>`; };
+      const eqPontos = pres.equipComStatus.map(e => `<i class="${e.status === 'parado' ? 'x' : 'o'}" title="${esc(e.nome)}${e.status === 'parado' ? ' (parado)' : ''}"></i>`).join('');
       const dataBonita = new Date(data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
       const hero = `
         <div class="pn-box pn-hero">
           <div>
             <div class="pn-lbl"><span>Frentes em execução${ehHoje ? '' : ' em ' + dataBonita}</span><span>14 dias</span></div>
-            <div class="pn-big">${emExec.length}${delta ? `<small class="${delta > 0 ? 'up' : 'down'}">${delta > 0 ? '+' : ''}${delta} em 7 dias</small>` : '<small>igual a 7 dias atrás</small>'}</div>
+            <div class="pn-big">${emExec.length}${delta ? `<small class="${delta > 0 ? 'up' : 'down'}">${delta > 0 ? '▲ +' : '▼ '}${delta} em 7 dias</small>` : '<small>igual a 7 dias atrás</small>'}</div>
             ${spark}
           </div>
-          <div><div class="pn-lbl">Pessoas</div><div class="pn-mid">${pessoas || '—'}</div><div class="pn-sub">${empresas.length ? 'em ' + empresas.length + (empresas.length === 1 ? ' empresa' : ' empresas') : 'sem equipe lançada'}</div></div>
-          <div><div class="pn-lbl">Equipamentos</div><div class="pn-mid ${equipTot ? (equipOk === equipTot ? 'ok' : 'alerta') : ''}">${equipTot ? equipOk + '/' + equipTot : '—'}</div><div class="pn-sub">${equipTot ? (equipOk === equipTot ? 'todos operando' : (equipTot - equipOk) + (equipTot - equipOk === 1 ? ' parado' : ' parados')) : 'nenhum lançado'}</div></div>
-          <div><div class="pn-lbl">Concluídas no dia</div><div class="pn-mid ${concl.length ? 'ok' : ''}">${concl.length || '—'}</div><div class="pn-sub">${concl.length ? (concl.length === 1 ? 'frente finalizada' : 'frentes finalizadas') : 'nenhuma ainda'}</div></div>
+          <div class="pn-kpi"><div class="pn-lbl">Pessoas no dia</div><div class="pn-mid">${pessoas || '—'}</div><div class="pn-sub">${empresas.length ? 'em ' + empresas.length + (empresas.length === 1 ? ' empresa' : ' empresas') : 'sem equipe lançada'} · ${deltaTxt(pessoas, serPessoas[12], 'ontem')}</div>${miniLinha(serPessoas)}</div>
+          <div class="pn-kpi"><div class="pn-lbl">Equipamentos</div><div class="pn-mid ${equipTot ? (equipOk === equipTot ? 'ok' : 'alerta') : ''}">${equipTot ? equipOk + '/' + equipTot : '—'}</div><div class="pn-sub">${equipTot ? (equipOk === equipTot ? '✓ todos operando' : '⚠ ' + (equipTot - equipOk) + (equipTot - equipOk === 1 ? ' parado' : ' parados')) : 'nenhum lançado'}</div><div class="pn-pts">${eqPontos}</div></div>
+          <div class="pn-kpi"><div class="pn-lbl">Concluídas no dia</div><div class="pn-mid ${concl.length ? 'ok' : ''}">${concl.length || '—'}</div><div class="pn-sub">${serConcl.slice(7).reduce((a, b) => a + b, 0)} nos últimos 7 dias</div>${miniBarras(serConcl)}</div>
         </div>`;
 
       let obraAtual = null;
