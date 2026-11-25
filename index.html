@@ -1042,6 +1042,34 @@
     #dob-sidebar.recolhida .dob-side-top{ padding:0 0 14px; justify-content:center; }
     #dob-sidebar.recolhida .dob-side-item{ justify-content:center; padding:9px 0; }
   }
+
+  /* ===== Diário: acabamento ===== */
+  .dob-status-bar{ background:transparent !important; border:0 !important; box-shadow:none !important; padding:0 2px !important; margin:0 0 12px !important; font-size:12px !important; color:#6b7380; gap:12px !important; flex-direction:row !important; align-items:center !important; flex-wrap:wrap; }
+  .dob-status-bar .dob-dot{ width:7px; height:7px; box-shadow:none !important; margin-right:6px; }
+  .dob-status-mais{ margin-left:auto !important; width:auto !important; }
+  .dob-status-mais > summary{ padding:4px 10px !important; font-size:11.5px !important; font-weight:500 !important; background:#fff; border-color:#e3e6eb !important; }
+  .dob-status-mais[open]{ width:100% !important; }
+  .dob-saudacao{ margin-bottom:6px !important; }
+  .dob-saudacao-titulo{ font-size:24px !important; letter-spacing:-.02em !important; font-weight:700 !important; }
+  .pn-hist{ margin:26px 0 10px; font-size:16px; font-weight:650; letter-spacing:-.01em; color:var(--ink-text); }
+  .dob-toolbar{ margin-bottom:12px !important; }
+  .dob-entry{ padding:16px 18px !important; border-left-width:1px !important; }
+  .dob-entry-head{ margin-bottom:10px; }
+  .dob-entry-data{ font-size:15px !important; }
+  .dob-entry-tag{ background:#eef1f6 !important; color:#3a4660 !important; border:0 !important; border-radius:6px !important; padding:2px 8px !important; font-size:11.5px !important; }
+  .dob-entry-secao-colapsavel{ margin:6px 0 !important; }
+  .dob-entry-secao-colapsavel > summary{ background:#f8f9fb !important; border:1px solid #eef0f3 !important; border-radius:8px !important; font-size:13px !important; font-weight:500 !important; color:var(--ink-text) !important; padding:9px 12px !important; }
+  .dob-entry-secao-label{ color:#6b7380 !important; font-weight:600 !important; }
+  .dob-entry-fotos img{ border-radius:8px !important; }
+  .dob-btn{ border-radius:7px !important; }
+  .dob-btn.pequeno{ font-weight:500 !important; }
+  @media (max-width:720px){
+    #dob-m-bar{ background:rgba(255,255,255,.94) !important; -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border-top:1px solid #e3e6eb; box-shadow:none !important; }
+    #dob-m-bar button{ color:#6b7380 !important; font-weight:500 !important; }
+    #dob-m-bar button.on{ color:#16233d !important; background:transparent !important; font-weight:700 !important; }
+    .dob-status-bar{ font-size:11.5px !important; }
+    .dob-saudacao-titulo{ font-size:26px !important; }
+  }
 </style>
 
 <style id="dob-skin">
@@ -1181,6 +1209,7 @@
   <div class="dob-stats-resumo dob-home-only" id="dob-stats-resumo" title="Toque pra ver os números completos"></div>
 
 
+  <h3 class="pn-hist dob-home-only">Histórico de apontamentos</h3>
   <div class="dob-toolbar dob-home-only">
     <button class="dob-btn dob-btn-oculto-lateral" id="dob-novo">+ Novo apontamento</button>
     <button class="dob-btn secundario" id="dob-btn-relatorio" style="display:none;">Gerar apresentação</button>
@@ -1244,7 +1273,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.95';
+  const APP_VERSION = 'v2026.11.25.96';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9084,7 +9113,7 @@
     const qtdItens = linhas.filter(l => l.tipo === 'item').length;
     const obras = linhas.filter(l => l.tipo === 'obra').map(l => l.texto);
     const resumoObras = obras.length ? ` (${obras.join(', ')})` : '';
-    return `<details class="dob-entry-secao-colapsavel"><summary>📍 ${qtdItens} ${qtdItens===1?'marcação':'marcações'} do mapa nesse dia${resumoObras}</summary><div class="dob-entry-secao-texto">${linhasMapaParaHtml(linhas, data, true)}</div></details>`;
+    return `<details class="dob-entry-secao-colapsavel"><summary>${qtdItens} ${qtdItens===1?'marcação':'marcações'} do mapa nesse dia${resumoObras}</summary><div class="dob-entry-secao-texto">${linhasMapaParaHtml(linhas, data, true)}</div></details>`;
   }
 
   function datasComMarcacaoSemRegistro(){
@@ -9117,8 +9146,8 @@
     const { equipComStatus, pessoasNomes } = presencaDoDia(data);
     if(equipComStatus.length === 0 && pessoasNomes.length === 0) return '';
     const partesResumo = [];
-    if(equipComStatus.length) partesResumo.push(`🔧 ${equipComStatus.length} equipamento${equipComStatus.length===1?'':'s'}`);
-    if(pessoasNomes.length) partesResumo.push(`👷 ${pessoasNomes.length} pessoa${pessoasNomes.length===1?'':'s'}`);
+    if(equipComStatus.length) partesResumo.push(`${equipComStatus.length} equipamento${equipComStatus.length===1?'':'s'}`);
+    if(pessoasNomes.length) partesResumo.push(`${pessoasNomes.length} pessoa${pessoasNomes.length===1?'':'s'}`);
     return `
       <details class="dob-entry-secao-colapsavel">
         <summary>${partesResumo.join(' · ')}</summary>
