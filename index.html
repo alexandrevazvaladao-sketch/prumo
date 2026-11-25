@@ -1091,6 +1091,27 @@
     html, body{ scrollbar-width:none; }
     html::-webkit-scrollbar, body::-webkit-scrollbar{ display:none; width:0; height:0; }
   }
+
+  /* Parede de concreto: predinhos */
+  .pd-grade{ display:grid; grid-template-columns:repeat(auto-fill, minmax(330px, 1fr)); gap:12px; }
+  .pd-gem{ border:1px solid #e3e6eb; border-radius:10px; background:#fff; padding:10px 12px 12px; }
+  .pd-gem-t{ font-size:12.5px; font-weight:600; color:#6b7380; margin-bottom:8px; }
+  .pd-par{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:end; }
+  .pd-predio{ min-width:0; }
+  .pd-telhado{ padding:0 0 3px 18px; }
+  .pd-telhado .pd-cel{ border-radius:8px 8px 2px 2px; }
+  .pd-andar{ display:grid; grid-template-columns:16px 1fr 1fr; gap:3px; margin-bottom:3px; align-items:stretch; }
+  .pd-andar em{ font-style:normal; font-size:10.5px; color:#8a93a1; display:flex; align-items:center; }
+  .pd-cel{ min-width:0; border-radius:3px; padding:4px 5px; background:#f1f3f6; border:1px solid #e3e6eb; font-size:10.5px; line-height:1.25; cursor:default; }
+  .pd-cel b{ display:block; font-weight:600; color:#3a4660; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pd-cel span{ display:block; color:#6b7380; font-style:italic; white-space:nowrap; }
+  .pd-cel.ok{ background:#e8f4ec; border-color:#bfe0cb; } .pd-cel.ok b{ color:#1d6b3e; } .pd-cel.ok span{ color:#1d7a46; font-style:normal; font-weight:600; }
+  .pd-cel.run{ background:#fbf1e1; border-color:#efd3a6; } .pd-cel.run b{ color:#8a5200; } .pd-cel.run span{ color:#a05f00; font-style:normal; font-weight:600; }
+  .pd-l{ display:flex; gap:2px; margin-top:2px; } .pd-l i{ font-style:normal; font-size:9px; font-weight:700; color:#a3abb8; } .pd-l i.a{ color:#a05f00; } .pd-l i.f{ color:#1d7a46; }
+  .pd-chao{ height:3px; background:#16233d; border-radius:2px; margin:2px 0 6px 18px; }
+  .pd-nome{ padding-left:18px; font-size:12.5px; } .pd-nome span{ color:#6b7380; font-size:11.5px; }
+  .pd-fim{ padding-left:18px; font-size:11.5px; color:#6b7380; font-style:italic; }
+  @media (max-width:760px){ .pd-grade{ grid-template-columns:1fr; } }
 </style>
 
 <style id="dob-skin">
@@ -1294,7 +1315,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.101';
+  const APP_VERSION = 'v2026.11.25.102';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4309,18 +4330,29 @@
       else txt = '<i>prev. ' + pCurta(u.prevIni) + ' → ' + pCurta(u.prevFim) + '</i>';
       return `<div style="display:flex;justify-content:space-between;gap:6px;align-items:center;font-size:12px;line-height:1.35;padding:2px 0;"><span style="color:#3a4660;">${u.platibanda ? 'Platibanda' : u.rot.replace(' + hall', '+hall')}</span><span style="color:${cor};font-weight:${peso};white-space:nowrap;">${txt}</span></div>${u.etapas ? `<div style="margin:1px 0 4px;">${chips(u)}</div>` : ''}${u.aguardaLajao ? '<div style="font-size:11px;color:#c03a1c;">aguarda lajão</div>' : ''}`;
     };
+    const anoAtual = todayStr().slice(0, 4);
+    const dCurta = (d) => d ? (d.slice(0, 4) === anoAtual ? pCurta(d) : pCurta(d) + '/' + d.slice(2, 4)) : '—';
+    const celPredio = (u) => {
+      if(!u) return '<div class="pd-cel"></div>';
+      const st = u.status === 'concluido' ? 'ok' : (u.status === 'andamento' ? 'run' : 'plan');
+      const data = u.status === 'concluido' ? dCurta(u.fim) : (u.status === 'andamento' ? 'prev. ' + dCurta(u.prevFim) : dCurta(u.prevFim));
+      const etapasTxt = u.etapas ? PAREDE_ETAPAS.map(([sv, nome]) => { const e = u.etapas[sv]; return nome + ': ' + (e.feita ? 'ok' + (e.concl ? ' ' + fmtDate(e.concl) : '') : (e.n > 0 ? 'em execução' : '—')); }).join(' · ') : 'sem marcação no Mapa (só previsão)';
+      const tit = `Bloco ${u.bloco} · ${u.platibanda ? 'Platibanda' : u.pav + 'º pav. · ' + u.rot}\n` + (u.status === 'concluido' ? 'Concretada em ' + fmtDate(u.fim) : (u.status === 'andamento' ? 'Em execução desde ' + fmtDate(u.ini) + ' · concretagem prevista ' + fmtDate(u.prevFim) : 'Previsto ' + fmtDate(u.prevIni) + ' → ' + fmtDate(u.prevFim))) + '\n' + etapasTxt + (u.aguardaLajao ? '\nAguarda lajão' : '');
+      const letras = u.etapas ? `<span class="pd-l">${PAREDE_ETAPAS.map(([sv, n, l]) => { const e = u.etapas[sv]; return `<i class="${e.feita ? 'f' : (e.n > 0 ? 'a' : '')}">${l}</i>`; }).join('')}</span>` : '';
+      return `<div class="pd-cel ${st}${u.platibanda ? ' plat' : ''}" title="${paredeEsc(tit)}"><b>${u.platibanda ? 'Platibanda' : u.rot.replace(' + hall', '+H')}</b><span>${data}</span>${letras}</div>`;
+    };
+    const predio = (f, bl, k) => {
+      const us = f.us.filter(u => u.bloco === bl);
+      const pl = us.find(u => u.platibanda);
+      const feitos = us.filter(u => !u.platibanda && u.status === 'concluido').length;
+      const andares = [4, 3, 2, 1].map(p => `<div class="pd-andar"><em>${p}º</em>${celPredio(us.find(u => u.pav === p && u.metade === 'A'))}${celPredio(us.find(u => u.pav === p && u.metade === 'B'))}</div>`).join('');
+      const fim = pl && (pl.fim || pl.prevFim);
+      return `<div class="pd-predio"><div class="pd-telhado">${celPredio(pl)}</div>${andares}<div class="pd-chao"></div><div class="pd-nome"><b>Bloco ${bl}</b> <span>${k === 0 ? '1º lado' : '2º lado'} · ${feitos}/8</span></div><div class="pd-fim">fim ${fim ? dCurta(fim) : '—'}</div></div>`;
+    };
     const tabela = (obra) => {
-      const fs = filas.filter(f => f.obra === obra);
-      const linhas = [].concat(...fs.map(f => f.blocosOrdem.map((bl, k) => {
-        const us = f.us.filter(u => u.bloco === bl);
-        const cel = [1, 2, 3, 4].map(p => `<td style="padding:8px 10px;border-top:1px solid #eef0f3;vertical-align:top;min-width:170px;">${us.filter(u => u.pav === p).map(linhaUn).join('')}</td>`).join('');
-        const pl = us.find(u => u.platibanda);
-        const feitos = us.filter(u => !u.platibanda && u.status === 'concluido').length;
-        const fim = pl && (pl.fim || pl.prevFim);
-        return `<tr><td style="padding:8px 10px;border-top:1px solid #eef0f3;font-weight:600;white-space:nowrap;vertical-align:top;">Bloco ${bl}<div style="font-size:11px;font-weight:400;color:#6b7380;">geminado ${f.geminado} · ${k === 0 ? '1º lado' : '2º lado'}</div><div style="font-size:11px;font-weight:400;color:#6b7380;">${feitos}/8 meias lajes</div></td>${cel}<td style="padding:8px 10px;border-top:1px solid #eef0f3;vertical-align:top;min-width:150px;">${pl ? linhaUn(pl) : ''}</td><td style="padding:8px 10px;border-top:1px solid #eef0f3;font-size:12.5px;white-space:nowrap;vertical-align:top;color:#6b7380;font-style:italic;">${fim ? fmtDate(fim) : '—'}</td></tr>`;
-      })));
-      return `<h4 style="margin:20px 0 6px;font-family:inherit;font-size:15px;">Solar dos ${obra} <span style="font-size:13px;font-weight:400;color:#6b7380;">· término previsto ${fimObra(obra)}</span></h4>
-        <div style="overflow-x:auto;border:1px solid #e3e6eb;border-radius:10px;"><table style="border-collapse:collapse;width:100%;"><thead><tr style="text-align:left;font-size:12px;color:#6b7380;background:#fafbfc;"><th style="padding:8px 10px;">Bloco</th><th style="padding:8px 10px;">1º pav.</th><th style="padding:8px 10px;">2º pav.</th><th style="padding:8px 10px;">3º pav.</th><th style="padding:8px 10px;">4º pav.</th><th style="padding:8px 10px;">Platibanda</th><th style="padding:8px 10px;">Fim do bloco</th></tr></thead><tbody>${linhas.join('')}</tbody></table></div>`;
+      const fs = filas.filter(f => f.obra === obra).sort((x, y) => x.par - y.par);
+      return `<h4 style="margin:22px 0 8px;font-family:inherit;font-size:15px;">Solar dos ${obra} <span style="font-size:13px;font-weight:400;color:#6b7380;">· término previsto ${fimObra(obra)}</span></h4>
+        <div class="pd-grade">${fs.map(f => `<div class="pd-gem"><div class="pd-gem-t">Geminado ${f.geminado}</div><div class="pd-par">${f.blocosOrdem.slice().sort((x, y) => x - y).map(bl => predio(f, bl, f.blocosOrdem.indexOf(bl))).join('')}</div></div>`).join('')}</div>`;
     };
     const card = (titulo, valor, sub) => `<div style="flex:1;min-width:150px;background:#fff;border:1px solid #e3e6eb;border-radius:10px;padding:12px 14px;"><div style="font-size:12px;color:#6b7380;">${titulo}</div><div style="font-size:22px;font-weight:700;letter-spacing:-.02em;">${valor}</div><div style="font-size:11.5px;color:#6b7380;">${sub || ''}</div></div>`;
     const campo = (id, rot, val, extra) => `<label style="display:flex;flex-direction:column;font-size:12px;color:#6b7380;gap:3px;">${rot}<input class="dob-input" type="number" min="${extra.min}" step="${extra.step || 1}" id="${id}" value="${val}" style="width:110px;"/></label>`;
@@ -4347,10 +4379,10 @@
           <p class="dob-dica">Ritmo = dias úteis entre uma concretagem e a seguinte do mesmo jogo de forma (enquanto só existe a 1ª, conta do início das instalações até a concretagem). Cada jogo de forma sobe um geminado; o 1º lado começa depois do lajão do bloco concluído mais a cura. A platibanda não tem marcação no Mapa, então aparece sempre como previsão.</p>
         </details>
         <h4 style="margin:14px 0 6px;font-family:inherit;font-size:15px;">Próximas meias lajes</h4>
-        ${proximos.length ? `<div style="border:1px solid #e3e6eb;border-radius:10px;overflow:hidden;">${proximos.map((u, k) => `<div style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:9px 12px;${k ? 'border-top:1px solid #eef0f3;' : ''}font-size:13.5px;background:#fff;"><span style="width:7px;height:7px;border-radius:50%;background:${u.status === 'andamento' ? '#b26b00' : '#a3abb8'};"></span><b style="font-weight:600;">${paredeEsc(nomeU(u))}</b><span style="color:#6b7380;">${u.status === 'andamento' ? 'em execução desde ' + pCurta(u.ini) + ' · concretagem prevista ' + pCurta(u.prevFim) : 'início previsto ' + pCurta(u.prevIni) + ' · concretagem ' + pCurta(u.prevFim)}</span>${u.aguardaLajao ? '<span style="color:#c03a1c;font-size:12px;">aguarda lajão</span>' : ''}</div>`).join('')}</div>` : '<p class="dob-dica">Todas as meias lajes estão concretadas.</p>'}
+        ${proximos.length ? `<div style="border:1px solid #e3e6eb;border-radius:10px;overflow:hidden;">${proximos.map((u, k) => `<div style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:9px 12px;${k ? 'border-top:1px solid #eef0f3;' : ''}font-size:13.5px;background:#fff;"><span style="width:7px;height:7px;border-radius:50%;background:${u.status === 'andamento' ? '#b26b00' : '#a3abb8'};"></span><b style="font-weight:600;">${paredeEsc(nomeU(u))}</b><span style="color:#6b7380;">${u.status === 'andamento' ? 'em execução desde ' + dCurta(u.ini) + ' · concretagem prevista ' + dCurta(u.prevFim) : 'início previsto ' + dCurta(u.prevIni) + ' · concretagem ' + dCurta(u.prevFim)}</span>${u.aguardaLajao ? '<span style="color:#c03a1c;font-size:12px;">aguarda lajão</span>' : ''}</div>`).join('')}</div>` : '<p class="dob-dica">Todas as meias lajes estão concretadas.</p>'}
         ${tabela('Buritis')}
         ${tabela('Pequis')}
-        <p class="dob-dica" style="margin-top:12px;">Letras: <b>I</b> instalações · <b>F</b> forma · <b>C</b> concretagem (verde = concluída, laranja = em execução, cinza = não iniciada). Para registrar uma etapa, marque o apartamento no Mapa de Acompanhamento.</p>
+        <p class="dob-dica" style="margin-top:12px;">Cada prédio é um bloco: andares de baixo (1º) para cima (4º) e a platibanda no topo; cada andar tem as duas meias lajes (x01/x04 + hall e x02/x03). Verde = concretada, laranja = em execução, cinza = previsão (data prevista da concretagem). Letras <b>I F C</b> = instalações, forma e concretagem. Passe o mouse ou toque num andar para ver os detalhes. Para registrar uma etapa, marque o apartamento no Mapa de Acompanhamento.</p>
       </div>`;
     const salvar = (campo, v) => { if(!mapaState.paredeConfig) mapaState.paredeConfig = {}; mapaState.paredeConfig[campo] = v; saveMapaState(); renderParede(); };
     const lig = (id, campo, tipo) => { const el = document.getElementById(id); if(el) el.addEventListener('change', () => salvar(campo, tipo === 'bool' ? el.checked : (el.value === '' ? null : Number(el.value)))); };
