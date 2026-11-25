@@ -1093,7 +1093,7 @@
   }
 
   /* Parede de concreto: predinhos */
-  .pd-grade{ display:grid; grid-template-columns:repeat(auto-fill, minmax(330px, 1fr)); gap:12px; }
+  .pd-grade{ display:grid; grid-template-columns:repeat(auto-fill, minmax(380px, 1fr)); gap:12px; }
   .pd-gem{ border:1px solid #e3e6eb; border-radius:10px; background:#fff; padding:10px 12px 12px; }
   .pd-gem-t{ font-size:12.5px; font-weight:600; color:#6b7380; margin-bottom:8px; }
   .pd-par{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:end; }
@@ -1315,7 +1315,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.102';
+  const APP_VERSION = 'v2026.11.25.103';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4339,7 +4339,7 @@
       const etapasTxt = u.etapas ? PAREDE_ETAPAS.map(([sv, nome]) => { const e = u.etapas[sv]; return nome + ': ' + (e.feita ? 'ok' + (e.concl ? ' ' + fmtDate(e.concl) : '') : (e.n > 0 ? 'em execução' : '—')); }).join(' · ') : 'sem marcação no Mapa (só previsão)';
       const tit = `Bloco ${u.bloco} · ${u.platibanda ? 'Platibanda' : u.pav + 'º pav. · ' + u.rot}\n` + (u.status === 'concluido' ? 'Concretada em ' + fmtDate(u.fim) : (u.status === 'andamento' ? 'Em execução desde ' + fmtDate(u.ini) + ' · concretagem prevista ' + fmtDate(u.prevFim) : 'Previsto ' + fmtDate(u.prevIni) + ' → ' + fmtDate(u.prevFim))) + '\n' + etapasTxt + (u.aguardaLajao ? '\nAguarda lajão' : '');
       const letras = u.etapas ? `<span class="pd-l">${PAREDE_ETAPAS.map(([sv, n, l]) => { const e = u.etapas[sv]; return `<i class="${e.feita ? 'f' : (e.n > 0 ? 'a' : '')}">${l}</i>`; }).join('')}</span>` : '';
-      return `<div class="pd-cel ${st}${u.platibanda ? ' plat' : ''}" title="${paredeEsc(tit)}"><b>${u.platibanda ? 'Platibanda' : u.rot.replace(' + hall', '+H')}</b><span>${data}</span>${letras}</div>`;
+      return `<div class="pd-cel ${st}${u.platibanda ? ' plat' : ''}" title="${paredeEsc(tit)}"><b>${u.platibanda ? 'Platibanda' : (u.metade === 'A' ? '01/04 + hall' : '02/03')}</b><span>${data}</span>${letras}</div>`;
     };
     const predio = (f, bl, k) => {
       const us = f.us.filter(u => u.bloco === bl);
