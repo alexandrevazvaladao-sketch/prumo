@@ -1354,7 +1354,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.117';
+  const APP_VERSION = 'v2026.11.25.118';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9346,6 +9346,29 @@
     gente:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3.2 3.2 0 0 1 0 6.3M21 20c0-2.6-1.6-4.8-4-5.6"/></svg>',
     maq:'<svg viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>'
   };
+  // Um ícone por tipo de máquina (pelo nome do equipamento)
+  const PN_MAQ_IC = {
+    retro:'<svg viewBox="0 0 24 24"><circle cx="7" cy="18" r="2"/><circle cx="14.5" cy="18" r="2"/><path d="M4 16V9h5l2 3h5v4"/><path d="M13 12V7l5-3 3 5-4 2"/><path d="M21 9l-1 4h-3"/></svg>',
+    escav:'<svg viewBox="0 0 24 24"><rect x="2" y="16" width="12" height="4" rx="2"/><path d="M4 16v-4h6l2 4"/><path d="M9 12 14 5l5 2"/><path d="m19 7-2 6h4z"/></svg>',
+    perfu:'<svg viewBox="0 0 24 24"><rect x="2" y="18" width="10" height="3" rx="1.5"/><path d="M4 18v-5h6v5"/><path d="M14 3v15M17 3v15"/><path d="M14 7l3 2M14 11l3 2M14 15l3 2"/><path d="M12 14h2"/></svg>',
+    basc:'<svg viewBox="0 0 24 24"><path d="M2 17V9h4l3 3v5"/><path d="M9 10l8-5 5 8v4H9"/><circle cx="6" cy="18" r="1.8"/><circle cx="18" cy="18" r="1.8"/></svg>',
+    pipa:'<svg viewBox="0 0 24 24"><path d="M2 17v-7h4l3 3v4"/><ellipse cx="16" cy="11" rx="6" ry="4"/><path d="M16 7v-3M12 4h8"/><circle cx="6" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/><path d="M22 14l-1 4"/></svg>',
+    beto:'<svg viewBox="0 0 24 24"><path d="M7 4h8l3 7-3 6H8l-3-6z"/><path d="M8 8l8 4M9 12l6 3"/><path d="M5 11H3M18 11h3"/><path d="M7 21h10M12 17v4"/></svg>',
+    rolo:'<svg viewBox="0 0 24 24"><circle cx="7" cy="16" r="4"/><circle cx="18" cy="17" r="3"/><path d="M11 16h4M3 10h8v3M11 10l3-4h4v8"/><path d="M14 6V4"/></svg>',
+    patro:'<svg viewBox="0 0 24 24"><circle cx="4" cy="18" r="2"/><circle cx="11" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M2 16V9h6l2 3h9v4"/><path d="M6 9V6h4v3"/><path d="M2 21h20"/></svg>'
+  };
+  function pnIconeMaq(nome){
+    const n = String(nome || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    if(/retro/.test(n)) return PN_MAQ_IC.retro;
+    if(/perfuratriz|helice|estaca/.test(n)) return PN_MAQ_IC.perfu;
+    if(/escavadeira/.test(n)) return PN_MAQ_IC.escav;
+    if(/pipa/.test(n)) return PN_MAQ_IC.pipa;
+    if(/basculante|cacamba|truck/.test(n)) return PN_MAQ_IC.basc;
+    if(/betoneira|misturador/.test(n)) return PN_MAQ_IC.beto;
+    if(/rolo|compactador/.test(n)) return PN_MAQ_IC.rolo;
+    if(/patrola|motoniveladora|trator/.test(n)) return PN_MAQ_IC.patro;
+    return PN_IC.maq;
+  }
   function pnTitulo(t){
     const minus = ['de','da','do','das','dos','e','em','na','no','sobre','a','o'];
     return String(t || '').toLowerCase().split(/\s+/).map((w, i) => (i > 0 && minus.includes(w)) ? w : w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
@@ -9429,7 +9452,7 @@
 
       const linhasEmp = empresas.length ? empresas.map(g => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(pnEmpresa(g.empresa))}</div><div class="pn-t2">${esc(g.servs.map(pnTitulo).join(', '))}</div></div><div class="pn-rt"><b>${g.qtd}</b><span>${g.qtd === 1 ? 'pessoa' : 'pessoas'}</span></div></div>`).join('')
         : (pres.pessoasNomes.length ? pres.pessoasNomes.map(n => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(n)}</div></div></div>`).join('') : '<div class="pn-vazio">Sem equipe lançada nesse dia.</div>');
-      const linhasEq = pres.equipComStatus.length ? pres.equipComStatus.map(eq => `<div class="pn-row"><div class="pn-ic ${eq.status === 'parado' ? 'late' : 'ok'}">${PN_IC.maq}</div><div class="pn-tx"><div class="pn-t1">${esc(eq.nome)}</div>${eq.status === 'parado' && eq.motivo ? `<div class="pn-t2">${esc(eq.motivo)}</div>` : ''}</div><div class="pn-rt"><span class="pn-tag ${eq.status === 'parado' ? 'late' : 'ok'}">${eq.status === 'parado' ? 'Parado' : 'Operando'}</span></div></div>`).join('')
+      const linhasEq = pres.equipComStatus.length ? pres.equipComStatus.map(eq => `<div class="pn-row"><div class="pn-ic ${eq.status === 'parado' ? 'late' : 'ok'}">${pnIconeMaq(eq.nome)}</div><div class="pn-tx"><div class="pn-t1">${esc(eq.nome)}</div>${eq.status === 'parado' && eq.motivo ? `<div class="pn-t2">${esc(eq.motivo)}</div>` : ''}</div><div class="pn-rt"><span class="pn-tag ${eq.status === 'parado' ? 'late' : 'ok'}">${eq.status === 'parado' ? 'Parado' : 'Operando'}</span></div></div>`).join('')
         : '<div class="pn-vazio">Nenhum equipamento lançado nesse dia.</div>';
 
       el.innerHTML = hero + `
