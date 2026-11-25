@@ -852,9 +852,10 @@
   .dob-side-item{ border-left:0; border-radius:10px; margin:1px 0; padding:9px 12px; gap:12px; font-size:13.5px; font-weight:500; position:relative; transition:background .12s ease, color .12s ease; }
   .dob-side-item .ic{ width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:0; }
   .dob-side-item:hover{ background:rgba(255,255,255,0.07); }
-  .dob-side-item.active{ background:rgba(36,81,143,0.17); font-weight:600; }
-  .dob-side-item.active .ic-svg{ stroke:#f29a68; }
-  .dob-side-item.active::before{ content:""; position:absolute; left:-10px; top:9px; bottom:9px; width:3px; border-radius:0 3px 3px 0; background:var(--clay); }
+  .dob-side-item.active{ background:#fff; color:var(--ink) !important; font-weight:600; }
+  .dob-side-item.active .label{ color:var(--ink); }
+  .dob-side-item.active .ic-svg{ stroke:var(--ink); }
+  .dob-side-item.active::before{ display:none; }
   .dob-side-sep{ height:1px; background:rgba(255,255,255,0.08); margin:8px 10px; }
   .dob-side-item[data-nivel="dono"]::after, .dob-side-item[data-nivel="editores"]::after{ content:""; width:12px; height:12px; margin-left:auto; opacity:.55; background:center/contain no-repeat; font-size:0; }
   .dob-side-item[data-nivel="dono"]::after{ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='11' width='16' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 8 0v4'/></svg>"); }
@@ -1012,6 +1013,11 @@
     .pn-t1{ font-size:15px; }
     .pn-fotos img{ width:44%; height:auto; aspect-ratio:3/4; border-radius:12px; }
   }
+
+  .dob-side-brand{ font-size:15px !important; letter-spacing:-.01em; overflow:visible !important; gap:9px; }
+  .dob-side-logo-img{ width:24px; height:24px; border-radius:6px; flex-shrink:0; }
+  .pn-rt{ min-width:56px; text-align:center; }
+  .pn-rt b{ text-align:center; }
 </style>
 
 <style id="dob-skin">
@@ -1082,7 +1088,7 @@
   <div id="dob-sidebar">
     <div class="dob-side-top">
       <button class="dob-side-hamburguer" id="dob-side-toggle" title="Recolher/expandir menu" aria-label="Recolher ou expandir o menu"><svg class="ic-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-      <span class="dob-side-brand"><span class="dob-side-logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 4.5-9 4.5L3 7.5z"/><path d="m3 12 9 4.5 9-4.5"/><path d="m3 16.5 9 4.5 9-4.5"/></svg></span>Gestão de Obra</span>
+      <span class="dob-side-brand"><img class="dob-side-logo-img" src="icon.svg" alt="" />Gestão de Obra</span>
     </div>
     <div class="dob-side-item active" data-side="home"><span class="ic"><svg class="ic-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z"/></svg></span><span class="label">Diário</span></div>
     <div class="dob-side-item" data-side="novo"><span class="ic"><svg class="ic-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.4 2.6a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span><span class="label">Novo apontamento</span></div>
@@ -1214,7 +1220,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.92';
+  const APP_VERSION = 'v2026.11.25.93';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
