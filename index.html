@@ -946,6 +946,72 @@
   /* Seções desligadas (não uso): Rotina, Catálogo de custos, Custo por etapa e UAU → BEE. O código e os dados continuam, só ficam fora do menu. */
   .dob-side-item[data-side="rotina"], .dob-side-item[data-side="catalogo"], .dob-side-item[data-side="custo-etapa"], .dob-side-item[data-side="uaubee"],
   #dob-btn-rotina, #dob-btn-catalogo, #dob-btn-custo-etapa, #dob-btn-uaubee { display: none !important; }
+
+  /* ===== Panorama do dia (novo visual) ===== */
+  .dob-stats, .dob-stats-resumo{ display:none !important; }
+  .pn{ display:grid; grid-template-columns:minmax(0,1.65fr) minmax(0,1fr); gap:16px; margin:4px 0 18px; align-items:start; }
+  .pn-col{ display:grid; gap:16px; min-width:0; }
+  .pn-box{ background:#fff; border:1px solid #e3e6eb; border-radius:10px; min-width:0; }
+  .pn-box > header{ display:flex; align-items:baseline; gap:10px; padding:12px 16px; border-bottom:1px solid #eef0f3; }
+  .pn-box > header h3{ margin:0; font-size:14px; font-weight:600; color:var(--ink-text); }
+  .pn-box > header .m{ color:#6b7380; font-size:12.5px; }
+  .pn-box > header .a{ margin-left:auto; font-size:12.5px; color:var(--ink); font-weight:500; cursor:pointer; background:none; border:0; padding:0; }
+  .pn-hero{ grid-column:1 / -1; display:grid; grid-template-columns:minmax(0,1.2fr) repeat(3, minmax(0,.6fr)); }
+  .pn-hero > div{ padding:14px 16px; border-right:1px solid #eef0f3; min-width:0; }
+  .pn-hero > div:last-child{ border-right:none; }
+  .pn-lbl{ font-size:12.5px; color:#6b7380; display:flex; justify-content:space-between; gap:8px; }
+  .pn-big{ font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.15; color:var(--ink-text); font-variant-numeric:tabular-nums; }
+  .pn-big small{ font-size:12.5px; font-weight:600; letter-spacing:0; margin-left:8px; color:#6b7380; }
+  .pn-big small.up{ color:#1d7a46; } .pn-big small.down{ color:#c03a1c; }
+  .pn-mid{ font-size:22px; font-weight:650; letter-spacing:-.02em; color:var(--ink-text); font-variant-numeric:tabular-nums; margin-top:2px; }
+  .pn-spark{ display:block; width:100%; height:46px; margin-top:6px; }
+  .pn-row{ display:flex; align-items:center; gap:12px; padding:11px 16px; position:relative; }
+  .pn-row + .pn-row{ border-top:1px solid #eef0f3; }
+  .pn-ic{ flex:0 0 30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:#eef1f6; color:var(--ink); }
+  .pn-ic svg{ width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .pn-ic.run{ background:#fbf1e1; color:#b26b00; } .pn-ic.ok{ background:#e8f4ec; color:#1d7a46; } .pn-ic.late{ background:#fbe9e4; color:#c03a1c; }
+  .pn-tx{ min-width:0; flex:1; }
+  .pn-t1{ font-weight:600; font-size:14px; color:var(--ink-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pn-t2{ font-size:12.5px; color:#6b7380; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pn-rt{ flex:0 0 auto; text-align:right; }
+  .pn-rt b{ display:block; font-size:15px; font-variant-numeric:tabular-nums; color:var(--ink-text); }
+  .pn-rt span{ font-size:11.5px; color:#6b7380; }
+  .pn-tag{ font-size:11.5px; font-weight:600; padding:2px 8px; border-radius:6px; white-space:nowrap; }
+  .pn-tag.run{ background:#fbf1e1; color:#a05f00; } .pn-tag.ok{ background:#e8f4ec; color:#1d7a46; } .pn-tag.late{ background:#fbe9e4; color:#c03a1c; }
+  .pn-grp{ padding:8px 16px 6px; font-size:12px; font-weight:600; color:#6b7380; background:#f8f9fb; border-top:1px solid #eef0f3; }
+  .pn-box > header + .pn-grp{ border-top:none; }
+  .pn-vazio{ padding:14px 16px; color:#6b7380; font-size:13px; }
+  .pn-fotos{ display:flex; gap:8px; overflow-x:auto; padding:12px 16px; scrollbar-width:none; }
+  .pn-fotos::-webkit-scrollbar{ display:none; }
+  .pn-fotos img{ flex:0 0 auto; width:120px; height:90px; object-fit:cover; border-radius:8px; background:#eef0f3; cursor:pointer; }
+  .pn-fotos-box{ grid-column:1 / -1; }
+  /* cabeçalho enxuto */
+  .dob-header{ background:transparent !important; box-shadow:none !important; border:none !important; padding:0 !important; margin:0 0 10px !important; min-height:0 !important; color:var(--ink-text) !important; }
+  .dob-header .dob-title, .dob-header .dob-sub, .dob-header .dob-stamp, .dob-header::before, .dob-header::after{ display:none !important; }
+  .dob-header .dob-versao{ color:#8a93a1 !important; font-size:11px !important; margin:0 !important; }
+  .dob-header .dob-modo-compacto-toggle{ background:#fff !important; color:var(--ink-text) !important; border:1px solid #e3e6eb !important; }
+  /* dias */
+  .dob-daypill{ background:#fff !important; border:1px solid #e3e6eb !important; border-radius:10px !important; box-shadow:none !important; }
+  .dob-daypill.ativo, .dob-daypill.hoje.ativo{ background:var(--ink) !important; border-color:var(--ink) !important; }
+  .dob-daypill.ativo .dow, .dob-daypill.ativo .dnum{ color:#fff !important; }
+  .dob-daypill.hoje:not(.ativo){ border-color:var(--ink) !important; }
+  .dob-entry{ box-shadow:none !important; border:1px solid #e3e6eb !important; border-radius:10px !important; }
+  @media (max-width: 760px){
+    .pn{ grid-template-columns:1fr; gap:14px; }
+    .pn-box{ border-radius:14px; }
+    .pn-hero{ grid-template-columns:repeat(3,1fr); }
+    .pn-hero > div:first-child{ grid-column:1 / -1; border-right:none; border-bottom:1px solid #eef0f3; }
+    .pn-hero > div:nth-child(2), .pn-hero > div:nth-child(3), .pn-hero > div:nth-child(4){ padding:10px 12px; }
+    .pn-big{ font-size:38px; }
+    .pn-mid{ font-size:18px; }
+    .pn-lbl{ font-size:11.5px; }
+    .pn-spark{ height:58px; }
+    .pn-box > header{ border-bottom:none; padding:14px 16px 6px; }
+    .pn-box > header h3{ font-size:16px; }
+    .pn-row{ padding:12px 14px; }
+    .pn-t1{ font-size:15px; }
+    .pn-fotos img{ width:44%; height:auto; aspect-ratio:3/4; border-radius:12px; }
+  }
 </style>
 
 <style id="dob-skin">
@@ -1079,6 +1145,7 @@
 
   <div id="dob-nuvem-faixa" style="display:none;margin:8px 0;padding:10px 14px;border-radius:10px;background:#fff6dd;color:#5a4300;font-size:14px;line-height:1.4;"></div>
 
+  <div class="pn dob-home-only" id="dob-panorama"></div>
   <div class="dob-stats dob-home-only" id="dob-stats"></div>
   <div class="dob-stats-resumo dob-home-only" id="dob-stats-resumo" title="Toque pra ver os números completos"></div>
 
@@ -1147,7 +1214,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.89';
+  const APP_VERSION = 'v2026.11.25.90';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9041,8 +9108,122 @@
     `;
   }
 
+
+  // ---------- Panorama do dia (topo do Diário) ----------
+  const PN_IC = {
+    obra:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16"/><path d="M3 9h18M3 15h18M9 4v5M15 9v6M9 15v5"/></svg>',
+    rede:'<svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>',
+    gente:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3.2 3.2 0 0 1 0 6.3M21 20c0-2.6-1.6-4.8-4-5.6"/></svg>',
+    maq:'<svg viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>'
+  };
+  function pnTitulo(t){
+    const minus = ['de','da','do','das','dos','e','em','na','no','sobre','a','o'];
+    return String(t || '').toLowerCase().split(/\s+/).map((w, i) => (i > 0 && minus.includes(w)) ? w : w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+      .replace(/\bPne\b/g, 'PNE').replace(/\bCb\b/g, 'CB');
+  }
+  function pnFrentes(data, filtroObra){
+    const linhas = marcacoesMapaDoDia(data);
+    const out = []; let obra = null;
+    linhas.forEach(l => {
+      if(l.tipo === 'obra'){ obra = l.texto; return; }
+      if(filtroObra && !(obra === 'Pequis + Buritis' || obra === (filtroObra === 'Pequis' ? 'Solar dos Pequis' : 'Solar dos Buritis'))) return;
+      out.push(Object.assign({ obraLabel: obra }, l));
+    });
+    return out;
+  }
+  function renderPanorama(){
+    const el = document.getElementById('dob-panorama');
+    if(!el) return;
+    try{
+      const esc = t => String(t == null ? '' : t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+      const data = diaSelecionado || todayStr();
+      const filtroObra = (document.getElementById('dob-filtro-obra') || {}).value || '';
+      const ehHoje = data === todayStr();
+      const frentes = pnFrentes(data, filtroObra);
+      const emExec = frentes.filter(f => f.status === 'andamento');
+      const concl = frentes.filter(f => f.status === 'concluido');
+
+      // série dos últimos 14 dias (frentes em execução por dia)
+      const serie = [];
+      for(let k = 13; k >= 0; k--){
+        const d = new Date(data + 'T12:00:00'); d.setDate(d.getDate() - k);
+        const iso = d.toISOString().slice(0,10);
+        serie.push(pnFrentes(iso, filtroObra).filter(f => f.status === 'andamento').length);
+      }
+      const delta = serie[13] - serie[6];
+      const max = Math.max(1, ...serie), min = Math.min(...serie);
+      const pts = serie.map((v, i) => [i * (300/13), 40 - ((v - min) / Math.max(1, max - min)) * 32 - 4]);
+      const linha = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+      const spark = `<svg class="pn-spark" viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true"><path d="${linha} L300 44 L0 44Z" fill="rgba(22,35,61,.08)"/><path d="${linha}" fill="none" stroke="#16233d" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
+
+      // equipes (empreiteiras) e mão de obra
+      const regs = (equipeEmpState.registros || []).filter(r => r.data === data && r.qtd > 0 && (!filtroObra || r.obra === filtroObra || !/^(Pequis|Buritis)$/i.test(r.obra)));
+      const porEmp = {};
+      regs.forEach(r => { const g = porEmp[r.empresa] = porEmp[r.empresa] || { empresa: r.empresa, qtd: 0, servs: [] }; g.qtd += r.qtd; if(!g.servs.includes(r.servico)) g.servs.push(r.servico); });
+      const empresas = Object.values(porEmp).sort((a, b) => b.qtd - a.qtd);
+      const pres = presencaDoDia(data);
+      const pessoas = empresas.reduce((n, g) => n + g.qtd, 0) || pres.pessoasNomes.length;
+      const equipTot = pres.equipComStatus.length;
+      const equipOk = pres.equipComStatus.filter(e => e.status !== 'parado').length;
+
+      // fotos do dia
+      const entradasDia = entries.filter(e => e.date === data && (!filtroObra || e.obra === filtroObra || e.obra === 'Geral'));
+      const fotos = []; entradasDia.forEach(e => (e.fotos || []).forEach((f, i) => fotos.push({ e, i, nf: normalizeFoto(f) })));
+
+      const dataBonita = new Date(data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+      const hero = `
+        <div class="pn-box pn-hero">
+          <div>
+            <div class="pn-lbl"><span>Frentes em execução${ehHoje ? '' : ' em ' + dataBonita}</span><span>14 dias</span></div>
+            <div class="pn-big">${emExec.length}${delta ? `<small class="${delta > 0 ? 'up' : 'down'}">${delta > 0 ? '+' : ''}${delta} em 7 dias</small>` : '<small>igual a 7 dias atrás</small>'}</div>
+            ${spark}
+          </div>
+          <div><div class="pn-lbl">Pessoas</div><div class="pn-mid">${pessoas || '—'}</div></div>
+          <div><div class="pn-lbl">Equipamentos</div><div class="pn-mid">${equipTot ? equipOk + '/' + equipTot : '—'}</div></div>
+          <div><div class="pn-lbl">Concluídas no dia</div><div class="pn-mid">${concl.length || '—'}</div></div>
+        </div>`;
+
+      let obraAtual = null;
+      const linhasFrentes = frentes.length ? frentes.map(f => {
+        let cab = '';
+        if(f.obraLabel !== obraAtual){ obraAtual = f.obraLabel; cab = `<div class="pn-grp">${esc(obraAtual)}</div>`; }
+        const ok = f.status === 'concluido';
+        const unid = f.trecho ? (f.qtd === 1 ? 'trecho' : 'trechos') : (f.qtd === 1 ? 'local' : 'locais');
+        const nomeUnico = (!f.trecho && f.itens && f.itens.length === 1) ? f.itens[0].nome : '';
+        const det = [nomeUnico || (f.qtd + ' ' + unid), f.desde ? 'desde ' + fmtDate(f.desde).slice(0,5) : ''].filter(Boolean).join(' · ');
+        return cab + `<div class="pn-row"><div class="pn-ic ${ok ? 'ok' : 'run'}">${f.trecho ? PN_IC.rede : PN_IC.obra}</div><div class="pn-tx"><div class="pn-t1">${esc(pnTitulo(f.servico))}</div><div class="pn-t2">${esc(det)}</div></div><div class="pn-rt"><span class="pn-tag ${ok ? 'ok' : 'run'}">${ok ? 'Concluído' : 'Em execução'}</span></div></div>`;
+      }).join('') : '<div class="pn-vazio">Nenhuma frente marcada no mapa nesse dia.</div>';
+
+      const linhasEmp = empresas.length ? empresas.map(g => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(g.empresa)}</div><div class="pn-t2">${esc(g.servs.map(pnTitulo).join(', '))}</div></div><div class="pn-rt"><b>${g.qtd}</b><span>${g.qtd === 1 ? 'pessoa' : 'pessoas'}</span></div></div>`).join('')
+        : (pres.pessoasNomes.length ? pres.pessoasNomes.map(n => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(n)}</div></div></div>`).join('') : '<div class="pn-vazio">Sem equipe lançada nesse dia.</div>');
+      const linhasEq = pres.equipComStatus.length ? pres.equipComStatus.map(eq => `<div class="pn-row"><div class="pn-ic ${eq.status === 'parado' ? 'late' : 'ok'}">${PN_IC.maq}</div><div class="pn-tx"><div class="pn-t1">${esc(eq.nome)}</div>${eq.status === 'parado' && eq.motivo ? `<div class="pn-t2">${esc(eq.motivo)}</div>` : ''}</div><div class="pn-rt"><span class="pn-tag ${eq.status === 'parado' ? 'late' : 'ok'}">${eq.status === 'parado' ? 'Parado' : 'Operando'}</span></div></div>`).join('')
+        : '<div class="pn-vazio">Nenhum equipamento lançado nesse dia.</div>';
+
+      el.innerHTML = hero + `
+        <div class="pn-col">
+          <div class="pn-box"><header><h3>Frentes do dia</h3><span class="m">${emExec.length} em execução${concl.length ? ' · ' + concl.length + ' concluída' + (concl.length > 1 ? 's' : '') : ''}</span><button type="button" class="a" data-pn="mapa">Abrir mapa</button></header>${linhasFrentes}</div>
+        </div>
+        <div class="pn-col">
+          <div class="pn-box"><header><h3>Equipes</h3><span class="m">${pessoas ? pessoas + ' pessoas' : ''}</span></header>${linhasEmp}</div>
+          <div class="pn-box"><header><h3>Equipamentos</h3></header>${linhasEq}</div>
+        </div>
+        ${fotos.length ? `<div class="pn-box pn-fotos-box"><header><h3>Fotos do dia</h3><span class="m">${fotos.length}</span></header><div class="pn-fotos">${fotos.map((f, k) => `<img loading="lazy" decoding="async" src="${f.nf.thumb || f.nf.data || FOTO_SEM_THUMB}" data-pnf="${k}" alt="" />`).join('')}</div></div>` : ''}`;
+
+      el.querySelectorAll('[data-pnf]').forEach(img => img.addEventListener('click', () => {
+        const f = fotos[Number(img.dataset.pnf)];
+        if(f) openLightbox(f.e.fotos, f.i, () => { saveEntry(f.e); render(); });
+      }));
+      const bm = el.querySelector('[data-pn="mapa"]');
+      if(bm) bm.addEventListener('click', () => { const b = document.getElementById('dob-btn-mapa'); if(b) b.click(); });
+    }catch(err){
+      console.warn('panorama', err);
+      el.innerHTML = '';
+    }
+  }
+
   function render(){
     renderStats();
+    renderPanorama();
     renderDateStrip();
     const filtered = applyFilters(entries);
     const filtroData = document.getElementById('dob-filtro-data').value;
