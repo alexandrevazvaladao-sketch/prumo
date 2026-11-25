@@ -968,6 +968,7 @@
   .pn-spark{ display:block; width:100%; height:46px; margin-top:6px; }
   .pn-row{ display:flex; align-items:center; gap:12px; padding:11px 16px; position:relative; }
   .pn-row + .pn-row{ border-top:1px solid #eef0f3; }
+  .pn-go{ cursor:pointer; } .pn-go:hover{ background:#f3f6fb; } .pn-go:focus-visible{ outline:2px solid #1f9d57; outline-offset:-2px; }
   .pn-ic{ flex:0 0 30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:#eef1f6; color:var(--ink); }
   .pn-ic svg{ width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
   .pn-ic.run{ background:#fde6b0; color:#8a5200; } .pn-ic.ok{ background:#c9eed9; color:#0f7a3c; } .pn-ic.late{ background:#fbe9e4; color:#c03a1c; }
@@ -1349,7 +1350,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.112';
+  const APP_VERSION = 'v2026.11.25.113';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9319,11 +9320,11 @@
   }
   function pnFrentes(data, filtroObra){
     const linhas = marcacoesMapaDoDia(data);
-    const out = []; let obra = null;
+    const out = []; let obra = null, obraRaw = null;
     linhas.forEach(l => {
-      if(l.tipo === 'obra'){ obra = l.texto; return; }
+      if(l.tipo === 'obra'){ obra = l.texto; obraRaw = l.raw; return; }
       if(filtroObra && !(obra === 'Pequis + Buritis' || obra === (filtroObra === 'Pequis' ? 'Solar dos Pequis' : 'Solar dos Buritis'))) return;
-      out.push(Object.assign({ obraLabel: obra }, l));
+      out.push(Object.assign({ obraLabel: obra, obraRaw }, l));
     });
     return out;
   }
@@ -9387,7 +9388,7 @@
         const unid = f.trecho ? (f.qtd === 1 ? 'trecho' : 'trechos') : (f.qtd === 1 ? 'local' : 'locais');
         const nomeUnico = (!f.trecho && f.itens && f.itens.length === 1) ? f.itens[0].nome : '';
         const det = [nomeUnico || (f.qtd + ' ' + unid), f.desde ? 'desde ' + fmtDate(f.desde).slice(0,5) : ''].filter(Boolean).join(' · ');
-        return cab + `<div class="pn-row"><div class="pn-ic ${ok ? 'ok' : 'run'}">${f.trecho ? PN_IC.rede : PN_IC.obra}</div><div class="pn-tx"><div class="pn-t1">${esc(pnTitulo(f.servico))}</div><div class="pn-t2">${esc(det)}</div></div><div class="pn-rt"><span class="pn-tag ${ok ? 'ok' : 'run'}">${ok ? 'Concluído' : 'Em execução'}</span></div></div>`;
+        return cab + `<div class="pn-row pn-go" role="button" tabindex="0" title="Abrir no mapa" data-ir-mapa="${esc(f.obraRaw)}|||${esc(f.servico)}|||${esc(f.planta || '')}|||"><div class="pn-ic ${ok ? 'ok' : 'run'}">${f.trecho ? PN_IC.rede : PN_IC.obra}</div><div class="pn-tx"><div class="pn-t1">${esc(pnTitulo(f.servico))}</div><div class="pn-t2">${esc(det)}</div></div><div class="pn-rt"><span class="pn-tag ${ok ? 'ok' : 'run'}">${ok ? 'Concluído' : 'Em execução'}</span></div></div>`;
       }).join('') : '<div class="pn-vazio">Nenhuma frente marcada no mapa nesse dia.</div>';
 
       const linhasEmp = empresas.length ? empresas.map(g => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(pnEmpresa(g.empresa))}</div><div class="pn-t2">${esc(g.servs.map(pnTitulo).join(', '))}</div></div><div class="pn-rt"><b>${g.qtd}</b><span>${g.qtd === 1 ? 'pessoa' : 'pessoas'}</span></div></div>`).join('')
@@ -9409,6 +9410,7 @@
         const f = fotos[Number(img.dataset.pnf)];
         if(f) openLightbox(f.e.fotos, f.i, () => { saveEntry(f.e); render(); });
       }));
+      el.querySelectorAll('.pn-go').forEach(r => r.addEventListener('keydown', ev => { if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); r.click(); } }));
       const bm = el.querySelector('[data-pn="mapa"]');
       if(bm) bm.addEventListener('click', () => { const b = document.getElementById('dob-btn-mapa'); if(b) b.click(); });
     }catch(err){
