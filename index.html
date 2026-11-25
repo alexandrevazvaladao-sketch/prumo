@@ -1279,7 +1279,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.97';
+  const APP_VERSION = 'v2026.11.25.98';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -10262,16 +10262,19 @@
       const raw = localStorage.getItem('dob:aviso-atualizacao');
       if(raw){
         const a = JSON.parse(raw);
+        try{ localStorage.removeItem('dob:aviso-atualizacao'); }catch(e){}
         const mostrar = () => {
+          if(a.para && a.para !== APP_VERSION) return;
           if(document.getElementById('dob-aviso-atualizacao')) return;
           const box = document.createElement('div');
           box.id = 'dob-aviso-atualizacao';
           box.setAttribute('role','alertdialog');
-          box.style.cssText = 'position:fixed; left:50%; top:max(12px, env(safe-area-inset-top,0px)); transform:translateX(-50%); z-index:2147483000; width:min(92vw,420px); background:#1f6f43; color:#fff; border-radius:12px; padding:14px 16px; box-shadow:0 8px 28px rgba(0,0,0,.35); font:14px/1.4 system-ui,sans-serif; display:flex; gap:12px; align-items:flex-start;';
-          box.innerHTML = '<div style="flex:1;"><strong style="display:block; font-size:15px; margin-bottom:2px;">App atualizado</strong>O app foi atualizado automaticamente para a versão ' + (a.para || APP_VERSION) + (a.de ? ' (antes: ' + a.de + ')' : '') + '.</div>';
+          box.style.cssText = 'position:fixed; left:50%; bottom:calc(84px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:2147483000; width:min(92vw,380px); background:#16233d; color:#fff; border-radius:10px; padding:10px 12px 10px 14px; box-shadow:0 8px 24px rgba(16,24,40,.25); font:13px/1.4 Inter,system-ui,sans-serif; display:flex; gap:10px; align-items:center;';
+          setTimeout(() => { try{ box.remove(); }catch(e){} }, 6000);
+          box.innerHTML = '<div style="flex:1;"><strong>App atualizado</strong> para a versão ' + (a.para || APP_VERSION) + '.</div>';
           const x = document.createElement('button');
           x.type = 'button'; x.textContent = 'Fechar';
-          x.style.cssText = 'background:#fff; color:#1f6f43; border:0; border-radius:8px; padding:8px 12px; font-weight:700; font-size:14px; cursor:pointer; min-height:36px;';
+          x.style.cssText = 'background:transparent; color:#c9d6ec; border:0; padding:6px 4px; font-weight:600; font-size:13px; cursor:pointer;';
           x.addEventListener('click', () => { try{ localStorage.removeItem('dob:aviso-atualizacao'); }catch(e){} box.remove(); });
           box.appendChild(x);
           document.body.appendChild(box);
