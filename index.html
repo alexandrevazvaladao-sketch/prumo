@@ -1347,7 +1347,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.108';
+  const APP_VERSION = 'v2026.11.25.109';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4232,10 +4232,12 @@
   function paredeCfg2(){
     if(!mapaState.paredeConfig) mapaState.paredeConfig = {};
     const c = mapaState.paredeConfig;
-    // 25/11: ciclo informado pelo Alexandre — um dia monta a forma, no outro concreta (2 dias úteis por meia laje)
-    if(c.v !== 2){ delete c.diasMeia; c.v = 2; }
+    // 25/11: ritmo informado pelo Alexandre — monta num dia e concreta no outro, 6 aptos + 2 halls por semana
+    // (3 meias lajes: 2 aptos + hall → 2 aptos → 2 aptos + hall), de segunda a sexta.
+    if(c.v !== 3){ delete c.diasMeia; c.sabado = false; c.v = 3; }
     const num = (v, pad, min) => (v !== undefined && v !== null && v !== '' && isFinite(Number(v)) && Number(v) >= min) ? Number(v) : pad;
-    return { dias: num(c.diasMeia, 2, 1), platib: num(c.diasPlatib, 0, 0), paralelo: Math.round(num(c.paralelo, 1, 1)), cura: Math.round(num(c.cura, 3, 0)), sabado: c.sabado !== false, usarReal: c.usarReal !== false };
+    const porSemana = num(c.porSemana, 3, 0.5);
+    return { porSemana, dias: 5 / porSemana, platib: num(c.diasPlatib, 0, 0), paralelo: Math.round(num(c.paralelo, 1, 1)), cura: Math.round(num(c.cura, 3, 0)), sabado: c.sabado !== false, usarReal: c.usarReal !== false };
   }
   function paredeUnidades(){
     const filas = [];
@@ -4298,8 +4300,8 @@
     let medio = null, fonte = 'padrão informado', nDur = 0;
     if(ult.length){ medio = ult.reduce((a, b) => a + b, 0) / ult.length; fonte = 'média entre concretagens'; nDur = ult.length; }
     // a 1ª meia laje (montagem inicial) não entra no ritmo: o ciclo normal é monta num dia e concreta no outro
-    const D = Math.max(1, Math.round((cfg.usarReal && medio) ? medio : cfg.dias));
-    const DP = cfg.platib > 0 ? Math.round(cfg.platib) : D;
+    const D = Math.max(1, (cfg.usarReal && medio) ? medio : cfg.dias); // dias úteis por meia laje (pode ser fracionado: 5/3)
+    const DP = cfg.platib > 0 ? cfg.platib : D;
     if(!(cfg.usarReal && medio)) fonte = 'padrão informado';
     const slots = Array.from({ length: cfg.paralelo }, () => pProxUtil(hoje, sab));
     const comecou = f => f.us.some(u => u.status !== 'pendente');
@@ -4312,29 +4314,33 @@
     });
     ordem.forEach(f => {
       let i = 0; slots.forEach((x, j) => { if(x < slots[i]) i = j; });
-      let cursor = null; // fim da unidade anterior desta fila
+      // posição fracionada em dias úteis a partir de uma data-base: com 3 meias lajes por semana as concretagens
+      // caem em dias alternados (ex.: ter, qui, sex), sem arredondar cada ciclo para cima.
+      let base = null, pos = 0;
       const inicioFila = comecou(f) ? null : slots[i];
+      const em = (off) => pSomaUteis(base, off, sab);
       f.us.forEach(u => {
-        if(u.status === 'concluido'){ cursor = pDt(u.fim); return; }
+        if(u.status === 'concluido'){ base = pSomaUteis(pDt(u.fim), 1, sab); pos = 0; return; }
         const dur = u.platibanda ? DP : D;
-        let ini;
+        if(!base){ base = inicioFila || pProxUtil(hoje, sab); pos = 0; }
+        if(em(Math.floor(pos)) < hoje){ base = pProxUtil(hoje, sab); pos = 0; }
         if(u.status === 'andamento'){
-          ini = u.ini ? pDt(u.ini) : hoje;
-          let fim = cursor ? pSomaUteis(cursor, dur, sab) : pSomaUteis(ini, dur - 1, sab);
-          if(fim < hoje) fim = pProxUtil(hoje, sab);
-          u.prevIni = pStr(ini); u.prevFim = pStr(fim); cursor = fim; return;
+          const ini = u.ini ? pDt(u.ini) : hoje;
+          let fim = em(Math.max(0, Math.ceil(pos + dur) - 1));
+          pos += dur;
+          if(fim < hoje){ fim = pProxUtil(hoje, sab); base = pSomaUteis(fim, 1, sab); pos = 0; }
+          u.prevIni = pStr(ini); u.prevFim = pStr(fim); return;
         }
-        ini = cursor ? pSomaUteis(cursor, 1, sab) : (inicioFila || pProxUtil(hoje, sab));
-        if(ini < hoje) ini = pProxUtil(hoje, sab);
         if(u.pav === 1 && u.metade === 'A'){
           const lib = libBloco(u.obra, u.bloco);
           u.aguardaLajao = !lib;
-          if(lib){ const l = pProxUtil(pDt(lib), sab); if(l > ini) ini = l; }
+          if(lib){ const l = pProxUtil(pDt(lib), sab); if(l > em(Math.floor(pos))){ base = l; pos = 0; } }
         }
-        const fim = pSomaUteis(ini, dur - 1, sab);
-        u.prevIni = pStr(ini); u.prevFim = pStr(fim); cursor = fim;
+        const ini = em(Math.floor(pos)), fim = em(Math.max(0, Math.ceil(pos + dur) - 1));
+        pos += dur;
+        u.prevIni = pStr(ini); u.prevFim = pStr(fim);
       });
-      if(cursor){ const livre = pSomaUteis(cursor, 1, sab); if(livre > slots[i]) slots[i] = livre; }
+      if(base){ const livre = em(Math.ceil(pos)); if(livre > slots[i]) slots[i] = livre; }
     });
     return { D, DP, medio, nDur, fonte };
   }
@@ -4394,23 +4400,23 @@
     container.innerHTML = `
       <div class="dob-card-form">
         <h3>Parede de concreto — ciclos</h3>
-        <p class="dob-dica" style="margin-top:0;">Um jogo de forma faz uma meia laje a cada 2 dias — um dia monta, no outro concreta (2 aptos + hall, depois os outros 2) e sobe o bloco inteiro — 1º ao 4º pavimento e platibanda — antes de passar para o outro bloco do geminado. Os dados vêm do Mapa (Instalações, Forma e Concretagem por apartamento); o que ainda não aconteceu aparece em <i>itálico</i>.</p>
+        <p class="dob-dica" style="margin-top:0;">Um jogo de forma monta num dia e concreta no outro, fazendo 3 meias lajes por semana — 6 aptos + 2 halls, de segunda a sexta (2 aptos + hall, depois os outros 2) e sobe o bloco inteiro — 1º ao 4º pavimento e platibanda — antes de passar para o outro bloco do geminado. Os dados vêm do Mapa (Instalações, Forma e Concretagem por apartamento); o que ainda não aconteceu aparece em <i>itálico</i>.</p>
         <div style="display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;">
           ${card('Meias lajes concretadas', conc.length + ' / ' + lajes.length, and.length ? and.length + ' em execução' : 'nenhuma em execução')}
           ${card('Ritmo realizado', prev.medio ? prev.medio.toFixed(1).replace('.', ',') + ' dias' : '—', prev.medio ? prev.fonte + ' · dias úteis' : 'ainda sem concretagem')}
-          ${card('Ritmo usado na previsão', prev.D + ' dias por meia laje', (cfg.usarReal && prev.medio) ? 'realizado' : 'padrão informado')}
+          ${card('Ritmo usado na previsão', (5 / prev.D).toFixed(1).replace('.0', '').replace('.', ',') + ' meias lajes/semana', (cfg.usarReal && prev.medio) ? 'realizado' : (cfg.porSemana === 3 ? '6 aptos + 2 halls · seg a sex' : 'padrão informado'))}
           ${card('Término previsto', 'Buritis ' + fimObra('Buritis'), 'Pequis ' + fimObra('Pequis'))}
         </div>
         <details style="margin-bottom:10px;"><summary style="cursor:pointer;font-weight:600;">Premissas da previsão</summary>
           <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:10px;">
-            ${campo('dob-pc-dias', 'Dias por meia laje (padrão)', cfg.dias, { min: 1 })}
+            ${campo('dob-pc-dias', 'Meias lajes por semana (seg–sex)', cfg.porSemana, { min: 0.5, step: 0.5 })}
             ${campo('dob-pc-plat', 'Dias da platibanda (0 = igual)', cfg.platib, { min: 0 })}
             ${campo('dob-pc-par', 'Jogos de forma em paralelo', cfg.paralelo, { min: 1 })}
             ${campo('dob-pc-cura', 'Cura do lajão (dias)', cfg.cura, { min: 0 })}
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="dob-pc-sab" ${cfg.sabado ? 'checked' : ''}/> Trabalha aos sábados</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="dob-pc-real" ${cfg.usarReal ? 'checked' : ''}/> Usar o ritmo realizado</label>
           </div>
-          <p class="dob-dica">O jogo de forma cobre 2 aptos + hall e só vira depois de concretar; instalações e armadura vão na frente. Ciclo padrão: um dia monta a forma, no outro concreta — 2 dias úteis por meia laje, na sequência 2 aptos + hall → 2 aptos → 2 aptos + hall do andar de cima. Com “Usar o ritmo realizado” marcado, vale a média dos intervalos entre concretagens seguidas (a 1ª montagem não conta). Cada jogo de forma sobe um geminado; o 1º lado começa depois do lajão do bloco concluído mais a cura. A platibanda não tem marcação no Mapa, então aparece sempre como previsão.</p>
+          <p class="dob-dica">O jogo de forma cobre 2 aptos + hall e só vira depois de concretar; instalações e armadura vão na frente. Ritmo padrão: monta num dia e concreta no outro, 3 meias lajes por semana de segunda a sexta (6 aptos + 2 halls): 2 aptos + hall → 2 aptos → 2 aptos + hall do andar de cima. Com “Usar o ritmo realizado” marcado, vale a média dos intervalos entre concretagens seguidas (a 1ª montagem não conta). Cada jogo de forma sobe um geminado; o 1º lado começa depois do lajão do bloco concluído mais a cura. A platibanda não tem marcação no Mapa, então aparece sempre como previsão.</p>
         </details>
         <h4 style="margin:14px 0 6px;font-family:inherit;font-size:15px;">Próximas meias lajes</h4>
         ${proximos.length ? `<div style="border:1px solid #e3e6eb;border-radius:10px;overflow:hidden;">${proximos.map((u, k) => `<div style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:9px 12px;${k ? 'border-top:1px solid #eef0f3;' : ''}font-size:13.5px;background:#fff;"><span style="width:7px;height:7px;border-radius:50%;background:${u.status === 'andamento' ? '#b26b00' : '#a3abb8'};"></span><b style="font-weight:600;">${paredeEsc(nomeU(u))}</b><span style="color:#6b7380;">${u.status === 'andamento' ? 'em execução desde ' + dCurta(u.ini) + ' · concretagem prevista ' + dCurta(u.prevFim) : 'início previsto ' + dCurta(u.prevIni) + ' · concretagem ' + dCurta(u.prevFim)}</span>${u.aguardaLajao ? '<span style="color:#c03a1c;font-size:12px;">aguarda lajão</span>' : ''}</div>`).join('')}</div>` : '<p class="dob-dica">Todas as meias lajes estão concretadas.</p>'}
@@ -4420,7 +4426,7 @@
       </div>`;
     const salvar = (campo, v) => { if(!mapaState.paredeConfig) mapaState.paredeConfig = {}; mapaState.paredeConfig[campo] = v; saveMapaState(); renderParede(); };
     const lig = (id, campo, tipo) => { const el = document.getElementById(id); if(el) el.addEventListener('change', () => salvar(campo, tipo === 'bool' ? el.checked : (el.value === '' ? null : Number(el.value)))); };
-    lig('dob-pc-dias', 'diasMeia'); lig('dob-pc-plat', 'diasPlatib'); lig('dob-pc-par', 'paralelo'); lig('dob-pc-cura', 'cura'); lig('dob-pc-sab', 'sabado', 'bool'); lig('dob-pc-real', 'usarReal', 'bool');
+    lig('dob-pc-dias', 'porSemana'); lig('dob-pc-plat', 'diasPlatib'); lig('dob-pc-par', 'paralelo'); lig('dob-pc-cura', 'cura'); lig('dob-pc-sab', 'sabado', 'bool'); lig('dob-pc-real', 'usarReal', 'bool');
   }
   document.getElementById('dob-btn-parede').addEventListener('click', () => {
     paredeAberto = !paredeAberto;
