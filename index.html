@@ -1315,7 +1315,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.103';
+  const APP_VERSION = 'v2026.11.25.104';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4256,14 +4256,14 @@
     filas.forEach(f => {
       const feitas = f.us.filter(u => u.status === 'concluido' && u.fim);
       feitas.forEach((u, i) => {
-        if(i === 0){ if(u.ini) primeiros.push(pDiasUteis(pDt(u.ini), pDt(u.fim), sab)); }
+        if(i === 0){ const iniF = (u.etapas && u.etapas['FORMA PAREDE DE CONCRETO'].ini) || u.ini; if(iniF) primeiros.push(pDiasUteis(pDt(iniF), pDt(u.fim), sab)); }
         else intervalos.push({ fim: u.fim, d: Math.max(1, pDiasUteis(pSomaUteis(pDt(feitas[i - 1].fim), 1, sab), pDt(u.fim), sab)) });
       });
     });
     const ult = intervalos.sort((a, b) => a.fim.localeCompare(b.fim)).slice(-6).map(x => x.d);
     let medio = null, fonte = 'padrão informado', nDur = 0;
     if(ult.length){ medio = ult.reduce((a, b) => a + b, 0) / ult.length; fonte = 'média entre concretagens'; nDur = ult.length; }
-    else if(primeiros.length){ medio = primeiros.reduce((a, b) => a + b, 0) / primeiros.length; fonte = '1ª meia laje (início → concretagem)'; nDur = primeiros.length; }
+    else if(primeiros.length){ medio = primeiros.reduce((a, b) => a + b, 0) / primeiros.length; fonte = '1ª meia laje (montagem da forma → concretagem)'; nDur = primeiros.length; }
     const D = Math.max(1, Math.round((cfg.usarReal && medio) ? medio : cfg.dias));
     const DP = cfg.platib > 0 ? Math.round(cfg.platib) : D;
     if(!(cfg.usarReal && medio)) fonte = 'padrão informado';
@@ -4376,7 +4376,7 @@
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="dob-pc-sab" ${cfg.sabado ? 'checked' : ''}/> Trabalha aos sábados</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="dob-pc-real" ${cfg.usarReal ? 'checked' : ''}/> Usar o ritmo realizado</label>
           </div>
-          <p class="dob-dica">Ritmo = dias úteis entre uma concretagem e a seguinte do mesmo jogo de forma (enquanto só existe a 1ª, conta do início das instalações até a concretagem). Cada jogo de forma sobe um geminado; o 1º lado começa depois do lajão do bloco concluído mais a cura. A platibanda não tem marcação no Mapa, então aparece sempre como previsão.</p>
+          <p class="dob-dica">O jogo de forma cobre 2 aptos + hall e só vira depois de concretar; instalações e armadura vão na frente. Ritmo = dias úteis entre uma concretagem e a seguinte do mesmo jogo (enquanto só existe a 1ª, conta da montagem da forma até a concretagem). Cada jogo de forma sobe um geminado; o 1º lado começa depois do lajão do bloco concluído mais a cura. A platibanda não tem marcação no Mapa, então aparece sempre como previsão.</p>
         </details>
         <h4 style="margin:14px 0 6px;font-family:inherit;font-size:15px;">Próximas meias lajes</h4>
         ${proximos.length ? `<div style="border:1px solid #e3e6eb;border-radius:10px;overflow:hidden;">${proximos.map((u, k) => `<div style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:9px 12px;${k ? 'border-top:1px solid #eef0f3;' : ''}font-size:13.5px;background:#fff;"><span style="width:7px;height:7px;border-radius:50%;background:${u.status === 'andamento' ? '#b26b00' : '#a3abb8'};"></span><b style="font-weight:600;">${paredeEsc(nomeU(u))}</b><span style="color:#6b7380;">${u.status === 'andamento' ? 'em execução desde ' + dCurta(u.ini) + ' · concretagem prevista ' + dCurta(u.prevFim) : 'início previsto ' + dCurta(u.prevIni) + ' · concretagem ' + dCurta(u.prevFim)}</span>${u.aguardaLajao ? '<span style="color:#c03a1c;font-size:12px;">aguarda lajão</span>' : ''}</div>`).join('')}</div>` : '<p class="dob-dica">Todas as meias lajes estão concretadas.</p>'}
