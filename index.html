@@ -607,7 +607,7 @@
      centralizado. A coluna de seleção fica "grudada" (sticky) pra ficar sempre à mão. No celular
      (tela estreita) cai pra uma coluna só, empilhado, como já era. ---------- */
   .dob-mapa-layout{ display:flex; align-items:flex-start; gap:22px; margin-top:14px; }
-  .dob-mapa-coluna-selecao{ width:340px; flex-shrink:0; position:sticky; top:14px; max-height:calc(100vh - 28px); overflow-y:auto; padding-right:2px; }
+  .dob-mapa-coluna-selecao{ width:340px; flex-shrink:0; padding-right:2px; }
   .dob-mapa-coluna-mapa{ flex:1; min-width:0; }
   @media (max-width: 980px){
     .dob-mapa-layout{ flex-direction:column; gap:14px; }
@@ -1350,7 +1350,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.114';
+  const APP_VERSION = 'v2026.11.25.115';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -5983,7 +5983,7 @@
             <details id="dob-mapa-ordem-wrap" style="margin-top:8px;">
               <summary style="cursor:pointer; font-size:12.5px; color:var(--muted); user-select:none;">Ver todos os serviços / reordenar</summary>
               <p class="dob-dica" style="margin:6px 0;">Arraste um serviço pelo ⠿ pra mudar a ordem em que aparece na lista.</p>
-              <div id="dob-mapa-servico-lista" style="display:flex; flex-direction:column; gap:6px; max-height:420px; overflow-y:auto; border:1px solid var(--line); border-radius:8px; padding:8px; background:#fafbfc;"></div>
+              <div id="dob-mapa-servico-lista" style="display:flex; flex-direction:column; gap:6px; border:1px solid var(--line); border-radius:8px; padding:8px; background:#fafbfc;"></div>
             </details>
             <div class="dob-linha" style="gap:6px; margin-top:10px; flex-wrap:wrap;">
               <button class="dob-btn secundario pequeno" id="dob-mapa-editar-servico" type="button" title="Editar nome do serviço">✏️ Editar</button>
