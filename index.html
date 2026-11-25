@@ -1394,7 +1394,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.126';
+  const APP_VERSION = 'v2026.11.25.127';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9519,7 +9519,7 @@
       const hero = `
         <div class="pn-box pn-hero">
           <div>
-            <div class="pn-lbl"><span>Frentes em execução${ehHoje ? '' : ' em ' + dataBonita}</span><span>14 dias</span></div>
+            <div class="pn-lbl"><span>Frentes em execução${ehHoje ? '' : ' em ' + dataBonita}</span><span>60 dias · arraste ou use ‹ ›</span></div>
             <div class="pn-big">${emExec.length}${delta ? `<small class="${delta > 0 ? 'up' : 'down'}">${delta > 0 ? '▲ +' : '▼ '}${delta} em 7 dias</small>` : '<small>igual a 7 dias atrás</small>'}</div>
             ${pnLinhaDias(isosLc, serFrentes, data)}
           </div>
