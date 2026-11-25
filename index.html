@@ -1347,7 +1347,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.109';
+  const APP_VERSION = 'v2026.11.25.110';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4307,6 +4307,8 @@
     const comecou = f => f.us.some(u => u.status !== 'pendente');
     const libBloco = (obra, bl) => paredeLiberacao(obra, [bl], cfg.cura, sab);
     const ordem = filas.slice().sort((x, y) => {
+      // 25/11: foco no Buritis — termina o Buritis inteiro e só depois entra no Pequis
+      if(x.obra !== y.obra) return x.obra === 'Buritis' ? -1 : 1;
       const cx = comecou(x), cy = comecou(y);
       if(cx !== cy) return cx ? -1 : 1;
       const lx = libBloco(x.obra, x.blocosOrdem[0]) || '9999', ly = libBloco(y.obra, y.blocosOrdem[0]) || '9999';
