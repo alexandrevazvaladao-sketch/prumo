@@ -1338,7 +1338,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.105';
+  const APP_VERSION = 'v2026.11.25.106';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -10360,15 +10360,16 @@
   // ===== Nomes em MAIÚSCULAS (vindos das planilhas/UAU) aparecem em formato normal na tela =====
   (function normalizarMaiusculas(){
     const SIGLAS = new Set(['LTDA','ME','EPP','EIRELI','SA','PNE','UH','BEE','UAU','PPC','CNPJ','CPF','INSS','FGTS','NR','EPI','EPC','ART','RRT','CB','GS','SM','CCB','CEF','PCMSO','PGR','ASO','FCK','CA','CP','PVC','PPR','PEAD','PEX','TV','CFTV','SPDA','QDC','QGBT','RJ','GO','SP','DF','MG','I','II','III','IV','VI','OK']);
-    const MINUS = new Set(['DE','DA','DO','DAS','DOS','E','EM','NO','NA','NOS','NAS','A','O','AS','OS','COM','POR','PARA','SOBRE','AO','AOS']);
-    const temMinuscula = t => /[a-zà-ÿ]/.test(t);
+    const MINUS = new Set(['DE','DA','DO','DAS','DOS','E','OU','EM','NO','NA','NOS','NAS','A','O','AS','OS','COM','POR','PARA','SOBRE','AO','AOS']);
+    const temMinuscula = t => /[a-zà-ÿ]/.test(t.replace(/\S*\d\S*/g, ''));
     function converter(t){
       if(temMinuscula(t)){
         // texto misto (ex.: "Rosa ANGELICA GOMES"): só ajusta palavras longas todas em maiúsculas
         return t.replace(/[A-ZÀ-Ý]{4,}/g, w => SIGLAS.has(w) ? w : w.charAt(0) + w.slice(1).toLowerCase());
       }
       let primeira = true;
-      return t.replace(/[A-Za-zÀ-ÿ]+/g, (w, pos) => {
+      return t.replace(/[A-Za-zÀ-ÿ]+/g, (w, pos, str) => {
+        if(/\d/.test(str.charAt(pos - 1) || '')) return w; // ex.: 1o, 2º
         const ini = primeira; primeira = false;
         if(SIGLAS.has(w)) return w;
         if(!ini && MINUS.has(w)) return w.toLowerCase();
