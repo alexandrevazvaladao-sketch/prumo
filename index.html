@@ -1135,6 +1135,15 @@
     .dob-card-form{ padding:16px 14px !important; }
     .dob-card-form h3{ font-size:17px !important; }
   }
+
+  /* mais contraste entre fundo, cartões e divisórias */
+  :root{ --paper:#e9ecf1; --line:#d5dae2; }
+  body{ background:#e9ecf1 !important; }
+  .dob-entry, .pn-box, .dob-card-form, .pd-gem, .dob-daypill{ border-color:#d5dae2 !important; box-shadow:0 1px 2px rgba(16,24,40,.06) !important; }
+  .pn-row + .pn-row, .pn-box > header{ border-color:#e4e8ee !important; }
+  .pn-grp{ background:#f1f3f7 !important; border-color:#e4e8ee !important; }
+  .dob-entry-secao-colapsavel > summary{ background:#f1f3f7 !important; border-color:#dde2ea !important; }
+  .dob-input, .dob-select, .dob-textarea{ border-color:#cfd5de !important; }
 </style>
 
 <style id="dob-skin">
@@ -1338,7 +1347,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.106';
+  const APP_VERSION = 'v2026.11.25.107';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
