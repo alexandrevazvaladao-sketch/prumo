@@ -1076,6 +1076,15 @@
   .dob-card-form{ border:1px solid #e3e6eb !important; box-shadow:none !important; border-radius:10px !important; }
   .dob-card-form h3, .dob-card-form > h2{ font-size:18px !important; letter-spacing:-.015em; }
   .dob-crono-ppc-card, .dob-crono-geral .gcard{ background:#fff !important; border:1px solid #e3e6eb !important; }
+
+  @media (max-width:760px){
+    .pn-box > header .m{ display:none; }
+    .dob-header{ display:flex !important; justify-content:space-between; align-items:center; flex-direction:row !important; }
+    .dob-header .dob-header-right{ margin:0 !important; }
+    .dob-header .dob-modo-compacto-toggle{ padding:5px 10px !important; font-size:12px !important; min-height:0 !important; }
+    #dob-status-sincr, .dob-nuvem-texto{ margin-left:0 !important; }
+    .dob-status-mais{ margin-left:auto !important; }
+  }
 </style>
 
 <style id="dob-skin">
@@ -1279,7 +1288,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.98';
+  const APP_VERSION = 'v2026.11.25.99';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -1363,6 +1372,7 @@
         <div class="dnum">${d.getDate()}</div>
       </div>`;
     }).join('');
+    try{ const alvo = el.querySelector('.dob-daypill.ativo') || el.querySelector('.dob-daypill.hoje'); if(alvo) el.scrollLeft = alvo.offsetLeft - el.clientWidth + alvo.offsetWidth + 8; }catch(e){}
     el.querySelectorAll('.dob-daypill').forEach(pill => {
       pill.addEventListener('click', () => {
         const iso = pill.dataset.iso;
