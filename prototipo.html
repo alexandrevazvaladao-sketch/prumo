@@ -132,60 +132,95 @@
   .prog b i{ display:block; height:100%; background:var(--navy); }
   .view{ display:none; } .view.on{ display:contents; }
 
+  .m-only{ display:none; }
+  @media (max-width:820px){ .d-compare{ display:none !important; } }
   @media (max-width: 820px){
-    .app{ grid-template-columns:1fr; }
-    .side{ display:none; }
-    .top{ padding-top:calc(12px + env(safe-area-inset-top)); }
-    .top .hide-m{ display:none; }
-    .kpis{ grid-template-columns:repeat(2,1fr); }
-    .kpi:nth-child(2){ border-right:none; }
-    .kpi:nth-child(-n+2){ border-bottom:1px solid var(--line-2); }
-    .grid2{ grid-template-columns:1fr; }
-    .tbl .hide-m{ display:none; }
-    .cron th:first-child, .cron td:first-child{ min-width:190px; }
-    .st.st-m{ display:flex; margin-top:4px; }
-    .panel > header .meta{ display:none; }
-    .day .c{ font-size:0; height:8px; }
-    .day .c.has::after{ content:""; display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--navy); }
-    .top{ position:static; }
-    .fotos{ grid-template-columns:repeat(3,1fr); }
-    .ppc{ grid-template-columns:auto 1fr; }
-    .ppc .hide-m{ display:none; }
-    .bottom{ display:grid; grid-template-columns:repeat(5,1fr); position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line); padding:6px 0 calc(6px + env(safe-area-inset-bottom)); z-index:10; }
-    .bottom a{ display:flex; flex-direction:column; align-items:center; gap:2px; font-size:11px; color:var(--muted); text-decoration:none; padding:4px 0; }
-    .bottom a.on{ color:var(--navy); font-weight:600; }
+    body{ background:#f2f3f6; }
+    .app{ display:block; }
+    .side, .top, .wrap{ display:none !important; }
+    .m-only{ display:block; }
+    .m{ padding:calc(10px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) calc(96px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
 
-    /* ---- celular: cabeçalho escuro com indicadores ---- */
-    .top{ background:var(--navy); border-bottom:none; color:#fff; padding-bottom:6px; }
-    .top .sub{ color:#a9b5c9; }
-    .top .btn.pri{ background:#fff; color:var(--navy); border-color:#fff; }
-    .top .select{ background:transparent; color:#fff; border-color:#3a4c6e; }
-    .compare{ background:#2a3a58; }
-    .wrap{ padding-top:0; }
-    .wrap > .kpis, .wrap > .ppc-panel{ margin:0 calc(-1 * max(16px, env(safe-area-inset-left))); border:none; border-radius:0; background:var(--navy); color:#fff; padding:0 max(16px, env(safe-area-inset-left)) 18px; }
-    .kpis{ grid-template-columns:repeat(4,1fr); }
-    .kpi{ padding:8px 6px 0 0; border:none !important; }
-    .kpi .v{ font-size:21px; }
-    .kpi .l{ color:#a9b5c9; font-size:11px; line-height:1.25; }
-    .wrap > .week{ margin-top:-10px; }
-    .ppc-panel .ppc{ padding:6px 0 0; }
-    .ppc-panel .muted{ color:#a9b5c9 !important; }
-    .ppc-panel .bar{ background:#2f4166; } .ppc-panel .bar i{ background:#fff; }
-    .wrap > .ppc-panel + .panel{ margin-top:-10px; }
-    /* ordem no celular: fotos sobem logo depois da semana */
-    #p-fotos{ order:3; } #p-frentes{ order:4; } #p-obs{ order:5; }
-    #p-fotos .fotos{ display:flex; overflow-x:auto; gap:8px; scroll-snap-type:x mandatory; }
-    #p-fotos .fotos div{ flex:0 0 42%; scroll-snap-align:start; }
-    /* frentes: barra de status à esquerda + progresso */
-    .tbl tbody tr td:first-child{ border-left:3px solid transparent; }
-    .tbl tbody tr.s-run td:first-child{ border-left-color:var(--run); }
-    .tbl tbody tr.s-late td:first-child{ border-left-color:var(--late); }
-    .tbl tbody tr.s-ok td:first-child{ border-left-color:var(--ok); }
-    .prog{ display:flex; align-items:center; gap:8px; margin-top:6px; font-size:11.5px; color:var(--muted); }
-    .prog b{ display:block; flex:1; max-width:140px; height:4px; background:var(--line-2); border-radius:2px; overflow:hidden; }
-    .prog b i{ display:block; height:100%; background:var(--navy); }
-    .top .btn.pri{ display:none; }
-    .compare{ top:calc(14px + env(safe-area-inset-top)); bottom:auto; right:14px; font-size:11px; padding:6px 9px; }
+    /* cabeçalho estilo iOS: data pequena + título grande + botão da obra */
+    .m-head{ display:flex; align-items:flex-end; gap:12px; padding:8px 2px 14px; }
+    .m-head .eyebrow{ font-size:13px; color:var(--muted); font-weight:500; }
+    .m-head h1{ margin:2px 0 0; font-size:30px; line-height:1.1; font-weight:700; letter-spacing:-.025em; }
+    .m-head .obra{ white-space:nowrap; flex:0 0 auto; margin-left:auto; display:flex; align-items:center; gap:6px; background:#fff; border:1px solid var(--line); border-radius:999px; padding:6px 10px 6px 6px; font-size:12.5px; font-weight:500; }
+    .m-head .obra img{ width:22px; height:22px; border-radius:50%; }
+
+    /* métrica principal com gráfico (padrão Stripe/Mercury) */
+    .hero{ background:#fff; border-radius:14px; padding:16px 16px 10px; border:1px solid #e6e8ec; }
+    .hero .lbl{ font-size:13px; color:var(--muted); display:flex; justify-content:space-between; }
+    .hero .big{ font-size:40px; font-weight:700; letter-spacing:-.035em; line-height:1.1; margin-top:4px; }
+    .hero .big small{ font-size:14px; font-weight:500; color:var(--ok); letter-spacing:0; margin-left:8px; }
+    .hero svg.spark{ display:block; width:100%; height:64px; margin-top:6px; }
+    .hero .axis{ display:flex; justify-content:space-between; font-size:11px; color:var(--faint); }
+    .stats{ display:grid; grid-template-columns:repeat(3,1fr); margin-top:12px; border-top:1px solid var(--line-2); padding-top:12px; }
+    .stats div + div{ border-left:1px solid var(--line-2); padding-left:12px; }
+    .stats b{ display:block; font-size:18px; letter-spacing:-.02em; }
+    .stats span{ font-size:11.5px; color:var(--muted); }
+
+    /* seletor de dias em pílulas */
+    .days{ display:flex; gap:8px; overflow-x:auto; padding:14px 2px 2px; scrollbar-width:none; }
+    .days::-webkit-scrollbar{ display:none; }
+    .days a{ flex:0 0 auto; min-width:48px; text-align:center; padding:7px 0 8px; border-radius:12px; background:#fff; border:1px solid #e6e8ec; color:var(--text); text-decoration:none; }
+    .days a small{ display:block; font-size:11px; color:var(--muted); }
+    .days a b{ display:block; font-size:17px; }
+    .days a i{ display:block; width:5px; height:5px; border-radius:50%; margin:3px auto 0; background:transparent; }
+    .days a.has i{ background:var(--navy); }
+    .days a.on{ background:var(--navy); border-color:var(--navy); color:#fff; }
+    .days a.on small{ color:#aebad0; } .days a.on i{ background:#fff; }
+
+    /* listas agrupadas (padrão iOS / Linear) */
+    .sec{ display:flex; align-items:baseline; justify-content:space-between; margin:22px 4px 8px; }
+    .sec h2{ margin:0; font-size:17px; font-weight:650; letter-spacing:-.01em; }
+    .sec a{ font-size:13.5px; color:var(--navy); text-decoration:none; font-weight:500; }
+    .group{ background:#fff; border-radius:14px; border:1px solid #e6e8ec; overflow:hidden; }
+    .row{ display:flex; align-items:center; gap:12px; padding:12px 14px; position:relative; }
+    .row + .row::before{ content:""; position:absolute; top:0; left:58px; right:0; height:1px; background:var(--line-2); }
+    .row .ic{ flex:0 0 32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; background:#eef1f6; color:var(--navy); }
+    .row .ic.run{ background:var(--run-bg); color:var(--run); }
+    .row .ic.late{ background:var(--late-bg); color:var(--late); }
+    .row .ic.ok{ background:var(--ok-bg); color:var(--ok); }
+    .row .ic svg{ width:17px; height:17px; }
+    .row .tx{ min-width:0; flex:1; }
+    .row .t1{ font-weight:600; font-size:15px; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .row .t2{ font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .row .rt{ text-align:right; flex:0 0 auto; }
+    .row .rt b{ display:block; font-size:15px; }
+    .row .rt span{ font-size:12px; color:var(--muted); }
+    .row .chev{ color:#b9bfca; width:16px; height:16px; }
+    .mini{ display:flex; align-items:center; gap:8px; margin-top:6px; }
+    .mini b{ flex:1; height:4px; border-radius:2px; background:var(--line-2); overflow:hidden; }
+    .mini b i{ display:block; height:100%; background:var(--navy); }
+    .mini span{ font-size:11.5px; color:var(--muted); white-space:nowrap; }
+    .tag{ font-size:11.5px; font-weight:600; padding:2px 7px; border-radius:6px; }
+    .tag.run{ background:var(--run-bg); color:var(--run); } .tag.late{ background:var(--late-bg); color:var(--late); } .tag.ok{ background:var(--ok-bg); color:var(--ok); }
+
+    .strip{ display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; }
+    .strip::-webkit-scrollbar{ display:none; }
+    .strip div{ flex:0 0 40%; aspect-ratio:3/4; border-radius:12px; scroll-snap-align:start; background:linear-gradient(160deg,#b9a58f,#7e6c58); position:relative; }
+    .strip div:nth-child(2n){ background:linear-gradient(160deg,#9aa3ad,#5f6976); }
+    .strip div:nth-child(3n){ background:linear-gradient(160deg,#c08a63,#7e4f33); }
+    .strip span{ position:absolute; left:10px; bottom:9px; color:#fff; font-size:12px; font-weight:600; }
+
+    /* PPC */
+    .ring{ display:flex; align-items:center; gap:16px; }
+    .ring svg{ width:76px; height:76px; transform:rotate(-90deg); }
+    .ring .big{ margin:0; }
+    .weeks{ display:flex; gap:6px; align-items:flex-end; height:46px; margin-top:12px; }
+    .weeks div{ flex:1; background:#dfe4ec; border-radius:4px 4px 0 0; position:relative; }
+    .weeks div.cur{ background:var(--navy); }
+    .seg{ display:flex; background:#e6e8ee; border-radius:10px; padding:3px; margin-top:16px; }
+    .seg a{ flex:1; text-align:center; padding:7px 0; font-size:13px; font-weight:500; color:var(--muted); text-decoration:none; border-radius:8px; }
+    .seg a.on{ background:#fff; color:var(--text); box-shadow:0 1px 2px rgba(16,24,40,.08); }
+    .today{ font-size:12px; font-weight:700; min-width:30px; text-align:center; padding:3px 0; border-radius:7px; background:#eef3fb; color:var(--navy); }
+    .today.zero{ background:transparent; color:#c3c8d1; font-weight:500; }
+
+    .bottom{ display:grid; grid-template-columns:repeat(5,1fr); position:fixed; left:0; right:0; bottom:0; background:rgba(255,255,255,.92); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border-top:1px solid var(--line); padding:6px 0 calc(6px + env(safe-area-inset-bottom)); z-index:10; }
+    .bottom a{ display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10.5px; color:var(--muted); text-decoration:none; padding:4px 0; }
+    .bottom a.on{ color:var(--navy); font-weight:600; }
+    .compare{ position:static; display:block; text-align:center; margin:22px 0 0; background:transparent; color:var(--muted); text-decoration:underline; font-size:12.5px; }
   }
 </style>
 </head>
@@ -228,6 +263,37 @@
   <main>
     <!-- ===================== DIÁRIO ===================== -->
     <section class="view" id="v-diario">
+      <div class="m-only m">
+        <div class="m-head"><div><div class="eyebrow">Quarta, 25 de novembro</div><h1>Diário</h1></div><span class="obra"><img src="icon.svg" alt="" />Pequis + Buritis</span></div>
+        <div class="hero">
+          <div class="lbl"><span>Frentes em execução</span><span>últimos 14 dias</span></div>
+          <div class="big num">9<small>+2 na semana</small></div>
+          <svg class="spark" viewBox="0 0 300 64" preserveAspectRatio="none"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16233d" stop-opacity=".16"/><stop offset="1" stop-color="#16233d" stop-opacity="0"/></linearGradient></defs><path d="M0 46 L23 40 L46 44 L69 30 L92 34 L115 26 L138 36 L161 22 L184 28 L207 18 L230 24 L253 14 L276 20 L300 10 L300 64 L0 64Z" fill="url(#g1)"/><path d="M0 46 L23 40 L46 44 L69 30 L92 34 L115 26 L138 36 L161 22 L184 28 L207 18 L230 24 L253 14 L276 20 L300 10" fill="none" stroke="#16233d" stroke-width="2" vector-effect="non-scaling-stroke"/><circle cx="300" cy="10" r="3.5" fill="#16233d"/></svg>
+          <div class="axis"><span>12/11</span><span>hoje</span></div>
+          <div class="stats"><div><b class="num">16</b><span>pessoas hoje</span></div><div><b class="num">2/3</b><span>equipamentos</span></div><div><b class="num">12</b><span>fotos hoje</span></div></div>
+        </div>
+        <div class="days">
+          <a class="has"><small>sex</small><b>20</b><i></i></a><a><small>sáb</small><b>21</b><i></i></a><a class="has"><small>seg</small><b>23</b><i></i></a><a class="has"><small>ter</small><b>24</b><i></i></a><a class="on has"><small>qua</small><b>25</b><i></i></a><a><small>qui</small><b>26</b><i></i></a><a><small>sex</small><b>27</b><i></i></a>
+        </div>
+        <div class="sec"><h2>Frentes do dia</h2><a href="#diario">Mapa</a></div>
+        <div class="group"><div class="row"><div class="ic run"><svg class="i"><use href="#i-wall"/></svg></div><div class="tx"><div class="t1">Bloco 18/19 · Apto 101</div><div class="t2">Parede de concreto · 1º pav.</div><div class="mini"><b><i style="width:25%"></i></b><span>1 de 4 aptos</span></div></div><div class="rt"><span class="tag run">Concretando</span></div></div><div class="row"><div class="ic run"><svg class="i"><use href="#i-wall"/></svg></div><div class="tx"><div class="t1">Guarita</div><div class="t2">Alvenaria · área comum</div><div class="mini"><b><i style="width:70%"></i></b><span>70%</span></div></div><div class="rt"><span class="tag run">Execução</span></div></div><div class="row"><div class="ic run"><svg class="i"><use href="#i-wall"/></svg></div><div class="tx"><div class="t1">Casa do lixo</div><div class="t2">Alvenaria pós laje superior</div><div class="mini"><b><i style="width:20%"></i></b><span>20%</span></div></div><div class="rt"><span class="tag run">Execução</span></div></div><div class="row"><div class="ic late"><svg class="i"><use href="#i-layers"/></svg></div><div class="tx"><div class="t1">Drenagem Pequis 1</div><div class="t2">Infra interna e externa</div><div class="mini"><b><i style="width:45%"></i></b><span>45% · sem avanço há 12 dias</span></div></div><div class="rt"><span class="tag late">Parada</span></div></div><div class="row"><div class="ic run"><svg class="i"><use href="#i-layers"/></svg></div><div class="tx"><div class="t1">Reservatório</div><div class="t2">Fundação · área comum</div><div class="mini"><b><i style="width:60%"></i></b><span>60%</span></div></div><div class="rt"><span class="tag run">Execução</span></div></div><div class="row"><div class="ic ok"><svg class="i"><use href="#i-wall"/></svg></div><div class="tx"><div class="t1">Muro de divisa</div><div class="t2">Pequis + Buritis · 2 trechos</div><div class="mini"><b><i style="width:100%"></i></b><span>2 de 2 trechos</span></div></div><div class="rt"><span class="tag ok">Concluído</span></div></div></div>
+        <div class="sec"><h2>Fotos</h2><a href="#diario">Ver todas</a></div>
+        <div class="strip"><div><span>Bloco 19</span></div><div><span>Guarita</span></div><div><span>Casa do lixo</span></div><div><span>Muro</span></div><div><span>Reservatório</span></div></div>
+        <div class="sec"><h2>Equipes</h2><a href="#diario">16 pessoas</a></div>
+        <div class="group">
+          <div class="row"><div class="ic"><svg class="i"><use href="#i-users"/></svg></div><div class="tx"><div class="t1">Tavares Construtora</div><div class="t2">Forma parede de concreto</div></div><div class="rt"><b class="num">9</b><span>pessoas</span></div></div>
+          <div class="row"><div class="ic"><svg class="i"><use href="#i-users"/></svg></div><div class="tx"><div class="t1">Prolajes Artefatos</div><div class="t2">Muro de divisa</div></div><div class="rt"><b class="num">6</b><span>pessoas</span></div></div>
+          <div class="row"><div class="ic"><svg class="i"><use href="#i-users"/></svg></div><div class="tx"><div class="t1">SM Formas e Serviços</div><div class="t2">Areia e concreto magro</div></div><div class="rt"><b class="num">1</b><span>pessoa</span></div></div>
+        </div>
+        <div class="sec"><h2>Equipamentos</h2></div>
+        <div class="group">
+          <div class="row"><div class="ic ok"><svg class="i"><use href="#i-truck"/></svg></div><div class="tx"><div class="t1">Retroescavadeira 1</div><div class="t2">Operando</div></div><svg class="i chev"><path d="m9 6 6 6-6 6"/></svg></div>
+          <div class="row"><div class="ic ok"><svg class="i"><use href="#i-truck"/></svg></div><div class="tx"><div class="t1">Retroescavadeira 2</div><div class="t2">Operando</div></div><svg class="i chev"><path d="m9 6 6 6-6 6"/></svg></div>
+          <div class="row"><div class="ic"><svg class="i"><use href="#i-truck"/></svg></div><div class="tx"><div class="t1">Perfuratriz hélice</div><div class="t2">Parada</div></div><svg class="i chev"><path d="m9 6 6 6-6 6"/></svg></div>
+        </div>
+        <a class="compare" href="./">Voltar ao app atual</a>
+      </div>
+
       <div class="top">
         <div>
           <h1>Diário</h1>
@@ -309,6 +375,26 @@
 
     <!-- ===================== CRONOGRAMA ===================== -->
     <section class="view" id="v-cronograma">
+      <div class="m-only m">
+        <div class="m-head"><div><div class="eyebrow">Semana 23 a 29 nov</div><h1>Cronograma</h1></div><span class="obra"><img src="icon.svg" alt="" />Pequis + Buritis</span></div>
+        <div class="hero">
+          <div class="ring">
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" fill="none" stroke="#e6e9ef" stroke-width="4"/><circle cx="18" cy="18" r="15.5" fill="none" stroke="#16233d" stroke-width="4" stroke-linecap="round" stroke-dasharray="24.3 97.4"/></svg>
+            <div><div class="lbl" style="display:block">PPC da semana</div><div class="big num">25%</div><div style="font-size:13px;color:var(--muted)">1 de 4 compromissos cumpridos</div></div>
+          </div>
+          <div class="weeks"><div style="height:60%"></div><div style="height:75%"></div><div style="height:40%"></div><div style="height:50%"></div><div style="height:65%"></div><div class="cur" style="height:25%"></div></div>
+          <div class="axis" style="margin-top:4px"><span>6 semanas atrás</span><span>esta semana</span></div>
+        </div>
+        <div class="seg"><a class="on">Produção</a><a>Compromissos</a><a>Paredes</a></div>
+        <div class="sec"><h2>02.02 Fundação</h2><a>produção hoje</a></div>
+        <div class="group"><div class="row"><div class="tx"><div class="t1"><span style="color:var(--faint);font-weight:500;margin-right:6px">02.02.03</span>Fundação profunda</div><div class="mini"><b><i style="width:100%"></i></b><span class="num">19 de 19 blocos</span></div></div><div class="rt"><span class="today zero">—</span></div></div><div class="row"><div class="tx"><div class="t1"><span style="color:var(--faint);font-weight:500;margin-right:6px">02.02.04</span>Bloco de coroamento</div><div class="mini"><b><i style="width:89%"></i></b><span class="num">17 de 19 blocos</span></div></div><div class="rt"><span class="today zero">—</span></div></div><div class="row"><div class="tx"><div class="t1"><span style="color:var(--faint);font-weight:500;margin-right:6px">02.02.05</span>Laje de piso (lajão)</div><div class="mini"><b><i style="width:79%"></i></b><span class="num">15 de 19 blocos</span></div></div><div class="rt"><span class="today">+1</span></div></div><div class="row"><div class="tx"><div class="t1"><span style="color:var(--faint);font-weight:500;margin-right:6px">02.02.06</span>Alvenaria fiada zero</div><div class="mini"><b><i style="width:68%"></i></b><span class="num">13 de 19 blocos</span></div></div><div class="rt"><span class="today zero">—</span></div></div></div>
+        <div class="sec"><h2>02.03 Estrutura</h2></div>
+        <div class="group"><div class="row"><div class="tx"><div class="t1"><span style="color:var(--faint);font-weight:500;margin-right:6px">02.03.01</span>Laje PNE</div><div class="mini"><b><i style="width:20%"></i></b><span class="num">1 de 5 pavtos</span></div></div><div class="rt"><span class="today zero">—</span></div></div></div>
+        <div class="sec"><h2>02.12 Instalações</h2></div>
+        <div class="group"><div class="row"><div class="tx"><div class="t1"><span style="color:var(--faint);font-weight:500;margin-right:6px">02.12.01</span>Elétrica no piso 1º pav.</div><div class="mini"><b><i style="width:32%"></i></b><span class="num">6 de 19 pavtos</span></div></div><div class="rt"><span class="today">+2</span></div></div><div class="row"><div class="tx"><div class="t1"><span style="color:var(--faint);font-weight:500;margin-right:6px">02.15.01</span>Esgoto no piso 1º pav.</div><div class="mini"><b><i style="width:32%"></i></b><span class="num">6 de 19 pavtos</span></div></div><div class="rt"><span class="today">+2</span></div></div></div>
+        <a class="compare" href="./">Voltar ao app atual</a>
+      </div>
+
       <div class="top">
         <div>
           <h1>Cronograma</h1>
@@ -372,7 +458,7 @@
   <a href="#diario"><svg class="i"><use href="#i-menu"/></svg>Menu</a>
 </nav>
 
-<a class="compare" href="./">Voltar ao app atual</a>
+<a class="compare d-compare" href="./">Voltar ao app atual</a>
 
 <script>
   function mostrar(){
