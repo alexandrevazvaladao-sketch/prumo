@@ -1024,6 +1024,24 @@
     .pn-t1{ white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; line-height:1.3; }
     .pn-t2{ white-space:normal; }
   }
+
+  /* menu lateral no padrão do protótipo (PC) */
+  @media (min-width:721px){
+    #dob-sidebar{ width:232px; padding:18px 12px; background:#16233d; }
+    #dob-sidebar .dob-side-top{ padding:4px 8px 18px; margin:0; gap:10px; border:0; }
+    #dob-sidebar:not(.recolhida) .dob-side-hamburguer{ display:none; }
+    #dob-sidebar .dob-side-brand{ font-size:15px !important; font-weight:600; letter-spacing:-.01em; }
+    #dob-sidebar .dob-side-item{ padding:8px 10px; margin:1px 0; gap:10px; border-radius:6px; font-size:13.5px; font-weight:400; color:#c9d1de; min-height:0; }
+    #dob-sidebar .dob-side-item .ic, #dob-sidebar .dob-side-item .ic-svg{ width:18px; height:18px; }
+    #dob-sidebar .dob-side-item .ic-svg{ stroke-width:1.75; }
+    #dob-sidebar .dob-side-item:hover{ background:#22324f; color:#fff; }
+    #dob-sidebar .dob-side-item.active{ background:#fff; color:#16233d !important; font-weight:600; }
+    #dob-sidebar .dob-side-sep{ background:#2a3a58; margin:10px 8px; }
+    #dob-sidebar .dob-side-recolher{ border-top:0; margin-top:14px; padding:8px 10px; color:#8795ad; font-size:12px; }
+    #dob-sidebar.recolhida{ width:64px; }
+    #dob-sidebar.recolhida .dob-side-top{ padding:0 0 14px; justify-content:center; }
+    #dob-sidebar.recolhida .dob-side-item{ justify-content:center; padding:9px 0; }
+  }
 </style>
 
 <style id="dob-skin">
@@ -1226,7 +1244,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.94';
+  const APP_VERSION = 'v2026.11.25.95';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
