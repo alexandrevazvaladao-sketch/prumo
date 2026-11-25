@@ -1085,6 +1085,12 @@
     #dob-status-sincr, .dob-nuvem-texto{ margin-left:0 !important; }
     .dob-status-mais{ margin-left:auto !important; }
   }
+
+  /* sem barra de rolagem visível no app (celular/app instalado) */
+  @media (max-width:760px){
+    html, body{ scrollbar-width:none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar{ display:none; width:0; height:0; }
+  }
 </style>
 
 <style id="dob-skin">
@@ -1288,7 +1294,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.99';
+  const APP_VERSION = 'v2026.11.25.100';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
