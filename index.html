@@ -318,7 +318,7 @@
     transition: box-shadow .15s ease;
   }
   .dob-entry:hover{ box-shadow: var(--shadow); }
-  .dob-entry-ocorrencia{ border-left-color:#b8462f; background:#fffaf8; }
+  .dob-entry-ocorrencia{ border-left-color:#b8462f; background:#fafbfc; }
   .dob-entry-head{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
   .dob-entry-data{ font-weight:700; font-size:15.5px; color:var(--ink); font-family:"Inter", -apple-system, sans-serif; }
   .dob-entry-tag{
@@ -473,7 +473,7 @@
   .dob-kanban-item{ background:#fff; border-radius:7px; margin-bottom:4px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,0.08); white-space:normal; }
   .dob-kanban-item:last-child{ margin-bottom:0; }
   .dob-kanban-card-compacta{ display:flex; align-items:center; gap:7px; padding:6px 9px; cursor:pointer; font-size:11.5px; }
-  .dob-kanban-card-compacta:hover{ background:#faf8f4; }
+  .dob-kanban-card-compacta:hover{ background:#f8f9fb; }
   .dob-kanban-card-compacta .dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
   .dob-kanban-card-compacta .nome{ font-weight:600; color:var(--ink,#16233d); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .dob-kanban-card-compacta .qtd{ font-size:10.5px; color:#6b7380; white-space:nowrap; flex-shrink:0; }
@@ -562,11 +562,11 @@
   .dob-mapa-novo-serv select{ text-overflow:ellipsis; }
   .dob-mapa-novo-serv #dob-mapa-add-servico{ font-weight:700; }
   .dob-crono-geral{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin:14px 0 4px; }
-  .dob-crono-geral .gcard{ display:flex; align-items:center; gap:14px; background:#f7f4ec; border:1px solid var(--line); border-radius:10px; padding:12px 14px; cursor:pointer; }
+  .dob-crono-geral .gcard{ display:flex; align-items:center; gap:14px; background:#f8f9fb; border:1px solid var(--line); border-radius:10px; padding:12px 14px; cursor:pointer; }
   .dob-crono-geral .gcard.sel{ border-color:var(--clay, #24518f); box-shadow:0 0 0 1px var(--clay, #24518f) inset; }
   .dob-crono-geral .gcard .dob-crono-ppc-aro{ width:64px; height:64px; } .dob-crono-geral .gcard .dob-crono-ppc-aro svg{ width:64px; height:64px; }
   .dob-crono-geral .gtit{ font-weight:700; font-size:15px; } .dob-crono-geral .gsub{ font-size:12.5px; color:var(--muted); margin-top:2px; }
-  .dob-crono-ppc-card{ display:flex; align-items:center; gap:18px; background:#f7f4ec; border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin:14px 0; flex-wrap:wrap; }
+  .dob-crono-ppc-card{ display:flex; align-items:center; gap:18px; background:#f8f9fb; border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin:14px 0; flex-wrap:wrap; }
   .dob-crono-ppc-aro{ position:relative; width:72px; height:72px; flex-shrink:0; }
   .dob-crono-ppc-aro svg{ width:72px; height:72px; transform:rotate(-90deg); }
   .dob-crono-ppc-aro .fundo{ fill:none; stroke:#e3e6eb; stroke-width:7; }
@@ -583,7 +583,7 @@
   .dob-crono-causa{ margin-top:6px; }
   .dob-crono-causa select{ font-size:11.5px; padding:4px 8px; border-radius:6px; border:1px solid var(--line); background:#fff; color:var(--ink-soft); max-width:260px; }
   .dob-crono-causa-label{ font-size:11px; color:var(--muted); margin-right:4px; }
-  .dob-crono-item.nao-cumprido{ background:#fdf7f3; border-radius:8px; }
+  .dob-crono-item.nao-cumprido{ background:#f8f9fb; border-radius:8px; }
 
   /* ---------- Mapa de Acompanhamento (blocos clicáveis) ---------- */
   .dob-mapa-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(64px, 1fr)); gap:8px; margin-top:14px; }
@@ -663,7 +663,7 @@
   .dob-pd-ok{ text-align:center; padding:4px 8px; white-space:nowrap; }
   .dob-pd-ok input{ width:17px; height:17px; }
   .dob-pd-item.concluido .desc{ color:var(--muted); }
-  .dob-pd-item.nao-cumprido{ background:#fdf7f3; }
+  .dob-pd-item.nao-cumprido{ background:#f8f9fb; }
   .dob-pd-compacto{ font-size:12px; min-width:0; }
   .dob-pd-compacto .dob-pd-in{ min-width:34px; padding:4px 1px; font-size:12px; }
   .dob-pd-compacto .dob-pd-th-dia{ min-width:38px; padding:4px 1px; }
@@ -702,12 +702,12 @@
   .dob-pd-macro td{ background:var(--ink); color:#fff; font-weight:700; padding:8px 12px; font-family:inherit; font-size:12.5px; }
   .dob-pd-sub td{ background:#f0ede6; color:var(--muted); font-weight:600; padding:6px 12px; font-size:10.5px; text-transform:uppercase; letter-spacing:.3px; }
   .dob-pd-item td.desc{ padding:7px 12px; position:sticky; left:0; background:#fff; z-index:1; }
-  .dob-pd-item:nth-child(even) td.desc{ background:#fbfaf7; }
+  .dob-pd-item:nth-child(even) td.desc{ background:#fafbfc; }
   .dob-pd-un{ text-align:center; color:var(--muted); }
   .dob-pd-cel{ text-align:center; font-variant-numeric:tabular-nums; }
   .dob-pd-cel.vazio{ color:#c8c4ba; }
   .dob-pd-cel.tem-dado{ background:#eaf3de; color:#3b6d11; font-weight:600; }
-  .dob-pd-total{ text-align:center; font-weight:700; color:var(--clay); background:#fff9f2; font-variant-numeric:tabular-nums; }
+  .dob-pd-total{ text-align:center; font-weight:700; color:var(--clay); background:#fafbfc; font-variant-numeric:tabular-nums; }
   .dob-chamada-del:hover{ color:var(--brick); }
 
   @media (max-width: 640px){
@@ -903,19 +903,19 @@
   /* ---------- Refinamento visual: formulários, mapa e rótulos ---------- */
   .dob-pt{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:7px; vertical-align:1px; }
   .dob-campo label{ text-transform:none; letter-spacing:0; font-size:12.5px; font-weight:600; color:var(--ink-soft); }
-  .dob-input, .dob-select, .dob-textarea{ border-radius:10px; border-color:#ddd8ca; padding:10px 12px; background:#fff; transition:border-color .12s ease, box-shadow .12s ease; }
-  .dob-input:hover, .dob-select:hover, .dob-textarea:hover{ border-color:#c9c3b3; }
+  .dob-input, .dob-select, .dob-textarea{ border-radius:10px; border-color:#e3e6eb; padding:10px 12px; background:#fff; transition:border-color .12s ease, box-shadow .12s ease; }
+  .dob-input:hover, .dob-select:hover, .dob-textarea:hover{ border-color:#cdd3dc; }
   .dob-card-form{ border-color:transparent; border-radius:16px; padding:24px 26px; }
-  .dob-card-form h3{ font-size:19px; border-bottom-color:#eeeade; }
+  .dob-card-form h3{ font-size:19px; border-bottom-color:#eef0f3; }
   .dob-custo-resumo .rot, .dob-mapa-fotos-label, .dob-mapa-atualizando .rot, .dob-resumo-semana-card .l, .dob-pd-filtros label,
   .dob-crono-grupo2 > h5, .dob-crono-ppc-txt .titulo{ text-transform:none; letter-spacing:0; }
   .dob-mapa-status-label, .dob-crono-status{ text-transform:none; letter-spacing:0; font-size:11.5px; }
   .dob-crono-grupo2 > h5, .dob-crono-ppc-txt .titulo{ font-size:13.5px; color:var(--ink-soft); }
-  .dob-kanban-col{ background:#f6f2e9; border-radius:12px; padding:10px; }
+  .dob-kanban-col{ background:#f2f4f7; border-radius:12px; padding:10px; }
   .dob-kanban-item{ border-radius:9px; margin-bottom:6px; box-shadow:0 1px 2px rgba(22,35,61,0.07); }
   .dob-kanban-card-compacta{ padding:8px 11px; font-size:12.5px; }
   .dob-btn.pequeno{ padding:7px 14px; }
-  .dob-btn.secundario{ border-color:#ddd8ca; }
+  .dob-btn.secundario{ border-color:#e3e6eb; }
   .dob-sub{ font-family:inherit; font-size:12.5px; text-transform:none; letter-spacing:0.1px; color:#b4c0d4; margin-top:4px; }
   .dob-versao{ font-family:inherit; font-size:11px; letter-spacing:0.2px; }
   .dob-stamp{ font-family:inherit !important; text-transform:none !important; letter-spacing:0.1px !important; font-size:12.5px !important; font-weight:600; }
@@ -1070,6 +1070,12 @@
     .dob-status-bar{ font-size:11.5px !important; }
     .dob-saudacao-titulo{ font-size:26px !important; }
   }
+
+  /* seções (fora do Diário): sem a saudação/status no topo, conteúdo direto */
+  body.m-sec .dob-header, body.m-sec .dob-saudacao, body.m-sec #dob-status-bar{ display:none !important; }
+  .dob-card-form{ border:1px solid #e3e6eb !important; box-shadow:none !important; border-radius:10px !important; }
+  .dob-card-form h3, .dob-card-form > h2{ font-size:18px !important; letter-spacing:-.015em; }
+  .dob-crono-ppc-card, .dob-crono-geral .gcard{ background:#fff !important; border:1px solid #e3e6eb !important; }
 </style>
 
 <style id="dob-skin">
@@ -1273,7 +1279,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.96';
+  const APP_VERSION = 'v2026.11.25.97';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4581,7 +4587,7 @@
       const ult = porSemana.slice(-10);
       const totAll = porSemana.reduce((a, x) => a + x.tot, 0), okAll = porSemana.reduce((a, x) => a + x.ok, 0);
       const ppcAll = totAll ? Math.round(okAll / totAll * 100) : 0;
-      const barras = ult.length ? ult.map(x => `<div style="display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12.5px;"><span style="width:62px;color:var(--muted);">${fmtDate(x.sw).slice(0,5)}</span><div style="flex:1;background:#eceae1;border-radius:99px;height:12px;overflow:hidden;"><div style="width:${x.pct}%;height:100%;background:${cor(x.pct)};"></div></div><b style="width:78px;text-align:right;">${x.pct}% <span style="font-weight:400;color:var(--muted);">(${x.ok}/${x.tot})</span></b></div>`).join('') : '<p class="dob-dica">Ainda não há semanas fechadas com compromissos.</p>';
+      const barras = ult.length ? ult.map(x => `<div style="display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12.5px;"><span style="width:62px;color:var(--muted);">${fmtDate(x.sw).slice(0,5)}</span><div style="flex:1;background:#e8ebf0;border-radius:99px;height:12px;overflow:hidden;"><div style="width:${x.pct}%;height:100%;background:${cor(x.pct)};"></div></div><b style="width:78px;text-align:right;">${x.pct}% <span style="font-weight:400;color:var(--muted);">(${x.ok}/${x.tot})</span></b></div>`).join('') : '<p class="dob-dica">Ainda não há semanas fechadas com compromissos.</p>';
       // atrasados e causas
       const atras = [], causas = {};
       folhas.forEach(it => {
@@ -4598,7 +4604,7 @@
         if(!a || !a.total || !(a.concluidos || a.andamento)) return null;
         return { sv, v: a.concluidos, a: a.andamento, tot: a.total, pct: Math.round(a.concluidos / a.total * 100) };
       }).filter(Boolean).sort((x, y) => y.pct - x.pct);
-      const listaMapa = linhasMapa.length ? linhasMapa.map(x => `<div style="display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12.5px;"><span style="flex:1.4;min-width:0;">${x.sv}</span><div style="flex:1;background:#eceae1;border-radius:99px;height:12px;overflow:hidden;display:flex;"><div style="width:${x.pct}%;background:#2f7d4f;"></div><div style="width:${Math.round(x.a / x.tot * 100)}%;background:#c9a24a;"></div></div><b style="width:92px;text-align:right;">${x.v}/${x.tot} <span style="font-weight:400;color:var(--muted);">+${x.a} exec.</span></b></div>`).join('') : '<p class="dob-dica">Sem marcações no Mapa para esta obra.</p>';
+      const listaMapa = linhasMapa.length ? linhasMapa.map(x => `<div style="display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12.5px;"><span style="flex:1.4;min-width:0;">${x.sv}</span><div style="flex:1;background:#e8ebf0;border-radius:99px;height:12px;overflow:hidden;display:flex;"><div style="width:${x.pct}%;background:#2f7d4f;"></div><div style="width:${Math.round(x.a / x.tot * 100)}%;background:#c9a24a;"></div></div><b style="width:92px;text-align:right;">${x.v}/${x.tot} <span style="font-weight:400;color:var(--muted);">+${x.a} exec.</span></b></div>`).join('') : '<p class="dob-dica">Sem marcações no Mapa para esta obra.</p>';
       html += bloco('Solar dos ' + obra + ' — PPC das últimas semanas <span style="font-size:13px;color:var(--muted);font-weight:400;">(acumulado: ' + ppcAll + '%)</span>', barras)
         + bloco('Solar dos ' + obra + ' — itens em atraso', listaAtr + '<div style="margin-top:10px;">' + listaCausas + '</div>')
         + bloco('Solar dos ' + obra + ' — avanço do Mapa (blocos concluídos)', listaMapa);
@@ -5848,7 +5854,7 @@
             <details id="dob-mapa-ordem-wrap" style="margin-top:8px;">
               <summary style="cursor:pointer; font-size:12.5px; color:var(--muted); user-select:none;">Ver todos os serviços / reordenar</summary>
               <p class="dob-dica" style="margin:6px 0;">Arraste um serviço pelo ⠿ pra mudar a ordem em que aparece na lista.</p>
-              <div id="dob-mapa-servico-lista" style="display:flex; flex-direction:column; gap:6px; max-height:420px; overflow-y:auto; border:1px solid var(--line); border-radius:8px; padding:8px; background:#fbfaf6;"></div>
+              <div id="dob-mapa-servico-lista" style="display:flex; flex-direction:column; gap:6px; max-height:420px; overflow-y:auto; border:1px solid var(--line); border-radius:8px; padding:8px; background:#fafbfc;"></div>
             </details>
             <div class="dob-linha" style="gap:6px; margin-top:10px; flex-wrap:wrap;">
               <button class="dob-btn secundario pequeno" id="dob-mapa-editar-servico" type="button" title="Editar nome do serviço">✏️ Editar</button>
