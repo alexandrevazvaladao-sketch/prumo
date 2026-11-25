@@ -1029,7 +1029,7 @@
   @media (min-width:721px){
     #dob-sidebar{ width:232px; padding:18px 12px; background:#16233d; }
     #dob-sidebar .dob-side-top{ padding:4px 8px 18px; margin:0; gap:10px; border:0; }
-    #dob-sidebar:not(.recolhida) .dob-side-hamburguer{ display:none; }
+    #dob-sidebar .dob-side-hamburguer{ width:28px; height:28px; margin-left:-4px; color:#c9d1de; }
     #dob-sidebar .dob-side-brand{ font-size:15px !important; font-weight:600; letter-spacing:-.01em; }
     #dob-sidebar .dob-side-item{ padding:8px 10px; margin:1px 0; gap:10px; border-radius:6px; font-size:13.5px; font-weight:400; color:#c9d1de; min-height:0; }
     #dob-sidebar .dob-side-item .ic, #dob-sidebar .dob-side-item .ic-svg{ width:18px; height:18px; }
@@ -1294,7 +1294,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.100';
+  const APP_VERSION = 'v2026.11.25.101';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4164,34 +4164,8 @@
   function pSomaUteis(d, n, sab){ const x = new Date(d); let k = 0; while(k < n){ x.setUTCDate(x.getUTCDate() + 1); if(pUtil(x, sab)) k++; } return x; }
   function pDiasUteis(a, b, sab){ let n = 0; const x = new Date(a); while(x <= b){ if(pUtil(x, sab)) n++; x.setUTCDate(x.getUTCDate() + 1); } return n; }
   function pCurta(s){ return s ? s.slice(8, 10) + '/' + s.slice(5, 7) : '—'; }
-  function paredeCiclos(){
-    const ciclos = [];
-    ['Buritis', 'Pequis'].forEach(obra => {
-      opcoesAptoDaObra(obra).forEach(([key, pl]) => {
-        const partes = key.split('_');
-        const par = parseInt(partes[2]), pav = parseInt(partes[3]);
-        const ids = new Set(pl.itens.filter(i => !/^C/.test(i.num)).map(i => i.id));
-        const blocos = Array.from(new Set(pl.itens.map(i => parseInt(i.id.split('_')[2])))).sort((a, b) => a - b);
-        const etapas = {};
-        PAREDE_ETAPAS.forEach(([sv]) => {
-          const est = mapaState.estados.filter(e => e.servico === sv && e.obra === obra && ids.has(e.bloco));
-          const verdes = est.filter(e => e.cor === 'verde');
-          const ini = est.map(e => e.dataInicio).filter(Boolean).sort()[0] || null;
-          const feita = verdes.length >= ids.size;
-          const concl = feita ? (verdes.map(e => e.dataConclusao).filter(Boolean).sort().slice(-1)[0] || null) : null;
-          etapas[sv] = { n: est.length, verdes: verdes.length, total: ids.size, ini, concl, feita };
-        });
-        const conc = etapas['CONCRETAGEM PAREDE DE CONCRETO'];
-        const iniciais = PAREDE_ETAPAS.map(([sv]) => etapas[sv].ini).filter(Boolean).sort();
-        const ini = iniciais[0] || null;
-        const status = conc.feita ? 'concluido' : (PAREDE_ETAPAS.some(([sv]) => etapas[sv].n > 0) ? 'andamento' : 'pendente');
-        ciclos.push({ obra, par, pav, blocos, nome: `${blocos.join('/')}`, etapas, ini, fim: conc.feita ? (conc.concl || ini) : null, status });
-      });
-    });
-    return ciclos;
-  }
   function paredeLiberacao(obra, blocos, cura, sab){
-    // Lajão concluído em todos os blocos do par → libera o 1º pavimento depois da cura.
+    // Lajão concluído em todos os blocos informados → libera o 1º pavimento depois da cura.
     let maior = null;
     for(const n of blocos){
       const e = mapaState.estados.find(x => x.servico === 'PREPARAÇÃO/CONCRETAGEM LAJÃO' && x.obra === obra && new RegExp('^' + obra + '_' + n + '_').test(x.bloco) && x.cor === 'verde' && x.dataConclusao);
@@ -4200,126 +4174,187 @@
     }
     return maior ? pStr(pSomaUteis(pDt(maior), cura, sab)) : null;
   }
-  function paredePrevisao(ciclos, cfg){
-    const sab = cfg.sabado, hoje = pDt(todayStr());
-    const concl = ciclos.filter(c => c.status === 'concluido' && c.ini && c.fim);
-    const duracoes = concl.sort((a, b) => a.fim.localeCompare(b.fim)).slice(-5).map(c => pDiasUteis(pDt(c.ini), pDt(c.fim), sab));
-    const medio = duracoes.length ? duracoes.reduce((a, b) => a + b, 0) / duracoes.length : null;
-    const D = Math.max(1, Math.round((cfg.usarReal && medio) ? medio : cfg.dias));
-    const slots = Array.from({ length: cfg.paralelo }, () => pProxUtil(hoje, sab));
-    const fimPrevPorBloco = {};
-    ciclos.forEach(c => { if(c.status === 'concluido') fimPrevPorBloco[c.obra + '|' + c.par + '|' + c.pav] = pDt(c.fim); });
-    // em andamento: ocupa um jogo de forma até o fim previsto
-    const emAnd = ciclos.filter(c => c.status === 'andamento').sort((a, b) => (a.ini || '').localeCompare(b.ini || ''));
-    emAnd.forEach((c, i) => {
-      const ini = c.ini ? pDt(c.ini) : hoje;
-      let fim = pSomaUteis(ini, D - 1, sab);
-      if(fim < hoje) fim = pProxUtil(hoje, sab);
-      c.prevIni = pStr(ini); c.prevFim = pStr(fim);
-      fimPrevPorBloco[c.obra + '|' + c.par + '|' + c.pav] = fim;
-      const idx = i % slots.length;
-      const livre = pSomaUteis(fim, 1, sab);
-      if(livre > slots[idx]) slots[idx] = livre;
-    });
-    // pendentes: por prontidão do lajão, depois obra/bloco; pavimentos em sequência
-    const pares = {};
-    ciclos.filter(c => c.status === 'pendente').forEach(c => { const k = c.obra + '|' + c.par; (pares[k] = pares[k] || []).push(c); });
-    const listaPares = Object.keys(pares).map(k => {
-      const cs = pares[k].sort((a, b) => a.pav - b.pav);
-      const lib = paredeLiberacao(cs[0].obra, cs[0].blocos, cfg.cura, sab);
-      return { k, cs, lib };
-    }).sort((a, b) => ((a.lib || '9999') + a.cs[0].obra + String(a.cs[0].par).padStart(3, '0')).localeCompare((b.lib || '9999') + b.cs[0].obra + String(b.cs[0].par).padStart(3, '0')));
-    listaPares.forEach(({ cs, lib }) => {
-      cs.forEach(c => {
-        let i = 0; slots.forEach((s, j) => { if(s < slots[i]) i = j; });
-        let ini = slots[i];
-        const ant = fimPrevPorBloco[c.obra + '|' + c.par + '|' + (c.pav - 1)];
-        if(ant){ const apos = pSomaUteis(ant, 1, sab); if(apos > ini) ini = apos; }
-        if(c.pav === 1 && lib){ const l = pProxUtil(pDt(lib), sab); if(l > ini) ini = l; }
-        c.aguardaLajao = (c.pav === 1 && !lib);
-        const fim = pSomaUteis(ini, D - 1, sab);
-        c.prevIni = pStr(ini); c.prevFim = pStr(fim);
-        fimPrevPorBloco[c.obra + '|' + c.par + '|' + c.pav] = fim;
-        slots[i] = pSomaUteis(fim, 1, sab);
+  // Novo modelo (25/11): um jogo de forma faz "meia laje" por vez — 2 aptos + hall (x01, x04 e corredor) e depois
+  // os outros 2 (x02, x03) — e sobe um bloco inteiro (1º ao 4º pav. + platibanda) antes de passar para o outro bloco do geminado.
+  function paredeCfg2(){
+    if(!mapaState.paredeConfig) mapaState.paredeConfig = {};
+    const c = mapaState.paredeConfig;
+    const num = (v, pad, min) => (v !== undefined && v !== null && v !== '' && isFinite(Number(v)) && Number(v) >= min) ? Number(v) : pad;
+    return { dias: num(c.diasMeia, 4, 1), platib: num(c.diasPlatib, 0, 0), paralelo: Math.round(num(c.paralelo, 1, 1)), cura: Math.round(num(c.cura, 3, 0)), sabado: c.sabado !== false, usarReal: c.usarReal !== false };
+  }
+  function paredeUnidades(){
+    const filas = [];
+    ['Buritis', 'Pequis'].forEach(obra => {
+      const nums = BLOCOS_MAPA.filter(b => b.obra === obra && b.cat === 'bloco' && b.num !== '1').map(b => parseInt(b.num)).sort((x, y) => x - y);
+      nums.filter(n => n % 2 === 0).forEach(par => {
+        const impar = nums.includes(par + 1) ? par + 1 : null;
+        const blocos = impar ? [par, impar] : [par];
+        const unidadesDoBloco = (bl) => {
+          const us = [];
+          PAVIMENTOS_APTO.forEach(pav => {
+            [['A', ['01', '04'], true], ['B', ['02', '03'], false]].forEach(([met, fins, hall]) => {
+              const ids = fins.map(f => `apto_${obra}_${bl}_${pav * 100 + parseInt(f)}`);
+              if(hall) ids.push(`apto_${obra}_${bl}_C${pav}`);
+              const set = new Set(ids);
+              const etapas = {};
+              PAREDE_ETAPAS.forEach(([sv]) => {
+                const est = mapaState.estados.filter(e => e.servico === sv && e.obra === obra && set.has(e.bloco));
+                const verdes = est.filter(e => e.cor === 'verde');
+                const ini = est.map(e => e.dataInicio).filter(Boolean).sort()[0] || null;
+                const feita = verdes.length >= set.size;
+                const concl = feita ? (verdes.map(e => e.dataConclusao).filter(Boolean).sort().slice(-1)[0] || null) : null;
+                etapas[sv] = { n: est.length, verdes: verdes.length, total: set.size, ini, concl, feita };
+              });
+              const conc = etapas['CONCRETAGEM PAREDE DE CONCRETO'];
+              const ini = PAREDE_ETAPAS.map(([sv]) => etapas[sv].ini).filter(Boolean).sort()[0] || null;
+              const status = conc.feita ? 'concluido' : (PAREDE_ETAPAS.some(([sv]) => etapas[sv].n > 0) ? 'andamento' : 'pendente');
+              const rot = met === 'A' ? `${pav}01/${pav}04 + hall` : `${pav}02/${pav}03`;
+              us.push({ obra, bloco: bl, geminado: blocos.join('/'), pav, metade: met, rot, etapas, ini, fim: conc.feita ? (conc.concl || ini) : null, status });
+            });
+          });
+          us.push({ obra, bloco: bl, geminado: blocos.join('/'), pav: 'P', metade: 'P', rot: 'Platibanda', etapas: null, ini: null, fim: null, status: 'pendente', platibanda: true });
+          return us;
+        };
+        const porBloco = blocos.map(bl => ({ bl, us: unidadesDoBloco(bl) }));
+        const inicio = x => x.us.map(u => u.ini).filter(Boolean).sort()[0] || null;
+        porBloco.sort((x, y) => {
+          const ix = inicio(x), iy = inicio(y);
+          if(ix && iy) return ix.localeCompare(iy);
+          if(ix) return -1; if(iy) return 1;
+          return y.bl - x.bl; // nenhum começou: ímpar (lado direito) primeiro, como no 18/19
+        });
+        filas.push({ obra, geminado: blocos.join('/'), par, blocosOrdem: porBloco.map(x => x.bl), us: [].concat(...porBloco.map(x => x.us)) });
       });
     });
-    return { D, medio, nDur: duracoes.length };
+    return filas;
+  }
+  function paredePrevisao2(filas, cfg){
+    const sab = cfg.sabado, hoje = pDt(todayStr());
+    // ritmo realizado: intervalo (dias úteis) entre concretagens seguidas da mesma fila; o 1º ciclo conta do início
+    const intervalos = [], primeiros = [];
+    filas.forEach(f => {
+      const feitas = f.us.filter(u => u.status === 'concluido' && u.fim);
+      feitas.forEach((u, i) => {
+        if(i === 0){ if(u.ini) primeiros.push(pDiasUteis(pDt(u.ini), pDt(u.fim), sab)); }
+        else intervalos.push({ fim: u.fim, d: Math.max(1, pDiasUteis(pSomaUteis(pDt(feitas[i - 1].fim), 1, sab), pDt(u.fim), sab)) });
+      });
+    });
+    const ult = intervalos.sort((a, b) => a.fim.localeCompare(b.fim)).slice(-6).map(x => x.d);
+    let medio = null, fonte = 'padrão informado', nDur = 0;
+    if(ult.length){ medio = ult.reduce((a, b) => a + b, 0) / ult.length; fonte = 'média entre concretagens'; nDur = ult.length; }
+    else if(primeiros.length){ medio = primeiros.reduce((a, b) => a + b, 0) / primeiros.length; fonte = '1ª meia laje (início → concretagem)'; nDur = primeiros.length; }
+    const D = Math.max(1, Math.round((cfg.usarReal && medio) ? medio : cfg.dias));
+    const DP = cfg.platib > 0 ? Math.round(cfg.platib) : D;
+    if(!(cfg.usarReal && medio)) fonte = 'padrão informado';
+    const slots = Array.from({ length: cfg.paralelo }, () => pProxUtil(hoje, sab));
+    const comecou = f => f.us.some(u => u.status !== 'pendente');
+    const libBloco = (obra, bl) => paredeLiberacao(obra, [bl], cfg.cura, sab);
+    const ordem = filas.slice().sort((x, y) => {
+      const cx = comecou(x), cy = comecou(y);
+      if(cx !== cy) return cx ? -1 : 1;
+      const lx = libBloco(x.obra, x.blocosOrdem[0]) || '9999', ly = libBloco(y.obra, y.blocosOrdem[0]) || '9999';
+      return (lx + x.obra + String(x.par).padStart(3, '0')).localeCompare(ly + y.obra + String(y.par).padStart(3, '0'));
+    });
+    ordem.forEach(f => {
+      let i = 0; slots.forEach((x, j) => { if(x < slots[i]) i = j; });
+      let cursor = null; // fim da unidade anterior desta fila
+      const inicioFila = comecou(f) ? null : slots[i];
+      f.us.forEach(u => {
+        if(u.status === 'concluido'){ cursor = pDt(u.fim); return; }
+        const dur = u.platibanda ? DP : D;
+        let ini;
+        if(u.status === 'andamento'){
+          ini = u.ini ? pDt(u.ini) : hoje;
+          let fim = cursor ? pSomaUteis(cursor, dur, sab) : pSomaUteis(ini, dur - 1, sab);
+          if(fim < hoje) fim = pProxUtil(hoje, sab);
+          u.prevIni = pStr(ini); u.prevFim = pStr(fim); cursor = fim; return;
+        }
+        ini = cursor ? pSomaUteis(cursor, 1, sab) : (inicioFila || pProxUtil(hoje, sab));
+        if(ini < hoje) ini = pProxUtil(hoje, sab);
+        if(u.pav === 1 && u.metade === 'A'){
+          const lib = libBloco(u.obra, u.bloco);
+          u.aguardaLajao = !lib;
+          if(lib){ const l = pProxUtil(pDt(lib), sab); if(l > ini) ini = l; }
+        }
+        const fim = pSomaUteis(ini, dur - 1, sab);
+        u.prevIni = pStr(ini); u.prevFim = pStr(fim); cursor = fim;
+      });
+      if(cursor){ const livre = pSomaUteis(cursor, 1, sab); if(livre > slots[i]) slots[i] = livre; }
+    });
+    return { D, DP, medio, nDur, fonte };
   }
   function paredeEsc(s){ return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
   function renderParede(){
     const container = document.getElementById('dob-parede-container');
     if(!paredeAberto){ container.innerHTML = ''; return; }
-    const cfg = paredeCfg();
-    const ciclos = paredeCiclos();
-    const prev = paredePrevisao(ciclos, cfg);
-    const sab = cfg.sabado;
-    const conc = ciclos.filter(c => c.status === 'concluido'), and = ciclos.filter(c => c.status === 'andamento'), pend = ciclos.filter(c => c.status === 'pendente');
-    const fimObra = (obra) => { const f = ciclos.filter(c => c.obra === obra).map(c => c.fim || c.prevFim).filter(Boolean).sort().slice(-1)[0]; return f ? fmtDate(f) : '—'; };
-    const proximos = ciclos.filter(c => c.status !== 'concluido' && c.prevIni).sort((a, b) => a.prevIni.localeCompare(b.prevIni) || a.obra.localeCompare(b.obra) || a.par - b.par || a.pav - b.pav).slice(0, 8);
-    const chipEtapa = (c) => PAREDE_ETAPAS.map(([sv, nome, s]) => {
-      const e = c.etapas[sv];
-      const cor = e.feita ? '#1b6e3c' : (e.n > 0 ? '#b7791f' : '#b9bfca');
-      const bg = e.feita ? '#e6f4ea' : (e.n > 0 ? '#fff4d6' : '#f1f3f6');
-      const tit = `${nome}: ${e.feita ? 'concluída' + (e.concl ? ' em ' + fmtDate(e.concl) : '') : (e.n > 0 ? 'em execução (' + e.verdes + '/' + e.total + ' aptos)' : 'não iniciada')}`;
-      return `<span title="${paredeEsc(tit)}" style="display:inline-block;min-width:16px;text-align:center;padding:1px 4px;border-radius:5px;font-size:10px;font-weight:700;color:${cor};background:${bg};margin-right:2px;">${s}</span>`;
+    const cfg = paredeCfg2();
+    const filas = paredeUnidades();
+    const prev = paredePrevisao2(filas, cfg);
+    const todas = [].concat(...filas.map(f => f.us));
+    const lajes = todas.filter(u => !u.platibanda);
+    const conc = lajes.filter(u => u.status === 'concluido'), and = lajes.filter(u => u.status === 'andamento');
+    const fimObra = (obra) => { const f = todas.filter(u => u.obra === obra).map(u => u.fim || u.prevFim).filter(Boolean).sort().slice(-1)[0]; return f ? fmtDate(f) : '—'; };
+    const proximos = todas.filter(u => u.status !== 'concluido' && u.prevIni).sort((a, b) => a.prevIni.localeCompare(b.prevIni) || a.obra.localeCompare(b.obra) || a.bloco - b.bloco).slice(0, 8);
+    const chips = (u) => !u.etapas ? '' : PAREDE_ETAPAS.map(([sv, nome, l]) => {
+      const e = u.etapas[sv];
+      const cor = e.feita ? '#1d7a46' : (e.n > 0 ? '#a05f00' : '#a3abb8');
+      const bg = e.feita ? '#e8f4ec' : (e.n > 0 ? '#fbf1e1' : '#f1f3f6');
+      const tit = `${nome}: ${e.feita ? 'concluída' + (e.concl ? ' em ' + fmtDate(e.concl) : '') : (e.n > 0 ? 'em execução (' + e.verdes + '/' + e.total + ')' : 'não iniciada')}`;
+      return `<span title="${paredeEsc(tit)}" style="display:inline-block;min-width:15px;text-align:center;padding:0 3px;border-radius:4px;font-size:10px;font-weight:700;color:${cor};background:${bg};margin-right:2px;">${l}</span>`;
     }).join('');
-    const celula = (c) => {
-      if(!c) return '<td></td>';
-      let corpo;
-      if(c.status === 'concluido'){
-        const d = (c.ini && c.fim) ? pDiasUteis(pDt(c.ini), pDt(c.fim), sab) : null;
-        corpo = `<div style="color:#1b6e3c;font-weight:700;">✔ ${pCurta(c.ini)} → ${pCurta(c.fim)}</div><div style="font-size:11px;color:#767e8c;">${d ? d + ' dia' + (d > 1 ? 's' : '') + ' úteis' : ''}</div>`;
-      } else if(c.status === 'andamento'){
-        corpo = `<div style="color:#b7791f;font-weight:700;">▶ desde ${pCurta(c.ini)}</div><div style="font-size:11px;color:#767e8c;font-style:italic;">prev. conc. ${pCurta(c.prevFim)}</div>`;
-      } else {
-        corpo = `<div style="color:#767e8c;font-style:italic;">prev. ${pCurta(c.prevIni)} → ${pCurta(c.prevFim)}</div>${c.aguardaLajao ? '<div style="font-size:11px;color:#b3261e;">aguarda lajão</div>' : ''}`;
-      }
-      return `<td style="padding:6px 8px;border-top:1px solid #e4e7ec;vertical-align:top;font-size:12.5px;min-width:128px;">${corpo}<div style="margin-top:3px;">${chipEtapa(c)}</div></td>`;
+    const linhaUn = (u) => {
+      let txt, cor = '#6b7380', peso = 500;
+      if(u.status === 'concluido'){ txt = 'concretada ' + pCurta(u.fim); cor = '#1d7a46'; peso = 600; }
+      else if(u.status === 'andamento'){ txt = 'em execução · prev. ' + pCurta(u.prevFim); cor = '#a05f00'; peso = 600; }
+      else txt = '<i>prev. ' + pCurta(u.prevIni) + ' → ' + pCurta(u.prevFim) + '</i>';
+      return `<div style="display:flex;justify-content:space-between;gap:6px;align-items:center;font-size:12px;line-height:1.35;padding:2px 0;"><span style="color:#3a4660;">${u.platibanda ? 'Platibanda' : u.rot.replace(' + hall', '+hall')}</span><span style="color:${cor};font-weight:${peso};white-space:nowrap;">${txt}</span></div>${u.etapas ? `<div style="margin:1px 0 4px;">${chips(u)}</div>` : ''}${u.aguardaLajao ? '<div style="font-size:11px;color:#c03a1c;">aguarda lajão</div>' : ''}`;
     };
     const tabela = (obra) => {
-      const doObra = ciclos.filter(c => c.obra === obra);
-      const pares = Array.from(new Set(doObra.map(c => c.par))).sort((a, b) => a - b);
-      const linhas = pares.map(par => {
-        const cs = [1, 2, 3, 4].map(p => doObra.find(c => c.par === par && c.pav === p));
-        const nome = (cs[0] || {}).nome || par;
-        const fim = cs[3] ? (cs[3].fim || cs[3].prevFim) : null;
-        const feitos = cs.filter(c => c && c.status === 'concluido').length;
-        return `<tr><td style="padding:6px 8px;border-top:1px solid #e4e7ec;font-weight:700;white-space:nowrap;">Bloco ${nome}<div style="font-size:11px;font-weight:400;color:#767e8c;">${feitos}/4 pav.</div></td>${cs.map(celula).join('')}<td style="padding:6px 8px;border-top:1px solid #e4e7ec;font-size:12.5px;white-space:nowrap;${feitos === 4 ? 'color:#1b6e3c;font-weight:700;' : 'color:#767e8c;font-style:italic;'}">${fim ? fmtDate(fim) : '—'}</td></tr>`;
-      }).join('');
-      return `<h4 style="margin:18px 0 6px;font-family:inherit;">Solar dos ${obra} <span style="font-size:13px;font-weight:400;color:#767e8c;">· término previsto ${fimObra(obra)}</span></h4>
-        <div style="overflow-x:auto;"><table style="border-collapse:collapse;width:100%;"><thead><tr style="text-align:left;font-size:12px;color:#767e8c;"><th style="padding:4px 8px;">Bloco</th><th style="padding:4px 8px;">1º pav.</th><th style="padding:4px 8px;">2º pav.</th><th style="padding:4px 8px;">3º pav.</th><th style="padding:4px 8px;">4º pav.</th><th style="padding:4px 8px;">Fim do bloco</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
+      const fs = filas.filter(f => f.obra === obra);
+      const linhas = [].concat(...fs.map(f => f.blocosOrdem.map((bl, k) => {
+        const us = f.us.filter(u => u.bloco === bl);
+        const cel = [1, 2, 3, 4].map(p => `<td style="padding:8px 10px;border-top:1px solid #eef0f3;vertical-align:top;min-width:170px;">${us.filter(u => u.pav === p).map(linhaUn).join('')}</td>`).join('');
+        const pl = us.find(u => u.platibanda);
+        const feitos = us.filter(u => !u.platibanda && u.status === 'concluido').length;
+        const fim = pl && (pl.fim || pl.prevFim);
+        return `<tr><td style="padding:8px 10px;border-top:1px solid #eef0f3;font-weight:600;white-space:nowrap;vertical-align:top;">Bloco ${bl}<div style="font-size:11px;font-weight:400;color:#6b7380;">geminado ${f.geminado} · ${k === 0 ? '1º lado' : '2º lado'}</div><div style="font-size:11px;font-weight:400;color:#6b7380;">${feitos}/8 meias lajes</div></td>${cel}<td style="padding:8px 10px;border-top:1px solid #eef0f3;vertical-align:top;min-width:150px;">${pl ? linhaUn(pl) : ''}</td><td style="padding:8px 10px;border-top:1px solid #eef0f3;font-size:12.5px;white-space:nowrap;vertical-align:top;color:#6b7380;font-style:italic;">${fim ? fmtDate(fim) : '—'}</td></tr>`;
+      })));
+      return `<h4 style="margin:20px 0 6px;font-family:inherit;font-size:15px;">Solar dos ${obra} <span style="font-size:13px;font-weight:400;color:#6b7380;">· término previsto ${fimObra(obra)}</span></h4>
+        <div style="overflow-x:auto;border:1px solid #e3e6eb;border-radius:10px;"><table style="border-collapse:collapse;width:100%;"><thead><tr style="text-align:left;font-size:12px;color:#6b7380;background:#fafbfc;"><th style="padding:8px 10px;">Bloco</th><th style="padding:8px 10px;">1º pav.</th><th style="padding:8px 10px;">2º pav.</th><th style="padding:8px 10px;">3º pav.</th><th style="padding:8px 10px;">4º pav.</th><th style="padding:8px 10px;">Platibanda</th><th style="padding:8px 10px;">Fim do bloco</th></tr></thead><tbody>${linhas.join('')}</tbody></table></div>`;
     };
-    const card = (titulo, valor, sub) => `<div style="flex:1;min-width:140px;background:var(--card-2,#f6f7f9);border-radius:10px;padding:10px 12px;"><div style="font-size:12px;color:#767e8c;">${titulo}</div><div style="font-size:22px;font-weight:700;">${valor}</div><div style="font-size:11.5px;color:#767e8c;">${sub || ''}</div></div>`;
-    const campo = (id, rot, val, extra) => `<label style="display:flex;flex-direction:column;font-size:12px;color:#767e8c;gap:3px;">${rot}<input class="dob-input" type="number" min="${extra.min}" step="${extra.step || 1}" id="${id}" value="${val}" style="width:96px;"/></label>`;
+    const card = (titulo, valor, sub) => `<div style="flex:1;min-width:150px;background:#fff;border:1px solid #e3e6eb;border-radius:10px;padding:12px 14px;"><div style="font-size:12px;color:#6b7380;">${titulo}</div><div style="font-size:22px;font-weight:700;letter-spacing:-.02em;">${valor}</div><div style="font-size:11.5px;color:#6b7380;">${sub || ''}</div></div>`;
+    const campo = (id, rot, val, extra) => `<label style="display:flex;flex-direction:column;font-size:12px;color:#6b7380;gap:3px;">${rot}<input class="dob-input" type="number" min="${extra.min}" step="${extra.step || 1}" id="${id}" value="${val}" style="width:110px;"/></label>`;
+    const nomeU = u => `${u.obra} · Bloco ${u.bloco} · ${u.platibanda ? 'platibanda' : u.pav + 'º pav. · ' + u.rot}`;
     container.innerHTML = `
       <div class="dob-card-form">
         <h3>Parede de concreto — ciclos</h3>
-        <p class="dob-dica" style="margin-top:0;">Cada ciclo é um pavimento de um bloco geminado. Os dados vêm do Mapa (Instalações, Forma e Concretagem por apartamento); o que ainda não aconteceu aparece como <i>previsão</i> em itálico.</p>
+        <p class="dob-dica" style="margin-top:0;">Um jogo de forma faz uma meia laje por vez (2 aptos + hall, depois os outros 2) e sobe o bloco inteiro — 1º ao 4º pavimento e platibanda — antes de passar para o outro bloco do geminado. Os dados vêm do Mapa (Instalações, Forma e Concretagem por apartamento); o que ainda não aconteceu aparece em <i>itálico</i>.</p>
         <div style="display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;">
-          ${card('Ciclos concluídos', conc.length + ' / ' + ciclos.length, and.length ? and.length + ' em andamento' : 'nenhum em andamento')}
-          ${card('Ciclo médio realizado', prev.medio ? prev.medio.toFixed(1).replace('.', ',') + ' dias' : '—', prev.medio ? 'últimos ' + prev.nDur + ' ciclo(s), dias úteis' : 'ainda sem ciclo concluído')}
-          ${card('Ciclo usado na previsão', prev.D + ' dias', (cfg.usarReal && prev.medio) ? 'média realizada' : 'padrão informado')}
+          ${card('Meias lajes concretadas', conc.length + ' / ' + lajes.length, and.length ? and.length + ' em execução' : 'nenhuma em execução')}
+          ${card('Ritmo realizado', prev.medio ? prev.medio.toFixed(1).replace('.', ',') + ' dias' : '—', prev.medio ? prev.fonte + ' · dias úteis' : 'ainda sem concretagem')}
+          ${card('Ritmo usado na previsão', prev.D + ' dias por meia laje', (cfg.usarReal && prev.medio) ? 'realizado' : 'padrão informado')}
           ${card('Término previsto', 'Buritis ' + fimObra('Buritis'), 'Pequis ' + fimObra('Pequis'))}
         </div>
         <details style="margin-bottom:10px;"><summary style="cursor:pointer;font-weight:600;">Premissas da previsão</summary>
           <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:10px;">
-            ${campo('dob-pc-dias', 'Dias por ciclo (padrão)', cfg.dias, { min: 1 })}
-            ${campo('dob-pc-par', 'Ciclos em paralelo', cfg.paralelo, { min: 1 })}
+            ${campo('dob-pc-dias', 'Dias por meia laje (padrão)', cfg.dias, { min: 1 })}
+            ${campo('dob-pc-plat', 'Dias da platibanda (0 = igual)', cfg.platib, { min: 0 })}
+            ${campo('dob-pc-par', 'Jogos de forma em paralelo', cfg.paralelo, { min: 1 })}
             ${campo('dob-pc-cura', 'Cura do lajão (dias)', cfg.cura, { min: 0 })}
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="dob-pc-sab" ${cfg.sabado ? 'checked' : ''}/> Trabalha aos sábados</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="dob-pc-real" ${cfg.usarReal ? 'checked' : ''}/> Usar o ciclo médio realizado</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="dob-pc-real" ${cfg.usarReal ? 'checked' : ''}/> Usar o ritmo realizado</label>
           </div>
-          <p class="dob-dica">Ciclo = dias úteis do início das instalações até a concretagem do pavimento. "Em paralelo" = quantos pavimentos podem estar em ciclo ao mesmo tempo (jogos de forma/equipes). O 1º pavimento de cada bloco só entra depois do lajão concluído mais a cura.</p>
+          <p class="dob-dica">Ritmo = dias úteis entre uma concretagem e a seguinte do mesmo jogo de forma (enquanto só existe a 1ª, conta do início das instalações até a concretagem). Cada jogo de forma sobe um geminado; o 1º lado começa depois do lajão do bloco concluído mais a cura. A platibanda não tem marcação no Mapa, então aparece sempre como previsão.</p>
         </details>
-        <h4 style="margin:14px 0 6px;font-family:inherit;">Próximos ciclos</h4>
-        ${proximos.length ? `<div style="display:flex;flex-direction:column;gap:6px;">${proximos.map(c => `<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:7px 10px;border-radius:8px;background:${c.status === 'andamento' ? '#fff4d6' : '#f1f3f6'};font-size:13.5px;"><b>${c.obra} · Bloco ${c.nome} · ${c.pav}º pav.</b><span style="color:#767e8c;">${c.status === 'andamento' ? 'em andamento desde ' + pCurta(c.ini) + ' · concretagem prevista ' + pCurta(c.prevFim) : 'início previsto ' + pCurta(c.prevIni) + ' · concretagem ' + pCurta(c.prevFim)}</span>${c.aguardaLajao ? '<span style="color:#b3261e;font-size:12px;">aguarda lajão</span>' : ''}</div>`).join('')}</div>` : '<p class="dob-dica">Todos os ciclos estão concluídos.</p>'}
+        <h4 style="margin:14px 0 6px;font-family:inherit;font-size:15px;">Próximas meias lajes</h4>
+        ${proximos.length ? `<div style="border:1px solid #e3e6eb;border-radius:10px;overflow:hidden;">${proximos.map((u, k) => `<div style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:9px 12px;${k ? 'border-top:1px solid #eef0f3;' : ''}font-size:13.5px;background:#fff;"><span style="width:7px;height:7px;border-radius:50%;background:${u.status === 'andamento' ? '#b26b00' : '#a3abb8'};"></span><b style="font-weight:600;">${paredeEsc(nomeU(u))}</b><span style="color:#6b7380;">${u.status === 'andamento' ? 'em execução desde ' + pCurta(u.ini) + ' · concretagem prevista ' + pCurta(u.prevFim) : 'início previsto ' + pCurta(u.prevIni) + ' · concretagem ' + pCurta(u.prevFim)}</span>${u.aguardaLajao ? '<span style="color:#c03a1c;font-size:12px;">aguarda lajão</span>' : ''}</div>`).join('')}</div>` : '<p class="dob-dica">Todas as meias lajes estão concretadas.</p>'}
         ${tabela('Buritis')}
         ${tabela('Pequis')}
-        <p class="dob-dica" style="margin-top:12px;">Letras: <b>I</b> instalações · <b>F</b> forma · <b>C</b> concretagem (verde = concluída, amarelo = em execução, cinza = não iniciada). Para registrar uma etapa, marque o apartamento no Mapa de Acompanhamento.</p>
+        <p class="dob-dica" style="margin-top:12px;">Letras: <b>I</b> instalações · <b>F</b> forma · <b>C</b> concretagem (verde = concluída, laranja = em execução, cinza = não iniciada). Para registrar uma etapa, marque o apartamento no Mapa de Acompanhamento.</p>
       </div>`;
     const salvar = (campo, v) => { if(!mapaState.paredeConfig) mapaState.paredeConfig = {}; mapaState.paredeConfig[campo] = v; saveMapaState(); renderParede(); };
     const lig = (id, campo, tipo) => { const el = document.getElementById(id); if(el) el.addEventListener('change', () => salvar(campo, tipo === 'bool' ? el.checked : (el.value === '' ? null : Number(el.value)))); };
-    lig('dob-pc-dias', 'dias'); lig('dob-pc-par', 'paralelo'); lig('dob-pc-cura', 'cura'); lig('dob-pc-sab', 'sabado', 'bool'); lig('dob-pc-real', 'usarReal', 'bool');
+    lig('dob-pc-dias', 'diasMeia'); lig('dob-pc-plat', 'diasPlatib'); lig('dob-pc-par', 'paralelo'); lig('dob-pc-cura', 'cura'); lig('dob-pc-sab', 'sabado', 'bool'); lig('dob-pc-real', 'usarReal', 'bool');
   }
   document.getElementById('dob-btn-parede').addEventListener('click', () => {
     paredeAberto = !paredeAberto;
