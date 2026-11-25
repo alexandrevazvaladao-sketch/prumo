@@ -1214,7 +1214,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.90';
+  const APP_VERSION = 'v2026.11.25.91';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9121,6 +9121,9 @@
     return String(t || '').toLowerCase().split(/\s+/).map((w, i) => (i > 0 && minus.includes(w)) ? w : w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
       .replace(/\bPne\b/g, 'PNE').replace(/\bCb\b/g, 'CB');
   }
+  function pnEmpresa(t){
+    return pnTitulo(t).replace(/\b(Ltda|Me|Eireli|Epp|Sa|Gs|Sm|Ccb)\b/g, w => w.toUpperCase()).replace(/\bI\b/g, '');
+  }
   function pnFrentes(data, filtroObra){
     const linhas = marcacoesMapaDoDia(data);
     const out = []; let obra = null;
@@ -9194,7 +9197,7 @@
         return cab + `<div class="pn-row"><div class="pn-ic ${ok ? 'ok' : 'run'}">${f.trecho ? PN_IC.rede : PN_IC.obra}</div><div class="pn-tx"><div class="pn-t1">${esc(pnTitulo(f.servico))}</div><div class="pn-t2">${esc(det)}</div></div><div class="pn-rt"><span class="pn-tag ${ok ? 'ok' : 'run'}">${ok ? 'Concluído' : 'Em execução'}</span></div></div>`;
       }).join('') : '<div class="pn-vazio">Nenhuma frente marcada no mapa nesse dia.</div>';
 
-      const linhasEmp = empresas.length ? empresas.map(g => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(g.empresa)}</div><div class="pn-t2">${esc(g.servs.map(pnTitulo).join(', '))}</div></div><div class="pn-rt"><b>${g.qtd}</b><span>${g.qtd === 1 ? 'pessoa' : 'pessoas'}</span></div></div>`).join('')
+      const linhasEmp = empresas.length ? empresas.map(g => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(pnEmpresa(g.empresa))}</div><div class="pn-t2">${esc(g.servs.map(pnTitulo).join(', '))}</div></div><div class="pn-rt"><b>${g.qtd}</b><span>${g.qtd === 1 ? 'pessoa' : 'pessoas'}</span></div></div>`).join('')
         : (pres.pessoasNomes.length ? pres.pessoasNomes.map(n => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(n)}</div></div></div>`).join('') : '<div class="pn-vazio">Sem equipe lançada nesse dia.</div>');
       const linhasEq = pres.equipComStatus.length ? pres.equipComStatus.map(eq => `<div class="pn-row"><div class="pn-ic ${eq.status === 'parado' ? 'late' : 'ok'}">${PN_IC.maq}</div><div class="pn-tx"><div class="pn-t1">${esc(eq.nome)}</div>${eq.status === 'parado' && eq.motivo ? `<div class="pn-t2">${esc(eq.motivo)}</div>` : ''}</div><div class="pn-rt"><span class="pn-tag ${eq.status === 'parado' ? 'late' : 'ok'}">${eq.status === 'parado' ? 'Parado' : 'Operando'}</span></div></div>`).join('')
         : '<div class="pn-vazio">Nenhum equipamento lançado nesse dia.</div>';
