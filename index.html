@@ -978,6 +978,20 @@
   .pn-big small{ font-size:12.5px; font-weight:600; letter-spacing:0; margin-left:8px; color:#6b7380; }
   .pn-big small.up{ color:#0f6fb5; } .pn-big small.down{ color:#c27300; }
   .pn-mid{ font-size:22px; font-weight:650; letter-spacing:-.02em; color:var(--ink-text); font-variant-numeric:tabular-nums; margin-top:2px; }
+  .pn-exp{ cursor:pointer; } .pn-exp:hover{ background:#f3f6fb; } .pn-exp:focus-visible{ outline:2px solid #0f6fb5; outline-offset:-2px; }
+  .pn-chev{ color:#8a93a1; font-size:13px; margin-left:4px; transition:transform .15s; } .pn-exp.aberto .pn-chev{ transform:rotate(180deg); }
+  .pn-det{ padding:6px 16px 14px 60px; background:#fafbfd; border-top:1px dashed #e4e8ee; }
+  .pn-det-t{ font-size:12.5px; font-weight:600; color:#4b5563; margin:8px 0 6px; } .pn-det-t em{ font-style:normal; font-weight:500; color:#6b7380; }
+  .pn-dias{ display:grid; grid-template-columns:repeat(14, minmax(0,1fr)); gap:4px; margin-top:6px; }
+  .pn-dia{ display:flex; flex-direction:column; align-items:center; gap:3px; min-width:0; }
+  .pn-dia-d{ font-size:10px; color:#6b7380; line-height:1; white-space:nowrap; } .pn-dia-d b{ color:#16233d; font-weight:700; font-size:11px; }
+  .pn-dia.sel .pn-dia-d b{ color:#0f6fb5; text-decoration:underline; }
+  .pn-dia-b{ width:100%; max-width:34px; height:26px; border-radius:8px; border:1.5px solid #cfd5df; background:#fff; color:#16233d; font:700 12px/1 inherit; cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center; }
+  .pn-dia-b:hover{ border-color:#0f6fb5; box-shadow:0 0 0 3px #d6e9f7; }
+  .pn-dia-b.tem{ background:#1f9d57; border-color:#12783f; color:#fff; } .pn-dia-b.parado{ background:#f7b92b; border-color:#c27300; color:#3a2300; }
+  .pn-dia-b.nao{ background:#f2f4f8; color:#9aa3b2; font-weight:600; }
+  .pn-hero .pn-dias{ margin-top:10px; } .pn-hero .pn-dia-b{ height:16px; max-width:16px; border-radius:50%; }
+  @media (max-width:640px){ .pn-det{ padding-left:14px; } .pn-dia-d{ font-size:9px; } .pn-dia-d b{ font-size:10px; } .pn-dias{ gap:2px; } }
   .pn-spark{ display:block; width:100%; height:46px; margin-top:6px; }
   .pn-row{ display:flex; align-items:center; gap:12px; padding:11px 16px; position:relative; }
   .pn-row + .pn-row{ border-top:1px solid #eef0f3; }
@@ -1365,7 +1379,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.122';
+  const APP_VERSION = 'v2026.11.25.123';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9398,6 +9412,22 @@
     });
     return out;
   }
+  // Painel: linhas expansíveis (por dia) e bolinhas de dia clicáveis
+  const pnAbertos = new Set();
+  function irParaDiaApontamento(iso){
+    diaSelecionado = iso;
+    const f = document.getElementById('dob-filtro-data'); if(f) f.value = iso;
+    render();
+    setTimeout(() => { const h = document.querySelector('.pn-hist'); if(h) h.scrollIntoView({ behavior:'smooth', block:'start' }); }, 60);
+  }
+  // colunas de 14 dias: data em texto em cima, botão embaixo (valor ou bolinha)
+  function pnGradeDias(itens, atual){
+    // itens: [{ iso, rotulo (texto do botão), classe, titulo }]
+    return `<div class="pn-dias">${itens.map(it => {
+      const dd = it.iso.slice(8,10), mm = it.iso.slice(5,7);
+      return `<div class="pn-dia${it.iso === atual ? ' sel' : ''}"><span class="pn-dia-d"><b>${dd}</b>/${mm}</span><button type="button" class="pn-dia-b ${it.classe || ''}" data-ir-dia="${it.iso}" title="${it.titulo || ''}">${it.rotulo}</button></div>`;
+    }).join('')}</div>`;
+  }
   function renderPanorama(){
     const el = document.getElementById('dob-panorama');
     if(!el) return;
@@ -9440,6 +9470,7 @@
       // séries curtas pros quadros do resumo (pessoas e concluídas por dia, últimos 14 dias)
       const diaISO = k => { const d = new Date(data + 'T12:00:00'); d.setDate(d.getDate() - k); return d.toISOString().slice(0,10); };
       const pessoasDia = iso => (equipeEmpState.registros || []).filter(r => r.data === iso && r.qtd > 0 && (!filtroObra || r.obra === filtroObra || !/^(Pequis|Buritis)$/i.test(r.obra))).reduce((n, r) => n + r.qtd, 0);
+      const serFrentes = serie;
       const serPessoas = [], serConcl = [];
       for(let k = 13; k >= 0; k--){ const iso = diaISO(k); serPessoas.push(pessoasDia(iso)); serConcl.push(pnFrentes(iso, filtroObra).filter(f => f.status === 'concluido').length); }
       const miniLinha = (arr) => {
@@ -9462,6 +9493,7 @@
             <div class="pn-lbl"><span>Frentes em execução${ehHoje ? '' : ' em ' + dataBonita}</span><span>14 dias</span></div>
             <div class="pn-big">${emExec.length}${delta ? `<small class="${delta > 0 ? 'up' : 'down'}">${delta > 0 ? '▲ +' : '▼ '}${delta} em 7 dias</small>` : '<small>igual a 7 dias atrás</small>'}</div>
             ${spark}
+            ${pnGradeDias(serFrentes.map((n, k) => ({ iso: diaISO(13 - k), rotulo: '', classe: (entries.some(e => e.date === diaISO(13 - k)) ? 'tem' : 'nao'), titulo: n + ' frente(s) em execução' + (entries.some(e => e.date === diaISO(13 - k)) ? ' · com apontamento' : ' · sem apontamento') + ' — clique pra abrir o dia' })), data)}
           </div>
           <div class="pn-kpi"><div class="pn-lbl">Pessoas no dia</div><div class="pn-mid">${pessoas || '—'}</div><div class="pn-sub">${empresas.length ? 'em ' + empresas.length + (empresas.length === 1 ? ' empresa' : ' empresas') : 'sem equipe lançada'} · ${deltaTxt(pessoas, serPessoas[12], 'ontem')}</div>${miniLinha(serPessoas)}</div>
           <div class="pn-kpi"><div class="pn-lbl">Equipamentos</div><div class="pn-mid ${equipTot ? (equipOk === equipTot ? 'ok' : 'alerta') : ''}">${equipTot ? equipOk + '/' + equipTot : '—'}</div><div class="pn-sub">${equipTot ? (equipOk === equipTot ? '✓ todos operando' : '⚠ ' + (equipTot - equipOk) + (equipTot - equipOk === 1 ? ' parado' : ' parados')) : 'nenhum lançado'}</div><div class="pn-pts">${eqPontos}</div></div>
@@ -9479,9 +9511,20 @@
         return cab + `<div class="pn-row pn-go" role="button" tabindex="0" title="Abrir no mapa" data-ir-mapa="${esc(f.obraRaw)}|||${esc(f.servico)}|||${esc(f.planta || '')}|||"><div class="pn-ic ${ok ? 'ok' : 'run'}">${f.trecho ? PN_IC.rede : PN_IC.obra}</div><div class="pn-tx"><div class="pn-t1">${esc(pnTitulo(f.servico))}</div><div class="pn-t2">${esc(det)}</div></div><div class="pn-rt"><span class="pn-tag ${ok ? 'ok' : 'run'}">${ok ? 'Concluído' : 'Em execução'}</span></div></div>`;
       }).join('') : '<div class="pn-vazio">Nenhuma frente marcada no mapa nesse dia.</div>';
 
-      const linhasEmp = empresas.length ? empresas.map(g => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(pnEmpresa(g.empresa))}</div><div class="pn-t2">${esc(g.servs.map(pnTitulo).join(', '))}</div></div><div class="pn-rt"><b>${g.qtd}</b><span>${g.qtd === 1 ? 'pessoa' : 'pessoas'}</span></div></div>`).join('')
+      const linhasEmp = empresas.length ? empresas.map(g => {
+        const chave = 'emp:' + g.empresa, aberto = pnAbertos.has(chave);
+        const dias = []; for(let k = 13; k >= 0; k--){ const iso = diaISO(k); const n = (equipeEmpState.registros || []).filter(r => r.data === iso && r.empresa === g.empresa && r.qtd > 0 && (!filtroObra || r.obra === filtroObra || !/^(Pequis|Buritis)$/i.test(r.obra))).reduce((a, r) => a + r.qtd, 0); dias.push({ iso, rotulo: n || '–', classe: n ? 'tem' : 'nao', titulo: n ? n + ' pessoa(s)' : 'sem equipe' }); }
+        const tot = dias.reduce((a, d) => a + (Number(d.rotulo) || 0), 0), diasCom = dias.filter(d => d.classe === 'tem').length;
+        return `<div class="pn-row pn-exp${aberto ? ' aberto' : ''}" role="button" tabindex="0" data-pn-exp="${esc(chave)}" title="Ver pessoas por dia"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(pnEmpresa(g.empresa))}</div><div class="pn-t2">${esc(g.servs.map(pnTitulo).join(', '))}</div></div><div class="pn-rt"><b>${g.qtd}</b><span>${g.qtd === 1 ? 'pessoa' : 'pessoas'}</span></div><span class="pn-chev" aria-hidden="true">▾</span></div>
+        <div class="pn-det" data-pn-det="${esc(chave)}"${aberto ? '' : ' hidden'}><div class="pn-det-t">Pessoas por dia · últimos 14 dias <em>(${diasCom} dias com equipe · ${tot} pessoas-dia)</em></div>${pnGradeDias(dias, data)}</div>`; }).join('')
         : (pres.pessoasNomes.length ? pres.pessoasNomes.map(n => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(n)}</div></div></div>`).join('') : '<div class="pn-vazio">Sem equipe lançada nesse dia.</div>');
-      const linhasEq = pres.equipComStatus.length ? pres.equipComStatus.map(eq => `<div class="pn-row"><div class="pn-ic ${eq.status === 'parado' ? 'late' : 'ok'}">${pnIconeMaq(eq.nome)}</div><div class="pn-tx"><div class="pn-t1">${esc(eq.nome)}</div>${eq.status === 'parado' && eq.motivo ? `<div class="pn-t2">${esc(eq.motivo)}</div>` : ''}</div><div class="pn-rt"><span class="pn-tag ${eq.status === 'parado' ? 'late' : 'ok'}">${eq.status === 'parado' ? 'Parado' : 'Operando'}</span></div></div>`).join('')
+      const linhasEq = pres.equipComStatus.length ? pres.equipComStatus.map(eq => {
+        const chave = 'eq:' + eq.nome, aberto = pnAbertos.has(chave);
+        const cad = equipState.equipamentos.find(x => x.nome === eq.nome);
+        const dias = []; for(let k = 13; k >= 0; k--){ const iso = diaISO(k); const pr = cad ? equipState.presencas.find(x => x.equipamentoId === cad.id && x.date === iso) : null; const par = pr && pr.status === 'parado'; dias.push({ iso, rotulo: pr ? (par ? '⚠' : '✓') : '–', classe: pr ? (par ? 'parado' : 'tem') : 'nao', titulo: pr ? (par ? 'Parado' + (pr.motivoParado ? ': ' + esc(pr.motivoParado) : '') : 'Operando') : 'não lançado' }); }
+        const op = dias.filter(d => d.classe === 'tem').length, pa = dias.filter(d => d.classe === 'parado').length;
+        return `<div class="pn-row pn-exp${aberto ? ' aberto' : ''}" role="button" tabindex="0" data-pn-exp="${esc(chave)}" title="Ver dia a dia"><div class="pn-ic ${eq.status === 'parado' ? 'late' : 'ok'}">${pnIconeMaq(eq.nome)}</div><div class="pn-tx"><div class="pn-t1">${esc(eq.nome)}</div>${eq.status === 'parado' && eq.motivo ? `<div class="pn-t2">${esc(eq.motivo)}</div>` : ''}</div><div class="pn-rt"><span class="pn-tag ${eq.status === 'parado' ? 'late' : 'ok'}">${eq.status === 'parado' ? 'Parado' : 'Operando'}</span></div><span class="pn-chev" aria-hidden="true">▾</span></div>
+        <div class="pn-det" data-pn-det="${esc(chave)}"${aberto ? '' : ' hidden'}><div class="pn-det-t">Dia a dia · últimos 14 dias <em>(${op} operando${pa ? ' · ' + pa + ' parado' + (pa > 1 ? 's' : '') : ''})</em></div>${pnGradeDias(dias, data)}</div>`; }).join('')
         : '<div class="pn-vazio">Nenhum equipamento lançado nesse dia.</div>';
 
       el.innerHTML = hero + `
@@ -9499,6 +9542,12 @@
         if(f) openLightbox(f.e.fotos, f.i, () => { saveEntry(f.e); render(); });
       }));
       el.querySelectorAll('.pn-go').forEach(r => r.addEventListener('keydown', ev => { if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); r.click(); } }));
+      el.querySelectorAll('[data-pn-exp]').forEach(r => {
+        const alt = () => { const k = r.dataset.pnExp; const det = Array.from(el.querySelectorAll('[data-pn-det]')).find(d => d.dataset.pnDet === k); if(!det) return; const abre = det.hidden; det.hidden = !abre; r.classList.toggle('aberto', abre); if(abre) pnAbertos.add(k); else pnAbertos.delete(k); };
+        r.addEventListener('click', alt);
+        r.addEventListener('keydown', ev => { if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); alt(); } });
+      });
+      el.querySelectorAll('[data-ir-dia]').forEach(b => b.addEventListener('click', ev => { ev.stopPropagation(); irParaDiaApontamento(b.dataset.irDia); }));
       const bm = el.querySelector('[data-pn="mapa"]');
       if(bm) bm.addEventListener('click', () => { const b = document.getElementById('dob-btn-mapa'); if(b) b.click(); });
     }catch(err){
