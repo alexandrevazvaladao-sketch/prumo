@@ -992,16 +992,21 @@
   .pn-dia-b.nao{ background:#f2f4f8; color:#9aa3b2; font-weight:600; }
   .pn-hero .pn-dias{ margin-top:10px; } .pn-hero .pn-dia-b{ height:16px; max-width:16px; border-radius:50%; }
   @media (max-width:640px){ .pn-det{ padding-left:14px; } .pn-dia-d{ font-size:9px; } .pn-dia-d b{ font-size:10px; } .pn-dias{ gap:2px; } }
-  .pn-lc{ margin-top:8px; } .pn-lc-rot{ margin:0 17px; }
+  .pn-lc{ position:relative; margin-top:8px; }
+  .pn-lc-scroll{ overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -ms-overflow-style:none; cursor:grab; padding:2px 0 6px; }
+  .pn-lc-scroll::-webkit-scrollbar{ display:none; }
+  .pn-lc-in{ position:relative; }
   .pn-lc-labs{ position:relative; height:15px; }
   .pn-lc-lab{ position:absolute; top:0; transform:translateX(-50%); font-size:10px; color:#6b7380; white-space:nowrap; line-height:1; } .pn-lc-lab b{ color:#16233d; font-size:11px; }
-  .pn-lc-lab.sel b{ color:#0f6fb5; text-decoration:underline; }
-  .pn-lc-plot{ position:relative; margin-top:4px; }
-  .pn-lc-plot svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .pn-lc-lab.sel b{ color:#0f6fb5; }
+  .pn-lc-plot{ position:relative; margin-top:4px; } .pn-lc-plot svg{ position:absolute; left:0; top:0; }
   .pn-lc-dot{ position:absolute; width:16px; height:16px; margin:-8px 0 0 -8px; padding:0; border-radius:50%; background:#fff; border:2.5px solid #16233d; cursor:pointer; box-shadow:0 0 0 2px #fff; }
-  .pn-lc-dot.tem{ background:#1f9d57; border-color:#12783f; } .pn-lc-dot:hover{ transform:scale(1.25); box-shadow:0 0 0 4px #d6e9f7; }
+  .pn-lc-dot.tem{ background:#1f9d57; border-color:#12783f; } .pn-lc-dot:hover{ box-shadow:0 0 0 4px #d6e9f7; }
   .pn-lc-dot.sel{ box-shadow:0 0 0 2px #fff, 0 0 0 5px #0f6fb5; }
-  @media (max-width:640px){ .pn-lc-lab{ font-size:8.5px; } .pn-lc-lab b{ font-size:9px; } .pn-lc-dot{ width:14px; height:14px; margin:-7px 0 0 -7px; } .pn-lc-rot{ margin:0 12px; } }
+  .pn-lc-seta{ position:absolute; top:22px; z-index:2; width:24px; height:24px; border-radius:50%; border:1px solid #d5dae3; background:#fff; color:#16233d; font-size:16px; line-height:1; padding:0 0 2px; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.12); }
+  .pn-lc-seta.e{ left:-6px; } .pn-lc-seta.d{ right:-6px; } .pn-lc-seta:hover{ background:#eef3fa; }
+  @media (max-width:640px){ .pn-lc-lab{ font-size:9px; } .pn-lc-seta{ display:none; } }
+  #dob-datestrip{ display:none !important; } /* a linha do painel já escolhe o dia */
   .pn-spark{ display:block; width:100%; height:46px; margin-top:6px; }
   .pn-row{ display:flex; align-items:center; gap:12px; padding:11px 16px; position:relative; }
   .pn-row + .pn-row{ border-top:1px solid #eef0f3; }
@@ -1389,7 +1394,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.125';
+  const APP_VERSION = 'v2026.11.25.126';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9437,15 +9442,19 @@
       return `<div class="pn-dia${it.iso === atual ? ' sel' : ''}"><span class="pn-dia-d"><b>${dd}</b>/${mm}</span><button type="button" class="pn-dia-b ${it.classe || ''}" data-ir-dia="${it.iso}" title="${it.titulo || ''}">${it.rotulo}</button></div>`;
     }).join('')}</div>`;
   }
-  // gráfico de linha com uma bolinha clicável em cada dia (data em texto em cima)
-  function pnLinhaDias(serie, atual, diaISO){
+  // gráfico de linha com uma bolinha clicável em cada dia; janela fixa de dias, rola pro lado (não muda ao clicar)
+  let pnLcScroll = null, pnLcOff = null;
+  const PN_LC_DIA = 36; // largura de cada dia (px)
+  function pnLinhaDias(isos, serie, atual){
     const n = serie.length, mx = Math.max(1, ...serie), mn = Math.min(...serie), rg = Math.max(1, mx - mn);
-    const H = 64, top = 8, bot = 8, util = H - top - bot;
+    const H = 64, top = 8, bot = 8, util = H - top - bot, W = n * PN_LC_DIA;
     const yPx = v => top + (1 - (v - mn) / rg) * util;
-    const xs = serie.map((_, i) => i / (n - 1) * 100);
-    const pts = serie.map((v, i) => `${(xs[i] * 3).toFixed(1)},${yPx(v).toFixed(1)}`);
+    const xPx = i => i * PN_LC_DIA + PN_LC_DIA / 2;
+    const pts = serie.map((v, i) => `${xPx(i).toFixed(1)},${yPx(v).toFixed(1)}`);
     const linha = 'M' + pts.join(' L');
-    return `<div class="pn-lc"><div class="pn-lc-rot"><div class="pn-lc-labs">${serie.map((_, i) => `<span class="pn-lc-lab${diaISO(n - 1 - i) === atual ? ' sel' : ''}" style="left:${xs[i].toFixed(2)}%"><b>${diaISO(n - 1 - i).slice(8,10)}</b>/${diaISO(n - 1 - i).slice(5,7)}</span>`).join('')}</div><div class="pn-lc-plot" style="height:${H}px"><svg viewBox="0 0 300 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${linha} L300,${H} L0,${H} Z" fill="rgba(22,35,61,.07)"/><path d="${linha}" fill="none" stroke="#16233d" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>${serie.map((v, i) => { const iso = diaISO(n - 1 - i); const tem = entries.some(e => e.date === iso); return `<button type="button" class="pn-lc-dot${tem ? ' tem' : ''}${iso === atual ? ' sel' : ''}" style="left:${xs[i].toFixed(2)}%; top:${yPx(v).toFixed(1)}px" data-ir-dia="${iso}" title="${iso.slice(8,10)}/${iso.slice(5,7)} · ${v} frente(s) em execução${tem ? ' · com apontamento' : ' · sem apontamento'} — clique pra abrir o dia"></button>`; }).join('')}</div></div></div>`;
+    const labs = isos.map((iso, i) => `<span class="pn-lc-lab${iso === atual ? ' sel' : ''}" style="left:${xPx(i)}px"><b>${iso.slice(8,10)}</b>/${iso.slice(5,7)}</span>`).join('');
+    const dots = isos.map((iso, i) => { const tem = entries.some(e => e.date === iso); return `<button type="button" class="pn-lc-dot${tem ? ' tem' : ''}${iso === atual ? ' sel' : ''}" style="left:${xPx(i)}px; top:${yPx(serie[i]).toFixed(1)}px" data-ir-dia="${iso}" title="${iso.slice(8,10)}/${iso.slice(5,7)} · ${serie[i]} frente(s) em execução${tem ? ' · com apontamento' : ' · sem apontamento'}"></button>`; }).join('');
+    return `<div class="pn-lc"><button type="button" class="pn-lc-seta e" data-lc-seta="-1" aria-label="Dias anteriores">‹</button><button type="button" class="pn-lc-seta d" data-lc-seta="1" aria-label="Dias seguintes">›</button><div class="pn-lc-scroll" id="pn-lc-scroll"><div class="pn-lc-in" style="width:${W}px"><div class="pn-lc-labs">${labs}</div><div class="pn-lc-plot" style="height:${H}px"><svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${linha} L${W},${H} L0,${H} Z" fill="rgba(22,35,61,.07)"/><path d="${linha}" fill="none" stroke="#16233d" stroke-width="2" stroke-linejoin="round"/></svg>${dots}</div></div></div></div>`;
   }
   function renderPanorama(){
     const el = document.getElementById('dob-panorama');
@@ -9489,7 +9498,8 @@
       // séries curtas pros quadros do resumo (pessoas e concluídas por dia, últimos 14 dias)
       const diaISO = k => { const d = new Date(data + 'T12:00:00'); d.setDate(d.getDate() - k); return d.toISOString().slice(0,10); };
       const pessoasDia = iso => (equipeEmpState.registros || []).filter(r => r.data === iso && r.qtd > 0 && (!filtroObra || r.obra === filtroObra || !/^(Pequis|Buritis)$/i.test(r.obra))).reduce((n, r) => n + r.qtd, 0);
-      const serFrentes = serie;
+      const isosLc = []; for(let k = 59; k >= 0; k--){ const d = new Date(todayStr() + 'T12:00:00'); d.setDate(d.getDate() - k); isosLc.push(d.toISOString().slice(0,10)); }
+      const serFrentes = isosLc.map(iso => pnFrentes(iso, filtroObra).filter(f => f.status === 'andamento').length);
       const serPessoas = [], serConcl = [];
       for(let k = 13; k >= 0; k--){ const iso = diaISO(k); serPessoas.push(pessoasDia(iso)); serConcl.push(pnFrentes(iso, filtroObra).filter(f => f.status === 'concluido').length); }
       const miniLinha = (arr) => {
@@ -9511,7 +9521,7 @@
           <div>
             <div class="pn-lbl"><span>Frentes em execução${ehHoje ? '' : ' em ' + dataBonita}</span><span>14 dias</span></div>
             <div class="pn-big">${emExec.length}${delta ? `<small class="${delta > 0 ? 'up' : 'down'}">${delta > 0 ? '▲ +' : '▼ '}${delta} em 7 dias</small>` : '<small>igual a 7 dias atrás</small>'}</div>
-            ${pnLinhaDias(serFrentes, data, diaISO)}
+            ${pnLinhaDias(isosLc, serFrentes, data)}
           </div>
           <div class="pn-kpi"><div class="pn-lbl">Pessoas no dia</div><div class="pn-mid">${pessoas || '—'}</div><div class="pn-sub">${empresas.length ? 'em ' + empresas.length + (empresas.length === 1 ? ' empresa' : ' empresas') : 'sem equipe lançada'} · ${deltaTxt(pessoas, serPessoas[12], 'ontem')}</div>${miniLinha(serPessoas)}</div>
           <div class="pn-kpi"><div class="pn-lbl">Equipamentos</div><div class="pn-mid ${equipTot ? (equipOk === equipTot ? 'ok' : 'alerta') : ''}">${equipTot ? equipOk + '/' + equipTot : '—'}</div><div class="pn-sub">${equipTot ? (equipOk === equipTot ? '✓ todos operando' : '⚠ ' + (equipTot - equipOk) + (equipTot - equipOk === 1 ? ' parado' : ' parados')) : 'nenhum lançado'}</div><div class="pn-pts">${eqPontos}</div></div>
@@ -9565,6 +9575,20 @@
         r.addEventListener('click', alt);
         r.addEventListener('keydown', ev => { if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); alt(); } });
       });
+      (function ligarLinhaDias(){
+        const sc = el.querySelector('#pn-lc-scroll'); if(!sc) return;
+        sc.scrollLeft = (pnLcScroll == null) ? sc.scrollWidth : pnLcScroll;
+        sc.addEventListener('scroll', () => { pnLcScroll = sc.scrollLeft; }, { passive:true });
+        el.querySelectorAll('[data-lc-seta]').forEach(b => b.addEventListener('click', () => sc.scrollBy({ left: Number(b.dataset.lcSeta) * PN_LC_DIA * 7, behavior:'smooth' })));
+        let arr = false, x0 = 0, s0 = 0, mov = false;
+        sc.addEventListener('pointerdown', ev => { if(ev.pointerType !== 'mouse') return; arr = true; mov = false; x0 = ev.clientX; s0 = sc.scrollLeft; });
+        if(pnLcOff) pnLcOff();
+        const mv = ev => { if(!arr) return; const dx = ev.clientX - x0; if(Math.abs(dx) > 4) mov = true; if(mov) sc.scrollLeft = s0 - dx; };
+        const up = () => { arr = false; };
+        window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up);
+        pnLcOff = () => { window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); };
+        sc.addEventListener('click', ev => { if(mov){ ev.stopPropagation(); ev.preventDefault(); mov = false; } }, true);
+      })();
       el.querySelectorAll('[data-ir-dia]').forEach(b => b.addEventListener('click', ev => { ev.stopPropagation(); irParaDiaApontamento(b.dataset.irDia); }));
       const bm = el.querySelector('[data-pn="mapa"]');
       if(bm) bm.addEventListener('click', () => { const b = document.getElementById('dob-btn-mapa'); if(b) b.click(); });
