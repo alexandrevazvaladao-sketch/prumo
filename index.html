@@ -964,6 +964,8 @@
   .pn-hero{ grid-column:1 / -1; display:grid; grid-template-columns:minmax(0,1.2fr) repeat(3, minmax(0,.6fr)); }
   .pn-hero > div{ padding:14px 16px; border-right:1px solid #eef0f3; min-width:0; }
   .pn-hero > div:last-child{ border-right:none; }
+  .pn-hero > div{ text-align:center; display:flex; flex-direction:column; align-items:stretch; justify-content:center; }
+  .pn-hero .pn-lbl{ justify-content:center; gap:14px; } .pn-hero .pn-big small{ margin-left:8px; }
   .pn-lbl{ font-size:12.5px; color:#6b7380; display:flex; justify-content:space-between; gap:8px; }
   .pn-big{ font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.15; color:var(--ink-text); font-variant-numeric:tabular-nums; }
   .pn-big small{ font-size:12.5px; font-weight:600; letter-spacing:0; margin-left:8px; color:#6b7380; }
@@ -1354,7 +1356,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.118';
+  const APP_VERSION = 'v2026.11.25.119';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
