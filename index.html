@@ -1347,7 +1347,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.110';
+  const APP_VERSION = 'v2026.11.25.111';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4234,10 +4234,11 @@
     const c = mapaState.paredeConfig;
     // 25/11: ritmo informado pelo Alexandre — monta num dia e concreta no outro, 6 aptos + 2 halls por semana
     // (3 meias lajes: 2 aptos + hall → 2 aptos → 2 aptos + hall), de segunda a sexta.
-    if(c.v !== 3){ delete c.diasMeia; c.sabado = false; c.v = 3; }
+    // 25/11 (tarde): sábado ligado e 4 meias lajes por semana (seg–sáb) até o ritmo real aparecer
+    if(c.v !== 4){ delete c.diasMeia; c.sabado = true; c.porSemana = 4; c.v = 4; }
     const num = (v, pad, min) => (v !== undefined && v !== null && v !== '' && isFinite(Number(v)) && Number(v) >= min) ? Number(v) : pad;
     const porSemana = num(c.porSemana, 3, 0.5);
-    return { porSemana, dias: 5 / porSemana, platib: num(c.diasPlatib, 0, 0), paralelo: Math.round(num(c.paralelo, 1, 1)), cura: Math.round(num(c.cura, 3, 0)), sabado: c.sabado !== false, usarReal: c.usarReal !== false };
+    return { porSemana, dias: (c.sabado !== false ? 6 : 5) / porSemana, platib: num(c.diasPlatib, 0, 0), paralelo: Math.round(num(c.paralelo, 1, 1)), cura: Math.round(num(c.cura, 3, 0)), sabado: c.sabado !== false, usarReal: c.usarReal !== false };
   }
   function paredeUnidades(){
     const filas = [];
@@ -4406,19 +4407,19 @@
         <div style="display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;">
           ${card('Meias lajes concretadas', conc.length + ' / ' + lajes.length, and.length ? and.length + ' em execução' : 'nenhuma em execução')}
           ${card('Ritmo realizado', prev.medio ? prev.medio.toFixed(1).replace('.', ',') + ' dias' : '—', prev.medio ? prev.fonte + ' · dias úteis' : 'ainda sem concretagem')}
-          ${card('Ritmo usado na previsão', (5 / prev.D).toFixed(1).replace('.0', '').replace('.', ',') + ' meias lajes/semana', (cfg.usarReal && prev.medio) ? 'realizado' : (cfg.porSemana === 3 ? '6 aptos + 2 halls · seg a sex' : 'padrão informado'))}
+          ${card('Ritmo usado na previsão', ((cfg.sabado ? 6 : 5) / prev.D).toFixed(1).replace('.0', '').replace('.', ',') + ' meias lajes/semana', (cfg.usarReal && prev.medio) ? 'realizado' : 'padrão informado (a ajustar com o ritmo real)')}
           ${card('Término previsto', 'Buritis ' + fimObra('Buritis'), 'Pequis ' + fimObra('Pequis'))}
         </div>
         <details style="margin-bottom:10px;"><summary style="cursor:pointer;font-weight:600;">Premissas da previsão</summary>
           <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:10px;">
-            ${campo('dob-pc-dias', 'Meias lajes por semana (seg–sex)', cfg.porSemana, { min: 0.5, step: 0.5 })}
+            ${campo('dob-pc-dias', 'Meias lajes por semana (com os dias trabalhados)', cfg.porSemana, { min: 0.5, step: 0.5 })}
             ${campo('dob-pc-plat', 'Dias da platibanda (0 = igual)', cfg.platib, { min: 0 })}
             ${campo('dob-pc-par', 'Jogos de forma em paralelo', cfg.paralelo, { min: 1 })}
             ${campo('dob-pc-cura', 'Cura do lajão (dias)', cfg.cura, { min: 0 })}
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="dob-pc-sab" ${cfg.sabado ? 'checked' : ''}/> Trabalha aos sábados</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="dob-pc-real" ${cfg.usarReal ? 'checked' : ''}/> Usar o ritmo realizado</label>
           </div>
-          <p class="dob-dica">O jogo de forma cobre 2 aptos + hall e só vira depois de concretar; instalações e armadura vão na frente. Ritmo padrão: monta num dia e concreta no outro, 3 meias lajes por semana de segunda a sexta (6 aptos + 2 halls): 2 aptos + hall → 2 aptos → 2 aptos + hall do andar de cima. Com “Usar o ritmo realizado” marcado, vale a média dos intervalos entre concretagens seguidas (a 1ª montagem não conta). Cada jogo de forma sobe um geminado; o 1º lado começa depois do lajão do bloco concluído mais a cura. A platibanda não tem marcação no Mapa, então aparece sempre como previsão.</p>
+          <p class="dob-dica">O jogo de forma cobre 2 aptos + hall e só vira depois de concretar; instalações e armadura vão na frente. Ritmo padrão (a acompanhar até o fim do ano): monta num dia e concreta no outro, 4 meias lajes por semana, de segunda a sábado (8 aptos + 2 halls): 2 aptos + hall → 2 aptos → 2 aptos + hall do andar de cima. Com “Usar o ritmo realizado” marcado, vale a média dos intervalos entre concretagens seguidas (a 1ª montagem não conta). Cada jogo de forma sobe um geminado; o 1º lado começa depois do lajão do bloco concluído mais a cura. A platibanda não tem marcação no Mapa, então aparece sempre como previsão.</p>
         </details>
         <h4 style="margin:14px 0 6px;font-family:inherit;font-size:15px;">Próximas meias lajes</h4>
         ${proximos.length ? `<div style="border:1px solid #e3e6eb;border-radius:10px;overflow:hidden;">${proximos.map((u, k) => `<div style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:9px 12px;${k ? 'border-top:1px solid #eef0f3;' : ''}font-size:13.5px;background:#fff;"><span style="width:7px;height:7px;border-radius:50%;background:${u.status === 'andamento' ? '#b26b00' : '#a3abb8'};"></span><b style="font-weight:600;">${paredeEsc(nomeU(u))}</b><span style="color:#6b7380;">${u.status === 'andamento' ? 'em execução desde ' + dCurta(u.ini) + ' · concretagem prevista ' + dCurta(u.prevFim) : 'início previsto ' + dCurta(u.prevIni) + ' · concretagem ' + dCurta(u.prevFim)}</span>${u.aguardaLajao ? '<span style="color:#c03a1c;font-size:12px;">aguarda lajão</span>' : ''}</div>`).join('')}</div>` : '<p class="dob-dica">Todas as meias lajes estão concretadas.</p>'}
