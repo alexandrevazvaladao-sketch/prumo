@@ -964,8 +964,11 @@
   .pn-hero{ grid-column:1 / -1; display:grid; grid-template-columns:minmax(0,1.2fr) repeat(3, minmax(0,.6fr)); }
   .pn-hero > div{ padding:14px 16px; border-right:1px solid #eef0f3; min-width:0; }
   .pn-hero > div:last-child{ border-right:none; }
-  .pn-hero > div{ text-align:center; display:flex; flex-direction:column; align-items:stretch; justify-content:center; }
-  .pn-hero .pn-lbl{ justify-content:center; gap:14px; } .pn-hero .pn-big small{ margin-left:8px; }
+  .pn-hero > div:not(:first-child){ text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:16px 12px; }
+  .pn-hero > div:not(:first-child) .pn-lbl{ font-size:14px; font-weight:600; color:#4b5563; justify-content:center; }
+  .pn-hero > div:not(:first-child) .pn-mid{ font-size:46px; font-weight:750; letter-spacing:-.04em; line-height:1.05; margin-top:0; }
+  .pn-hero .pn-sub{ font-size:13px; color:#6b7380; font-weight:500; }
+  .pn-hero .pn-mid.ok{ color:#12783f; } .pn-hero .pn-mid.alerta{ color:#c27300; }
   .pn-lbl{ font-size:12.5px; color:#6b7380; display:flex; justify-content:space-between; gap:8px; }
   .pn-big{ font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.15; color:var(--ink-text); font-variant-numeric:tabular-nums; }
   .pn-big small{ font-size:12.5px; font-weight:600; letter-spacing:0; margin-left:8px; color:#6b7380; }
@@ -1011,6 +1014,8 @@
     .pn-hero > div:first-child{ grid-column:1 / -1; border-right:none; border-bottom:1px solid #eef0f3; }
     .pn-hero > div:nth-child(2), .pn-hero > div:nth-child(3), .pn-hero > div:nth-child(4){ padding:10px 12px; }
     .pn-big{ font-size:38px; }
+    .pn-hero > div:not(:first-child) .pn-mid{ font-size:30px; }
+    .pn-hero > div:not(:first-child) .pn-lbl{ font-size:12px; }
     .pn-mid{ font-size:18px; }
     .pn-lbl{ font-size:11.5px; }
     .pn-spark{ height:58px; }
@@ -1356,7 +1361,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.119';
+  const APP_VERSION = 'v2026.11.25.120';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9436,9 +9441,9 @@
             <div class="pn-big">${emExec.length}${delta ? `<small class="${delta > 0 ? 'up' : 'down'}">${delta > 0 ? '+' : ''}${delta} em 7 dias</small>` : '<small>igual a 7 dias atrás</small>'}</div>
             ${spark}
           </div>
-          <div><div class="pn-lbl">Pessoas</div><div class="pn-mid">${pessoas || '—'}</div></div>
-          <div><div class="pn-lbl">Equipamentos</div><div class="pn-mid">${equipTot ? equipOk + '/' + equipTot : '—'}</div></div>
-          <div><div class="pn-lbl">Concluídas no dia</div><div class="pn-mid">${concl.length || '—'}</div></div>
+          <div><div class="pn-lbl">Pessoas</div><div class="pn-mid">${pessoas || '—'}</div><div class="pn-sub">${empresas.length ? 'em ' + empresas.length + (empresas.length === 1 ? ' empresa' : ' empresas') : 'sem equipe lançada'}</div></div>
+          <div><div class="pn-lbl">Equipamentos</div><div class="pn-mid ${equipTot ? (equipOk === equipTot ? 'ok' : 'alerta') : ''}">${equipTot ? equipOk + '/' + equipTot : '—'}</div><div class="pn-sub">${equipTot ? (equipOk === equipTot ? 'todos operando' : (equipTot - equipOk) + (equipTot - equipOk === 1 ? ' parado' : ' parados')) : 'nenhum lançado'}</div></div>
+          <div><div class="pn-lbl">Concluídas no dia</div><div class="pn-mid ${concl.length ? 'ok' : ''}">${concl.length || '—'}</div><div class="pn-sub">${concl.length ? (concl.length === 1 ? 'frente finalizada' : 'frentes finalizadas') : 'nenhuma ainda'}</div></div>
         </div>`;
 
       let obraAtual = null;
