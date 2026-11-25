@@ -29,8 +29,8 @@
     --line:#e3e6eb;
     --clay:#24518f;
     --clay-dark:#1b3f71;
-    --sand:#c99a3d;
-    --moss:#3f7d5c;
+    --sand:#f0a30a;
+    --moss:#1f9d57;
     --brick:#b8462f;
     --ink-text:#232a35;
     --muted:#767e8c;
@@ -51,7 +51,7 @@
   .lg-card{ display:flex; width:100%; max-width:900px; min-height:540px; background:#fff; border-radius:22px; overflow:hidden; box-shadow:0 30px 70px -20px rgba(0,0,0,.55); }
   .lg-arte{ flex:1.05; background: linear-gradient(160deg,#1e3050 0%,#16233d 100%); position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px; color:#fff; overflow:hidden; }
   .lg-arte::before{ content:""; position:absolute; width:340px; height:340px; border-radius:50%; background:rgba(36,81,143,.22); right:-110px; top:-110px; }
-  .lg-arte::after{ content:""; position:absolute; width:260px; height:260px; border-radius:50%; background:rgba(201,154,61,.16); left:-90px; bottom:-90px; }
+  .lg-arte::after{ content:""; position:absolute; width:260px; height:260px; border-radius:50%; background:rgba(240,163,10,.16); left:-90px; bottom:-90px; }
   .lg-arte svg{ width:100%; max-width:330px; height:auto; position:relative; z-index:1; }
   .lg-arte h2{ position:relative; z-index:1; margin:16px 0 4px; font-family:inherit; font-size:24px; text-align:center; }
   .lg-arte p{ position:relative; z-index:1; margin:0; font-size:13px; opacity:.8; text-align:center; letter-spacing:.04em; }
@@ -196,7 +196,7 @@
     font-size:13px; box-shadow: var(--shadow-sm);
   }
   .dob-dot{ width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:8px; }
-  .dob-dot.on{ background:var(--moss); box-shadow: 0 0 0 3px rgba(63,125,92,0.15); }
+  .dob-dot.on{ background:var(--moss); box-shadow: 0 0 0 3px rgba(31,157,87,0.15); }
   .dob-dot.off{ background:var(--brick); box-shadow: 0 0 0 3px rgba(184,70,47,0.15); }
 
   /* Botões de ação secundários da barra de status (conectar, recuperar, configurações...)
@@ -261,7 +261,7 @@
   .dob-custo-sug .cat{ color:var(--muted); font-size:10.5px; text-transform:uppercase; margin-right:6px; }
   .dob-custo-empresas{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; }
   .dob-custo-emp{ border:1px solid var(--line); border-radius:10px; padding:12px; background:#fff; }
-  .dob-custo-emp.melhor{ border-color:var(--moss,#3f7d5c); box-shadow:0 0 0 1px var(--moss,#3f7d5c) inset; }
+  .dob-custo-emp.melhor{ border-color:var(--moss,#1f9d57); box-shadow:0 0 0 1px var(--moss,#1f9d57) inset; }
   .dob-custo-emp .nome{ font-weight:800; margin-bottom:8px; }
   .dob-custo-emp .linha{ display:flex; justify-content:space-between; gap:8px; font-size:12.5px; padding:3px 0; border-bottom:1px dashed var(--line); }
   .dob-custo-emp .linha.total{ border-bottom:none; border-top:1px solid var(--line); margin-top:4px; padding-top:6px; font-size:14px; }
@@ -280,7 +280,7 @@
   .dob-custo-valores .exec{ font-weight:800; font-size:16px; }
   .dob-custo-valores .orc{ font-size:11px; color:var(--muted); }
   .dob-custo-barra{ height:6px; background:var(--paper2,#eee); border-radius:99px; margin:8px 0; overflow:hidden; }
-  .dob-custo-barra > div{ height:100%; background:var(--moss,#3f7d5c); }
+  .dob-custo-barra > div{ height:100%; background:var(--moss,#1f9d57); }
   .dob-custo-chips{ display:flex; flex-wrap:wrap; gap:6px; }
   .dob-custo-chip{ font-size:11.5px; background:var(--paper2,#eef1f6); border:1px solid var(--line); border-radius:99px; padding:2px 9px; }
   .dob-custo-corpo{ padding:0 14px 14px; }
@@ -461,9 +461,9 @@
   }
   .dob-chip.equip{ background:linear-gradient(155deg, var(--clay) 0%, var(--clay-dark) 100%); }
   .dob-chip.pessoa{ background:linear-gradient(155deg, var(--ink-soft) 0%, var(--ink) 100%); }
-  .dob-chip.servico{ background:linear-gradient(155deg, var(--moss) 0%, #2f5f45 100%); display:inline-flex; align-items:center; gap:6px; }
-  .dob-chip.mapa-concluido{ background:linear-gradient(155deg, #4c8f6a 0%, #2f5f45 100%); }
-  .dob-chip.mapa-andamento{ background:linear-gradient(155deg, #d8ab4c 0%, #a97e2c 100%); }
+  .dob-chip.servico{ background:linear-gradient(155deg, var(--moss) 0%, #12783f 100%); display:inline-flex; align-items:center; gap:6px; }
+  .dob-chip.mapa-concluido{ background:linear-gradient(155deg, #26b062 0%, #12783f 100%); }
+  .dob-chip.mapa-andamento{ background:linear-gradient(155deg, #f0a30a 0%, #c27300 100%); }
   .dob-chip.mini{ padding:2px 9px; font-size:10.5px; }
   .dob-card-bloco-linha{ display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
   .dob-card-bloco-linha:last-child{ border-bottom:none; }
@@ -518,7 +518,7 @@
   /* ---------- Cronograma ---------- */
   .dob-crono-resumo{ display:flex; gap:10px; flex-wrap:wrap; margin:14px 0; }
   .dob-crono-resumo .pill{ font-size:12.5px; padding:6px 12px; border-radius:999px; background:#eef0f3; color:var(--ink-soft); border:1px solid var(--line); }
-  .dob-crono-resumo .pill.ok{ background:#e6f2ea; color:#2f6b45; border-color:#cfe6d7; }
+  .dob-crono-resumo .pill.ok{ background:#c9eed9; color:#0f7a3c; border-color:#8fd5ae; }
   .dob-crono-resumo .pill.atraso{ background:#fbe9e4; color:var(--brick); border-color:#f2d2c7; }
   .dob-crono-grupo1{ margin-top:22px; }
   .dob-crono-grupo1 > h4{ font-family:inherit; color:var(--ink); font-size:16px; margin:0 0 4px; }
@@ -536,9 +536,9 @@
 
   .dob-crono-barra{ height:5px; border-radius:999px; background:#e3e6eb; margin-top:6px; overflow:hidden; max-width:260px; }
   .dob-crono-barra-fill{ height:100%; background:var(--clay, #24518f); border-radius:999px; }
-  .dob-crono-item.concluido .dob-crono-barra-fill{ background:#3f7d5c; }
+  .dob-crono-item.concluido .dob-crono-barra-fill{ background:#1f9d57; }
   .dob-crono-status{ font-size:10.5px; font-weight:700; letter-spacing:.02em; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap; flex-shrink:0; margin-top:1px; }
-  .dob-crono-status.concluido{ background:#e6f2ea; color:#2f6b45; }
+  .dob-crono-status.concluido{ background:#c9eed9; color:#0f7a3c; }
   .dob-crono-status.atrasado{ background:#fbe9e4; color:var(--brick); }
   .dob-crono-status.andamento{ background:#eaf1f7; color:#2f5f8a; }
   .dob-crono-status.naoiniciado{ background:#eef0f3; color:var(--muted); }
@@ -571,7 +571,7 @@
   .dob-crono-ppc-aro svg{ width:72px; height:72px; transform:rotate(-90deg); }
   .dob-crono-ppc-aro .fundo{ fill:none; stroke:#e3e6eb; stroke-width:7; }
   .dob-crono-ppc-aro .frente{ fill:none; stroke:var(--clay, #24518f); stroke-width:7; stroke-linecap:round; transition:stroke-dashoffset .3s ease; }
-  .dob-crono-ppc-aro.bom .frente{ stroke:#3f7d5c; }
+  .dob-crono-ppc-aro.bom .frente{ stroke:#1f9d57; }
   .dob-crono-ppc-aro .valor{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; color:var(--ink); }
   .dob-crono-ppc-txt{ flex:1; min-width:160px; }
   .dob-crono-ppc-txt .titulo{ font-size:12.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--muted); margin-bottom:3px; }
@@ -593,14 +593,14 @@
     transition:transform .08s ease; user-select:none;
   }
   .dob-mapa-bloco:hover{ transform:scale(1.05); }
-  .dob-mapa-bloco.amarelo{ background:var(--sand); border-color:#a97f2a; color:#fff; }
-  .dob-mapa-bloco.verde{ background:var(--moss); border-color:#2f5f45; color:#fff; }
+  .dob-mapa-bloco.amarelo{ background:var(--sand); border-color:#c27300; color:#2a1800; }
+  .dob-mapa-bloco.verde{ background:var(--moss); border-color:#12783f; color:#fff; }
   .dob-mapa-legenda{ display:flex; gap:16px; font-size:12px; color:var(--muted); margin-top:12px; align-items:center; }
   .dob-mapa-legenda span{ display:inline-flex; align-items:center; gap:6px; }
   .dob-mapa-legenda i{ width:14px; height:14px; border-radius:4px; display:inline-block; border:1px solid var(--line); }
   .dob-mapa-legenda i.branco{ background:#fff; }
-  .dob-mapa-legenda i.amarelo{ background:var(--sand); border-color:#a97f2a; }
-  .dob-mapa-legenda i.verde{ background:var(--moss); border-color:#2f5f45; }
+  .dob-mapa-legenda i.amarelo{ background:var(--sand); border-color:#c27300; }
+  .dob-mapa-legenda i.verde{ background:var(--moss); border-color:#12783f; }
 
   /* ---------- Mapa: layout em 2 colunas na tela larga, pra não precisar rolar tudo de novo só pra
      trocar de serviço, e pro mapa usar o espaço sobrando à direita em vez de ficar pequeno e
@@ -623,8 +623,8 @@
     font-size:13px; font-weight:600; cursor:pointer; transition:transform .08s ease;
   }
   .dob-mapa-chip:hover{ transform:scale(1.04); }
-  .dob-mapa-chip.amarelo{ background:var(--sand); border-color:#a97f2a; color:#fff; }
-  .dob-mapa-chip.verde{ background:var(--moss); border-color:#2f5f45; color:#fff; }
+  .dob-mapa-chip.amarelo{ background:var(--sand); border-color:#c27300; color:#2a1800; }
+  .dob-mapa-chip.verde{ background:var(--moss); border-color:#12783f; color:#fff; }
   @media (max-width: 480px){
     .dob-entry-presenca{ grid-template-columns:1fr; }
   }
@@ -647,7 +647,7 @@
   .dob-tag-clima{ font-size:15px; margin-left:6px; }
   .dob-equip-status-row{ display:flex; gap:6px; flex-wrap:wrap; padding:6px 0 6px 24px; margin-bottom:2px; }
   .dob-equip-status-btn{ font-size:11px; padding:5px 10px; border-radius:999px; border:1px solid var(--line); background:#fff; cursor:pointer; }
-  .dob-equip-status-btn.ativo-ok{ background:#eaf3de; border-color:#3f7d5c; color:#3b6d11; }
+  .dob-equip-status-btn.ativo-ok{ background:#d4f0dd; border-color:#1f9d57; color:#3b6d11; }
   .dob-equip-status-btn.ativo-parado{ background:#faece7; border-color:#b8462f; color:#993c1d; }
   .dob-equip-motivo{ flex:1; min-width:180px; font-size:12px; padding:5px 8px; }
   .dob-resumo-semana-cards{ display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:10px; margin-top:12px; }
@@ -682,7 +682,7 @@
   .dob-pd-item.comprometido td.desc .cod{ color:var(--clay,#24518f); }
   .dob-pd-sit{ display:inline-flex; align-items:center; gap:4px; cursor:pointer; font-size:11px; }
   .dob-pd-sit input{ width:14px; height:14px; }
-  .dob-pd-sit .ok{ color:#2f6b45; font-weight:700; } .dob-pd-sit .atraso{ color:var(--brick); font-weight:700; } .dob-pd-sit .plan{ color:#2f5f8a; }
+  .dob-pd-sit .ok{ color:#0f7a3c; font-weight:700; } .dob-pd-sit .atraso{ color:var(--brick); font-weight:700; } .dob-pd-sit .plan{ color:#2f5f8a; }
   .dob-pd-sit-vazio{ color:#c8c4ba; }
   .dob-pd-causa{ font-size:10.5px; max-width:110px; margin-left:4px; border:1px solid var(--line); border-radius:5px; }
   .dob-pd-barra{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:12px; }
@@ -706,7 +706,7 @@
   .dob-pd-un{ text-align:center; color:var(--muted); }
   .dob-pd-cel{ text-align:center; font-variant-numeric:tabular-nums; }
   .dob-pd-cel.vazio{ color:#c8c4ba; }
-  .dob-pd-cel.tem-dado{ background:#eaf3de; color:#3b6d11; font-weight:600; }
+  .dob-pd-cel.tem-dado{ background:#d4f0dd; color:#3b6d11; font-weight:600; }
   .dob-pd-total{ text-align:center; font-weight:700; color:var(--clay); background:#fafbfc; font-variant-numeric:tabular-nums; }
   .dob-chamada-del:hover{ color:var(--brick); }
 
@@ -927,7 +927,7 @@
   .dob-eqemp-lista{ display:flex; flex-direction:column; gap:6px; }
   .dob-eqemp-linha{ display:flex; align-items:center; justify-content:space-between; gap:10px; background:#fff; border:1px solid var(--line,#e4dfd3); border-radius:12px; padding:8px 10px; }
   .dob-eqemp-obra{ margin:14px 0 6px; padding:6px 10px; border-radius:8px; font-size:13px; font-weight:700; color:#fff; background:#5b6b86; }
-  .dob-eqemp-obra-p{ background:#2f5f45; } .dob-eqemp-obra-b{ background:#a97f2a; }
+  .dob-eqemp-obra-p{ background:#12783f; } .dob-eqemp-obra-b{ background:#c27300; }
   .dob-eqemp-nome{ display:flex; flex-direction:column; min-width:0; }
   .dob-eqemp-nome b{ font-size:13.5px; color:var(--ink,#16233d); }
   .dob-eqemp-nome span{ font-size:12px; color:var(--muted,#5d6675); white-space:normal; overflow-wrap:anywhere; line-height:1.3; }
@@ -963,14 +963,14 @@
   .pn-lbl{ font-size:12.5px; color:#6b7380; display:flex; justify-content:space-between; gap:8px; }
   .pn-big{ font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.15; color:var(--ink-text); font-variant-numeric:tabular-nums; }
   .pn-big small{ font-size:12.5px; font-weight:600; letter-spacing:0; margin-left:8px; color:#6b7380; }
-  .pn-big small.up{ color:#1d7a46; } .pn-big small.down{ color:#c03a1c; }
+  .pn-big small.up{ color:#0f7a3c; } .pn-big small.down{ color:#c03a1c; }
   .pn-mid{ font-size:22px; font-weight:650; letter-spacing:-.02em; color:var(--ink-text); font-variant-numeric:tabular-nums; margin-top:2px; }
   .pn-spark{ display:block; width:100%; height:46px; margin-top:6px; }
   .pn-row{ display:flex; align-items:center; gap:12px; padding:11px 16px; position:relative; }
   .pn-row + .pn-row{ border-top:1px solid #eef0f3; }
   .pn-ic{ flex:0 0 30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:#eef1f6; color:var(--ink); }
   .pn-ic svg{ width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-  .pn-ic.run{ background:#fbf1e1; color:#b26b00; } .pn-ic.ok{ background:#e8f4ec; color:#1d7a46; } .pn-ic.late{ background:#fbe9e4; color:#c03a1c; }
+  .pn-ic.run{ background:#fde6b0; color:#8a5200; } .pn-ic.ok{ background:#c9eed9; color:#0f7a3c; } .pn-ic.late{ background:#fbe9e4; color:#c03a1c; }
   .pn-tx{ min-width:0; flex:1; }
   .pn-t1{ font-weight:600; font-size:14px; color:var(--ink-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .pn-t2{ font-size:12.5px; color:#6b7380; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -978,7 +978,7 @@
   .pn-rt b{ display:block; font-size:15px; font-variant-numeric:tabular-nums; color:var(--ink-text); }
   .pn-rt span{ font-size:11.5px; color:#6b7380; }
   .pn-tag{ font-size:11.5px; font-weight:600; padding:2px 8px; border-radius:6px; white-space:nowrap; }
-  .pn-tag.run{ background:#fbf1e1; color:#a05f00; } .pn-tag.ok{ background:#e8f4ec; color:#1d7a46; } .pn-tag.late{ background:#fbe9e4; color:#c03a1c; }
+  .pn-tag.run{ background:#fde6b0; color:#8a5200; } .pn-tag.ok{ background:#c9eed9; color:#0f7a3c; } .pn-tag.late{ background:#fbe9e4; color:#c03a1c; }
   .pn-grp{ padding:8px 16px 6px; font-size:12px; font-weight:600; color:#6b7380; background:#f8f9fb; border-top:1px solid #eef0f3; }
   .pn-box > header + .pn-grp{ border-top:none; }
   .pn-vazio{ padding:14px 16px; color:#6b7380; font-size:13px; }
@@ -1105,9 +1105,11 @@
   .pd-cel{ min-width:0; border-radius:3px; padding:4px 5px; background:#f1f3f6; border:1px solid #e3e6eb; font-size:10.5px; line-height:1.25; cursor:default; }
   .pd-cel b{ display:block; font-weight:600; color:#3a4660; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .pd-cel span{ display:block; color:#6b7380; font-style:italic; white-space:nowrap; }
-  .pd-cel.ok{ background:#e8f4ec; border-color:#bfe0cb; } .pd-cel.ok b{ color:#1d6b3e; } .pd-cel.ok span{ color:#1d7a46; font-style:normal; font-weight:600; }
-  .pd-cel.run{ background:#fbf1e1; border-color:#efd3a6; } .pd-cel.run b{ color:#8a5200; } .pd-cel.run span{ color:#a05f00; font-style:normal; font-weight:600; }
-  .pd-l{ display:flex; gap:2px; margin-top:2px; } .pd-l i{ font-style:normal; font-size:9px; font-weight:700; color:#a3abb8; } .pd-l i.a{ color:#a05f00; } .pd-l i.f{ color:#1d7a46; }
+  .pd-cel.ok{ background:#1f9d57; border-color:#12783f; } .pd-cel.ok b{ color:#fff; } .pd-cel.ok span{ color:#e9fff1; font-style:normal; font-weight:700; }
+  .pd-cel.run{ background:#f7b92b; border-color:#c27300; } .pd-cel.run b{ color:#3a2300; } .pd-cel.run span{ color:#4a2d00; font-style:normal; font-weight:700; }
+  .pd-l{ display:flex; gap:2px; margin-top:2px; } .pd-l i{ font-style:normal; font-size:9px; font-weight:700; color:#a3abb8; } .pd-l i.a{ color:#8a5200; } .pd-l i.f{ color:#0f7a3c; }
+  .pd-cel.ok .pd-l i{ color:rgba(255,255,255,.55); } .pd-cel.ok .pd-l i.f{ color:#fff; } .pd-cel.ok .pd-l i.a{ color:#fff; }
+  .pd-cel.run .pd-l i{ color:rgba(58,35,0,.45); } .pd-cel.run .pd-l i.f{ color:#3a2300; } .pd-cel.run .pd-l i.a{ color:#3a2300; }
   .pd-chao{ height:3px; background:#16233d; border-radius:2px; margin:2px 0 6px 18px; }
   .pd-nome{ padding-left:18px; font-size:12.5px; } .pd-nome span{ color:#6b7380; font-size:11.5px; }
   .pd-fim{ padding-left:18px; font-size:11.5px; color:#6b7380; font-style:italic; }
@@ -1347,7 +1349,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.111';
+  const APP_VERSION = 'v2026.11.25.112';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4005,7 +4007,7 @@
       const lin = Object.entries(g.porEmpresa).map(([emp, e]) => ({ emp, min: Math.min(...e.precos), txt: faixa(e.precos), qtd: e.qtd, total: e.total, obras: [...e.obras].join(' + ') }));
       const menor = Math.min(...lin.map(l => l.min));
       return `<tr class="comp"><td colspan="5">${custoEsc(g.desc)} <span class="cat">(${custoEsc(g.un || '')})</span></td></tr>` +
-        lin.sort((a, b) => a.min - b.min).map(l => `<tr><td>${custoEsc(l.emp)} <span class="cat">· ${custoEsc(l.obras)}</span></td><td class="num">${l.txt}</td><td class="num">${custoNum(l.qtd)}</td><td class="num">${custoMoeda(l.total)}</td><td class="num">${l.min === menor ? '<b style="color:var(--moss,#3f7d5c)">menor</b>' : '+' + ((l.min / menor - 1) * 100).toFixed(0) + '%'}</td></tr>`).join('');
+        lin.sort((a, b) => a.min - b.min).map(l => `<tr><td>${custoEsc(l.emp)} <span class="cat">· ${custoEsc(l.obras)}</span></td><td class="num">${l.txt}</td><td class="num">${custoNum(l.qtd)}</td><td class="num">${custoMoeda(l.total)}</td><td class="num">${l.min === menor ? '<b style="color:var(--moss,#1f9d57)">menor</b>' : '+' + ((l.min / menor - 1) * 100).toFixed(0) + '%'}</td></tr>`).join('');
     }).join('');
     const porEmp = {};
     mapaState.estados.forEach(e => {
@@ -4361,15 +4363,15 @@
     const proximos = todas.filter(u => u.status !== 'concluido' && u.prevIni).sort((a, b) => a.prevIni.localeCompare(b.prevIni) || a.obra.localeCompare(b.obra) || a.bloco - b.bloco).slice(0, 8);
     const chips = (u) => !u.etapas ? '' : PAREDE_ETAPAS.map(([sv, nome, l]) => {
       const e = u.etapas[sv];
-      const cor = e.feita ? '#1d7a46' : (e.n > 0 ? '#a05f00' : '#a3abb8');
-      const bg = e.feita ? '#e8f4ec' : (e.n > 0 ? '#fbf1e1' : '#f1f3f6');
+      const cor = e.feita ? '#0f7a3c' : (e.n > 0 ? '#8a5200' : '#a3abb8');
+      const bg = e.feita ? '#c9eed9' : (e.n > 0 ? '#fde6b0' : '#f1f3f6');
       const tit = `${nome}: ${e.feita ? 'concluída' + (e.concl ? ' em ' + fmtDate(e.concl) : '') : (e.n > 0 ? 'em execução (' + e.verdes + '/' + e.total + ')' : 'não iniciada')}`;
       return `<span title="${paredeEsc(tit)}" style="display:inline-block;min-width:15px;text-align:center;padding:0 3px;border-radius:4px;font-size:10px;font-weight:700;color:${cor};background:${bg};margin-right:2px;">${l}</span>`;
     }).join('');
     const linhaUn = (u) => {
       let txt, cor = '#6b7380', peso = 500;
-      if(u.status === 'concluido'){ txt = 'concretada ' + pCurta(u.fim); cor = '#1d7a46'; peso = 600; }
-      else if(u.status === 'andamento'){ txt = 'em execução · prev. ' + pCurta(u.prevFim); cor = '#a05f00'; peso = 600; }
+      if(u.status === 'concluido'){ txt = 'concretada ' + pCurta(u.fim); cor = '#0f7a3c'; peso = 600; }
+      else if(u.status === 'andamento'){ txt = 'em execução · prev. ' + pCurta(u.prevFim); cor = '#8a5200'; peso = 600; }
       else txt = '<i>prev. ' + pCurta(u.prevIni) + ' → ' + pCurta(u.prevFim) + '</i>';
       return `<div style="display:flex;justify-content:space-between;gap:6px;align-items:center;font-size:12px;line-height:1.35;padding:2px 0;"><span style="color:#3a4660;">${u.platibanda ? 'Platibanda' : u.rot.replace(' + hall', '+hall')}</span><span style="color:${cor};font-weight:${peso};white-space:nowrap;">${txt}</span></div>${u.etapas ? `<div style="margin:1px 0 4px;">${chips(u)}</div>` : ''}${u.aguardaLajao ? '<div style="font-size:11px;color:#c03a1c;">aguarda lajão</div>' : ''}`;
     };
@@ -4422,7 +4424,7 @@
           <p class="dob-dica">O jogo de forma cobre 2 aptos + hall e só vira depois de concretar; instalações e armadura vão na frente. Ritmo padrão (a acompanhar até o fim do ano): monta num dia e concreta no outro, 4 meias lajes por semana, de segunda a sábado (8 aptos + 2 halls): 2 aptos + hall → 2 aptos → 2 aptos + hall do andar de cima. Com “Usar o ritmo realizado” marcado, vale a média dos intervalos entre concretagens seguidas (a 1ª montagem não conta). Cada jogo de forma sobe um geminado; o 1º lado começa depois do lajão do bloco concluído mais a cura. A platibanda não tem marcação no Mapa, então aparece sempre como previsão.</p>
         </details>
         <h4 style="margin:14px 0 6px;font-family:inherit;font-size:15px;">Próximas meias lajes</h4>
-        ${proximos.length ? `<div style="border:1px solid #e3e6eb;border-radius:10px;overflow:hidden;">${proximos.map((u, k) => `<div style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:9px 12px;${k ? 'border-top:1px solid #eef0f3;' : ''}font-size:13.5px;background:#fff;"><span style="width:7px;height:7px;border-radius:50%;background:${u.status === 'andamento' ? '#b26b00' : '#a3abb8'};"></span><b style="font-weight:600;">${paredeEsc(nomeU(u))}</b><span style="color:#6b7380;">${u.status === 'andamento' ? 'em execução desde ' + dCurta(u.ini) + ' · concretagem prevista ' + dCurta(u.prevFim) : 'início previsto ' + dCurta(u.prevIni) + ' · concretagem ' + dCurta(u.prevFim)}</span>${u.aguardaLajao ? '<span style="color:#c03a1c;font-size:12px;">aguarda lajão</span>' : ''}</div>`).join('')}</div>` : '<p class="dob-dica">Todas as meias lajes estão concretadas.</p>'}
+        ${proximos.length ? `<div style="border:1px solid #e3e6eb;border-radius:10px;overflow:hidden;">${proximos.map((u, k) => `<div style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:9px 12px;${k ? 'border-top:1px solid #eef0f3;' : ''}font-size:13.5px;background:#fff;"><span style="width:7px;height:7px;border-radius:50%;background:${u.status === 'andamento' ? '#8a5200' : '#a3abb8'};"></span><b style="font-weight:600;">${paredeEsc(nomeU(u))}</b><span style="color:#6b7380;">${u.status === 'andamento' ? 'em execução desde ' + dCurta(u.ini) + ' · concretagem prevista ' + dCurta(u.prevFim) : 'início previsto ' + dCurta(u.prevIni) + ' · concretagem ' + dCurta(u.prevFim)}</span>${u.aguardaLajao ? '<span style="color:#c03a1c;font-size:12px;">aguarda lajão</span>' : ''}</div>`).join('')}</div>` : '<p class="dob-dica">Todas as meias lajes estão concretadas.</p>'}
         ${tabela('Buritis')}
         ${tabela('Pequis')}
         <p class="dob-dica" style="margin-top:12px;">Cada prédio é um bloco: andares de baixo (1º) para cima (4º) e a platibanda no topo; cada andar tem as duas meias lajes (x01/x04 + hall e x02/x03). Verde = concretada, laranja = em execução, cinza = previsão (data prevista da concretagem). Letras <b>I F C</b> = instalações, forma e concretagem. Passe o mouse ou toque num andar para ver os detalhes. Para registrar uma etapa, marque o apartamento no Mapa de Acompanhamento.</p>
@@ -4527,7 +4529,7 @@
       }
       return `<div style="border:1px solid var(--line, #ddd);border-radius:8px;padding:10px 12px;margin-bottom:8px;">
         <div style="font-weight:700;">${paredeEsc(sv)} <span style="font-weight:400;opacity:.7;">· ${r.total} concluído(s)${macro ? ' · macro ' + paredeEsc(rotuloMacro(macro)) : ''}</span></div>${travaHtml}
-        ${linhasObra}${(() => { const l = (mapaState.beeLancado || {})[beediaData + '|' + sv]; return l ? `<div style="margin-top:6px;font-size:12px;color:#2f7d4f;">✔ Lançado no BEE em ${paredeEsc(String(l.em || '').slice(0, 10).split('-').reverse().join('/'))}${l.qtd != null ? ' · qtd ' + paredeEsc(l.qtd) : ''}</div>` : `<div style="margin-top:6px;font-size:12px;color:#24518f;">Pendente de lançar no BEE</div>`; })()}${kitHtml}</div>`;
+        ${linhasObra}${(() => { const l = (mapaState.beeLancado || {})[beediaData + '|' + sv]; return l ? `<div style="margin-top:6px;font-size:12px;color:#1a8a4c;">✔ Lançado no BEE em ${paredeEsc(String(l.em || '').slice(0, 10).split('-').reverse().join('/'))}${l.qtd != null ? ' · qtd ' + paredeEsc(l.qtd) : ''}</div>` : `<div style="margin-top:6px;font-size:12px;color:#24518f;">Pendente de lançar no BEE</div>`; })()}${kitHtml}</div>`;
     }).join('');
     c.innerHTML = `<div class="dob-card" style="margin-top:14px;">
       <h3>BEE do dia</h3>
@@ -4698,7 +4700,7 @@
     const feitos = cronogramaSemanalLer(), hoje = todayStr();
     const fimSem = (sIso) => { const [y,m,d] = sIso.split('-').map(Number); const dt = new Date(y, m-1, d + 6); return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0'); };
     const causaTxt = (v) => (CRONOGRAMA_CAUSAS.find(x => x.v === v) || { t: v }).t;
-    const cor = (pct) => pct >= 80 ? '#2f7d4f' : pct >= 60 ? '#c98a1b' : '#b4472e';
+    const cor = (pct) => pct >= 80 ? '#1a8a4c' : pct >= 60 ? '#e0900a' : '#b4472e';
     const bloco = (titulo, corpo) => `<div class="dob-card-form" style="margin-bottom:14px;"><h3 style="margin-top:0;">${titulo}</h3>${corpo}</div>`;
     let html = '<div class="dob-card-form" style="margin-bottom:14px;"><h3 style="margin:0;">Meu painel</h3><p class="dob-dica" style="margin:6px 0 0;">Só você vê esta tela. Tudo vem dos dados que já estão no app (Cronograma e Mapa).</p></div>';
     ['Buritis', 'Pequis'].forEach(obra => {
@@ -4730,7 +4732,7 @@
         if(!a || !a.total || !(a.concluidos || a.andamento)) return null;
         return { sv, v: a.concluidos, a: a.andamento, tot: a.total, pct: Math.round(a.concluidos / a.total * 100) };
       }).filter(Boolean).sort((x, y) => y.pct - x.pct);
-      const listaMapa = linhasMapa.length ? linhasMapa.map(x => `<div style="display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12.5px;"><span style="flex:1.4;min-width:0;">${x.sv}</span><div style="flex:1;background:#e8ebf0;border-radius:99px;height:12px;overflow:hidden;display:flex;"><div style="width:${x.pct}%;background:#2f7d4f;"></div><div style="width:${Math.round(x.a / x.tot * 100)}%;background:#c9a24a;"></div></div><b style="width:92px;text-align:right;">${x.v}/${x.tot} <span style="font-weight:400;color:var(--muted);">+${x.a} exec.</span></b></div>`).join('') : '<p class="dob-dica">Sem marcações no Mapa para esta obra.</p>';
+      const listaMapa = linhasMapa.length ? linhasMapa.map(x => `<div style="display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12.5px;"><span style="flex:1.4;min-width:0;">${x.sv}</span><div style="flex:1;background:#e8ebf0;border-radius:99px;height:12px;overflow:hidden;display:flex;"><div style="width:${x.pct}%;background:#1a8a4c;"></div><div style="width:${Math.round(x.a / x.tot * 100)}%;background:#c9a24a;"></div></div><b style="width:92px;text-align:right;">${x.v}/${x.tot} <span style="font-weight:400;color:var(--muted);">+${x.a} exec.</span></b></div>`).join('') : '<p class="dob-dica">Sem marcações no Mapa para esta obra.</p>';
       html += bloco('Solar dos ' + obra + ' — PPC das últimas semanas <span style="font-size:13px;color:var(--muted);font-weight:400;">(acumulado: ' + ppcAll + '%)</span>', barras)
         + bloco('Solar dos ' + obra + ' — itens em atraso', listaAtr + '<div style="margin-top:10px;">' + listaCausas + '</div>')
         + bloco('Solar dos ' + obra + ' — avanço do Mapa (blocos concluídos)', listaMapa);
@@ -5144,7 +5146,7 @@
     const e = mapaState.estados.find(x => x.servico === servico && x.obra === obra && x.bloco === bloco);
     const nomeBonito = humanizarNomeBloco(bloco, tipo);
     const statusLabel = !e ? 'Não iniciado' : e.cor === 'verde' ? 'Concluído' : 'Em andamento';
-    const statusCor = !e ? '#9aa3b2' : e.cor === 'verde' ? '#5fae85' : '#e0b35c';
+    const statusCor = !e ? '#9aa3b2' : e.cor === 'verde' ? '#26b062' : '#f7b92b';
     const partes = [];
     if(e && e.atualizadoEm) partes.push('Última alteração: ' + tempoRelativoCurto(e.atualizadoEm));
     else if(e && e.dataInicio) partes.push('Iniciado em ' + fmtDate(e.dataInicio));
@@ -5335,7 +5337,7 @@
     setTimeout(restaurar, 80); setTimeout(restaurar, 450); // o 2º cobre a rolagem suave do botão "Diário"
   }
   document.addEventListener('click', (ev) => { if(ev.target.closest('[data-voltar-diario]')) voltarAoDiario(); });
-  const CORES_TRACO = { amarelo: '#c99a3d', verde: '#3f7d5c' };
+  const CORES_TRACO = { amarelo: '#f0a30a', verde: '#1f9d57' };
   function fmtCurto(iso){ if(!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}/${m}`; }
   function pontosDoTraco(d){
     const p = d.pontos || [];
@@ -5385,7 +5387,7 @@
         let ty = (topo.y/100)*h - 4; if(ty - fs < 0) ty = (topo.y/100)*h + fs + 8;
         ctx.fillStyle = 'rgba(255,255,255,0.88)';
         ctx.fillRect(tx - 3, ty - fs - 1, tw + 6, fs + 4);
-        ctx.fillStyle = d.cor === 'verde' ? '#2f5f45' : '#8a6414';
+        ctx.fillStyle = d.cor === 'verde' ? '#12783f' : '#8a5200';
         ctx.fillText(txt, tx, ty);
       }
     }
@@ -5443,7 +5445,7 @@
       overlay.style.cssText = 'position:fixed; inset:0; background:rgba(20,20,20,0.45); z-index:99999; display:flex; align-items:center; justify-content:center; padding:16px;';
       overlay.innerHTML = `
         <div style="background:#fff; border-radius:14px; width:380px; max-width:100%; box-shadow:0 16px 40px rgba(0,0,0,0.25); overflow:hidden; font-family:inherit;">
-          <div style="padding:14px 18px; background:linear-gradient(155deg,#d8ab4c 0%,#a97e2c 100%); color:#fff;" id="dob-tr-head">
+          <div style="padding:14px 18px; background:linear-gradient(155deg,#f0a30a 0%,#c27300 100%); color:#fff;" id="dob-tr-head">
             <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; opacity:.9;">${novo ? 'Novo trecho' : 'Editar trecho'}${forma ? ' · ' + forma : ''}</div>
             <div style="font-size:15px; font-weight:700;">${servico}</div>
           </div>
@@ -5451,8 +5453,8 @@
             <div>
               <label style="font-size:12px; color:#6b7380; display:block; margin-bottom:4px;">Status</label>
               <div style="display:flex; gap:8px;">
-                <button type="button" data-st="amarelo" class="dob-tr-st" style="flex:1; padding:8px; border-radius:8px; border:2px solid #a97f2a; font-size:13px; cursor:pointer;">🟡 Em execução</button>
-                <button type="button" data-st="verde" class="dob-tr-st" style="flex:1; padding:8px; border-radius:8px; border:2px solid #2f5f45; font-size:13px; cursor:pointer;">🟢 Concluído</button>
+                <button type="button" data-st="amarelo" class="dob-tr-st" style="flex:1; padding:8px; border-radius:8px; border:2px solid #c27300; font-size:13px; cursor:pointer;">🟡 Em execução</button>
+                <button type="button" data-st="verde" class="dob-tr-st" style="flex:1; padding:8px; border-radius:8px; border:2px solid #12783f; font-size:13px; cursor:pointer;">🟢 Concluído</button>
               </div>
             </div>
             <div style="display:flex; gap:8px;">
@@ -5479,11 +5481,11 @@
       const pintar = () => {
         overlay.querySelectorAll('.dob-tr-st').forEach(b => {
           const ativo = b.dataset.st === corSel;
-          b.style.background = ativo ? (b.dataset.st === 'verde' ? '#3f7d5c' : '#c99a3d') : '#fff';
+          b.style.background = ativo ? (b.dataset.st === 'verde' ? '#1f9d57' : '#f0a30a') : '#fff';
           b.style.color = ativo ? '#fff' : '#222';
         });
         overlay.querySelector('#dob-tr-conc-wrap').style.display = corSel === 'verde' ? 'block' : 'none';
-        overlay.querySelector('#dob-tr-head').style.background = corSel === 'verde' ? 'linear-gradient(155deg,#4c8f6a 0%,#2f5f45 100%)' : 'linear-gradient(155deg,#d8ab4c 0%,#a97e2c 100%)';
+        overlay.querySelector('#dob-tr-head').style.background = corSel === 'verde' ? 'linear-gradient(155deg,#26b062 0%,#12783f 100%)' : 'linear-gradient(155deg,#f0a30a 0%,#c27300 100%)';
       };
       overlay.querySelectorAll('.dob-tr-st').forEach(b => b.addEventListener('click', () => { corSel = b.dataset.st; pintar(); }));
       pintar();
@@ -5593,8 +5595,8 @@
   function corInfoBloco(cor){
     return {
       '':       { grad: 'linear-gradient(155deg, #cfcabc 0%, #a9a48f 100%)', label: '⚪ A fazer' },
-      amarelo:  { grad: 'linear-gradient(155deg, #d8ab4c 0%, #a97e2c 100%)', label: '🟡 Em execução' },
-      verde:    { grad: 'linear-gradient(155deg, #4c8f6a 0%, #2f5f45 100%)', label: '🟢 Concluído' }
+      amarelo:  { grad: 'linear-gradient(155deg, #f0a30a 0%, #c27300 100%)', label: '🟡 Em execução' },
+      verde:    { grad: 'linear-gradient(155deg, #26b062 0%, #12783f 100%)', label: '🟢 Concluído' }
     }[cor];
   }
   function cardBlocoCustom({ servico, obra, blocoId, nomeBonito }){
@@ -5776,8 +5778,8 @@
               </div>
               <div style="display:flex; gap:8px; margin-top:14px;">
                 ${btn('', '⚪ A fazer', '#8a8575')}
-                ${btn('amarelo', '🟡 Em execução', '#b8841f')}
-                ${btn('verde', '🟢 Concluído', '#2f7a52')}
+                ${btn('amarelo', '🟡 Em execução', '#e08f00')}
+                ${btn('verde', '🟢 Concluído', '#1a8a4c')}
               </div>
             </div>
             <div style="display:flex; gap:8px; padding:12px 18px; background:#eef1f6; border-top:1px solid #e3e6eb;">
@@ -6143,7 +6145,7 @@
         if(np) extra.push(`🔗 ${np} pré-requisito${np > 1 ? 's' : ''}`);
         const ativo = n === atual;
         const stN = statusServicoNaObra(n, (document.getElementById('dob-mapa-obra') || {}).value);
-        const corChip = stN === 'verde' ? 'background:#e2f1e8; border:1px solid #3f7d5c; box-shadow:inset 5px 0 0 #3f7d5c;' : stN === 'amarelo' ? 'background:#fbf0d3; border:1px solid #c99a3d; box-shadow:inset 5px 0 0 #c99a3d;' : 'background:#fff; border:1px solid var(--line);';
+        const corChip = stN === 'verde' ? 'background:#c9eed9; border:1px solid #1f9d57; box-shadow:inset 5px 0 0 #1f9d57;' : stN === 'amarelo' ? 'background:#fde6b0; border:1px solid #f0a30a; box-shadow:inset 5px 0 0 #f0a30a;' : 'background:#fff; border:1px solid var(--line);';
         if(stN) extra.unshift(stN === 'verde' ? '✔ concluído' : '● em execução');
         return `<button type="button" class="dob-mapa-atv-chip" data-atv="${n.replace(/"/g, '&quot;')}" data-st="${stN}" aria-pressed="${ativo}"
           style="text-align:left; padding:10px 12px; border-radius:7px; cursor:pointer; font:inherit; color:inherit; ${ativo ? 'background:#274b74; color:#fff; border:1px solid #274b74; box-shadow:inset 5px 0 0 ' + (stN === 'verde' ? '#5fbf8a' : stN === 'amarelo' ? '#f0c24d' : '#274b74') + ';' : corChip}">
@@ -6185,7 +6187,7 @@
       renderizarListaServicos();
     }
 
-    function corClasse(cor){ return cor === 'amarelo' ? 'rgba(201,154,61,0.75)' : cor === 'verde' ? 'rgba(63,125,92,0.75)' : 'transparent'; }
+    function corClasse(cor){ return cor === 'amarelo' ? 'rgba(240,163,10,0.75)' : cor === 'verde' ? 'rgba(31,157,87,0.75)' : 'transparent'; }
 
     let mapaZoomAtual = 1;
     let modoDesenho = false;
@@ -6398,8 +6400,8 @@
             </div>
             <div style="${grp}">
               <span style="${rot}">Novo traço</span>
-              <button type="button" class="dob-btn pequeno" id="dob-mapa-cor-amarelo" style="background:${desenhoCorAtual==='amarelo' ? '#c99a3d' : 'transparent'}; color:${desenhoCorAtual==='amarelo' ? '#fff' : 'inherit'}; border:1px solid #a97f2a;">🟡 Em execução</button>
-              <button type="button" class="dob-btn pequeno" id="dob-mapa-cor-verde" style="background:${desenhoCorAtual==='verde' ? '#3f7d5c' : 'transparent'}; color:${desenhoCorAtual==='verde' ? '#fff' : 'inherit'}; border:1px solid #2f5f45;">🟢 Concluído</button>
+              <button type="button" class="dob-btn pequeno" id="dob-mapa-cor-amarelo" style="background:${desenhoCorAtual==='amarelo' ? '#f0a30a' : 'transparent'}; color:${desenhoCorAtual==='amarelo' ? '#fff' : 'inherit'}; border:1px solid #c27300;">🟡 Em execução</button>
+              <button type="button" class="dob-btn pequeno" id="dob-mapa-cor-verde" style="background:${desenhoCorAtual==='verde' ? '#1f9d57' : 'transparent'}; color:${desenhoCorAtual==='verde' ? '#fff' : 'inherit'}; border:1px solid #12783f;">🟢 Concluído</button>
             </div>
             <div style="${grp}">
               <span style="${rot}">Empreiteira</span>
@@ -6835,7 +6837,7 @@
           <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
             <button type="button" id="dob-esc-todos" style="padding:6px 10px; border-radius:8px; border:1px solid #ccc; background:#fff; font-size:12.5px; cursor:pointer;">Todos</button>
             <button type="button" id="dob-esc-limpar" style="padding:6px 10px; border-radius:8px; border:1px solid #ccc; background:#fff; font-size:12.5px; cursor:pointer;">Limpar</button>
-            <button type="button" id="dob-esc-nenhum" style="padding:6px 10px; border-radius:8px; border:1px solid #c99a3d; background:#fff8e6; color:#7a5a12; font-size:12.5px; font-weight:600; cursor:pointer;" title="Nenhum bloco: o serviço vai ser desenhado direto no mapa">N · Nenhum bloco (desenhar no mapa)</button>
+            <button type="button" id="dob-esc-nenhum" style="padding:6px 10px; border-radius:8px; border:1px solid #f0a30a; background:#fff8e6; color:#7a5a12; font-size:12.5px; font-weight:600; cursor:pointer;" title="Nenhum bloco: o serviço vai ser desenhado direto no mapa">N · Nenhum bloco (desenhar no mapa)</button>
           </div>
           <div id="dob-esc-lista" style="overflow-y:auto; flex:1; display:grid; grid-template-columns:repeat(auto-fill,minmax(64px,1fr)); gap:6px; margin-bottom:14px;">
             ${blocosDaObraAtual.map(b => `
@@ -9103,8 +9105,8 @@
   }, true);
   function linhasMapaParaHtml(linhas, data, lazyFotos){
     const STATUS_INFO = {
-      andamento: { cor: '#a97e2c', bg: 'rgba(201,154,61,0.18)', label: 'Em execução', chipClasse: 'mapa-andamento' },
-      concluido: { cor: '#2f5f45', bg: 'rgba(63,125,92,0.14)',  label: 'Concluído', chipClasse: 'mapa-concluido' }
+      andamento: { cor: '#c27300', bg: 'rgba(240,163,10,0.18)', label: 'Em execução', chipClasse: 'mapa-andamento' },
+      concluido: { cor: '#12783f', bg: 'rgba(31,157,87,0.14)',  label: 'Concluído', chipClasse: 'mapa-concluido' }
     };
     const blocosObra = [];
     let atual = null;
@@ -9442,7 +9444,7 @@
             <div class="dob-entry-head">
               <div>
                 <span class="dob-entry-data">${fmtDate(item.date)}</span>
-                <span class="dob-entry-tag" style="background:var(--sand); color:#fff;">Só marcações no mapa</span>
+                <span class="dob-entry-tag" style="background:var(--sand); color:#2a1800;">Só marcações no mapa</span>
               </div>
             </div>
             ${marcacoesMapaHtml(item.date)}
