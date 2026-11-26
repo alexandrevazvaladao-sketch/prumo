@@ -1404,7 +1404,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.137';
+  const APP_VERSION = 'v2026.11.26.138';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -3107,8 +3107,15 @@
     });
     if(mudouEscopo || precisaMigrarPrereq) localStorage.setItem('dob:mapa_state', JSON.stringify(mapaState));
   })();
+  let mapaLocalCheio = false;
   function saveMapaState(sincronizar){
-    localStorage.setItem('dob:mapa_state', JSON.stringify(mapaState));
+    // celular com a memória do navegador cheia (fotos antigas, cópias de segurança): libera espaço e segue — nunca deixa de mandar para a nuvem por causa disso
+    const txt = JSON.stringify(mapaState);
+    try{ localStorage.setItem('dob:mapa_state', txt); }
+    catch(e){
+      try{ Object.keys(localStorage).filter(k => /_bak$/.test(k) || k.indexOf('dob:foto_') === 0).forEach(k => localStorage.removeItem(k)); localStorage.setItem('dob:mapa_state', txt); }
+      catch(e2){ mapaLocalCheio = true; try{ if(typeof mostrarToastSalvo === 'function') mostrarToastSalvo('Memória do aparelho cheia — enviando direto para a nuvem', { erro: true }); }catch(e3){ /* ignora */ } }
+    }
     if(sincronizar !== false && typeof nuvemAgendarGravacao === 'function') nuvemAgendarGravacao();
     if(sincronizar !== false && accessToken) return syncMapaToDrive();
     return null;
@@ -4668,9 +4675,10 @@
     if(falhas) mostrarToastSalvo(falhas + ' foto(s) não foram salvas — tenta de novo', { erro: true });
   }
   // fotos de visita que ficaram só no aparelho (sem sinal na hora): sobe pra nuvem quando der
-  let visitasSubindoLocais = false;
+  let visitasSubindoLocais = false, visitasGravouSessao = false;
   async function visitasSubirLocais(){
     if(visitasSubindoLocais || !nuvem.editor || !nuvem.db || !navigator.onLine) return;
+    if(!visitasGravouSessao){ visitasGravouSessao = true; try{ nuvemSalvarLocal(); nuvemAgendarGravacao(true); }catch(e){ /* ignora */ } } // 1x por sessão: empurra para a nuvem o que ficou só neste aparelho
     visitasSubindoLocais = true; let mudou = false;
     try{
       for(const [id, v0] of Object.entries(mapaState.visitas || {})){
@@ -4775,7 +4783,7 @@
     fotoIn('dob-vis-foto-cam'); fotoIn('dob-vis-foto-gal');
     c.querySelectorAll('[data-vis-abrir]').forEach(el => el.addEventListener('click', () => openLightbox(((mapaState.visitas || {})[sel].fotos || []).map(normalizeFoto), Number(el.dataset.visAbrir))));
     c.querySelectorAll('.dob-vis-fdel').forEach(b => b.addEventListener('click', () => {
-      if(b.dataset.confirma !== '1'){ b.dataset.confirma = '1'; b.textContent = '?'; b.style.width = 'auto'; b.style.padding = '0 6px'; b.title = 'Toque de novo para remover'; return; }
+      if(b.dataset.confirma !== '1'){ b.dataset.confirma = '1'; b.textContent = 'Remover?'; b.style.width = 'auto'; b.style.padding = '6px 10px'; b.style.background = '#b4472e'; b.style.fontSize = '12px'; b.title = 'Toque de novo para remover'; setTimeout(() => { if(b.isConnected){ b.dataset.confirma = ''; b.textContent = '×'; b.style.cssText = ''; } }, 4000); return; }
       const v = Object.assign({}, mapaState.visitas[sel]); v.fotos = (v.fotos || []).filter((_, i) => i !== Number(b.dataset.i)); v.atualizadoEm = new Date().toISOString();
       mapaState.visitas[sel] = v; saveMapaState(true); renderVisitas();
     }));
