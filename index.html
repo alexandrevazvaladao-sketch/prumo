@@ -1404,7 +1404,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.139';
+  const APP_VERSION = 'v2026.11.26.140';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4909,11 +4909,11 @@
     const linhas = METODO_OBRAS.map(ob => { const r = o[ob] || {}; const c = num(r.custo);
       let cmp = ''; if(ob !== 'Anápolis' && base && c){ const df = (c - base) / base * 100; cmp = `<span class="dob-met-cmp ${df > 0 ? 'mais' : 'menos'}">${df > 0 ? '+' : ''}${df.toFixed(1).replace('.', ',')}% vs Anápolis</span>`; }
       return `<div class="dob-met-obra"><b>${catEsc(ob)}</b>
-        <input class="dob-met-od" data-id="${p.id}" data-obra="${catEsc(ob)}" data-c="metodo" placeholder="Como executam" value="${catEsc(r.metodo || '')}">
+        <input class="dob-met-od" data-id="${p.id}" data-obra="${catEsc(ob)}" data-c="metodo" placeholder="Como executam (o que vi)" value="${catEsc(r.metodo || '')}">
         <span class="dob-met-custo"><input class="dob-met-od" inputmode="decimal" data-id="${p.id}" data-obra="${catEsc(ob)}" data-c="custo" placeholder="Custo R$" value="${catEsc(r.custo || '')}"><input class="dob-met-od" data-id="${p.id}" data-obra="${catEsc(ob)}" data-c="un" placeholder="por (m², bloco…)" value="${catEsc(r.un || '')}"></span>
         <input class="dob-met-od" data-id="${p.id}" data-obra="${catEsc(ob)}" data-c="obs" placeholder="Observação (equipe, prazo, qualidade)" value="${catEsc(r.obs || '')}">${cmp}</div>`; }).join('');
     const ta = (campo, rot, ph) => `<label class="dob-met-lb">${rot}<textarea class="dob-met-dt" data-id="${p.id}" data-campo="${campo}" rows="3" placeholder="${ph}">${catEsc(d[campo] || '')}</textarea></label>`;
-    return `<li class="dob-met-det">${ta('como', 'Como funciona esta etapa', 'Sequência de execução, equipe, equipamentos, tempo de cura/espera…')}${ta('qualidade', 'O que conferir (qualidade)', 'Pontos de inspeção: prumo, nível, cobrimento, cura, acabamento…')}${ta('comprar', 'Como comprar a execução', 'Escopo da empreitada, o que é material x mão de obra, unidade de medição, cuidados no contrato…')}
+    return `<li class="dob-met-det">${ta('como', 'Como é executada (o que observei)', 'O que vi: sequência, equipe, equipamentos, tempo de espera…')}${ta('qualidade', 'Sinais de boa execução (o que reparei)', 'O que indica se está bem feito ou mal feito: prumo, acabamento, retrabalho…')}${ta('comprar', 'Informações para a compra (para o custo)', 'O que descobri sobre escopo, material x mão de obra, unidade de medição e preço pago…')}
       <div class="dob-met-lb">Comparação entre obras</div>${linhas}</li>`;
   }
   function renderMetodo(){
