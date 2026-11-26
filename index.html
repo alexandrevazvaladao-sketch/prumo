@@ -982,7 +982,9 @@
   .pn-chev{ color:#8a93a1; font-size:13px; margin-left:4px; transition:transform .15s; } .pn-exp.aberto .pn-chev{ transform:rotate(180deg); }
   .pn-det{ padding:6px 16px 14px 60px; background:#fafbfd; border-top:1px dashed #e4e8ee; }
   .pn-det-t{ font-size:12.5px; font-weight:600; color:#4b5563; margin:8px 0 6px; } .pn-det-t em{ font-style:normal; font-weight:500; color:#6b7380; }
-  .pn-dias{ display:grid; grid-template-columns:repeat(14, minmax(0,1fr)); gap:4px; margin-top:6px; }
+  .pn-gd{ position:relative; margin-top:6px; } .pn-gd .pn-lc-seta{ top:14px; }
+  .pn-gd-scroll{ overflow-x:auto; overflow-y:hidden; scrollbar-width:none; padding:2px 0 4px; } .pn-gd-scroll::-webkit-scrollbar{ display:none; }
+  .pn-dias{ display:grid; grid-auto-flow:column; grid-auto-columns:38px; gap:0; }
   .pn-dia{ display:flex; flex-direction:column; align-items:center; gap:3px; min-width:0; }
   .pn-dia-d{ font-size:10px; color:#6b7380; line-height:1; white-space:nowrap; } .pn-dia-d b{ color:#16233d; font-weight:700; font-size:11px; }
   .pn-dia.sel .pn-dia-d b{ color:#0f6fb5; text-decoration:underline; }
@@ -990,7 +992,6 @@
   .pn-dia-b:hover{ border-color:#0f6fb5; box-shadow:0 0 0 3px #d6e9f7; }
   .pn-dia-b.tem{ background:#1f9d57; border-color:#12783f; color:#fff; } .pn-dia-b.parado{ background:#f7b92b; border-color:#c27300; color:#3a2300; }
   .pn-dia-b.nao{ background:#f2f4f8; color:#9aa3b2; font-weight:600; }
-  .pn-hero .pn-dias{ margin-top:10px; } .pn-hero .pn-dia-b{ height:16px; max-width:16px; border-radius:50%; }
   @media (max-width:640px){ .pn-det{ padding-left:14px; } .pn-dia-d{ font-size:9px; } .pn-dia-d b{ font-size:10px; } .pn-dias{ gap:2px; } }
   .pn-lc{ position:relative; margin-top:8px; }
   .pn-lc-scroll{ overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -ms-overflow-style:none; padding:2px 0 6px; }
@@ -1394,7 +1395,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.128';
+  const APP_VERSION = 'v2026.11.26.129';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9434,13 +9435,13 @@
     const f = document.getElementById('dob-filtro-data'); if(f) f.value = iso;
     render(); // o painel já resume o dia: não rola a tela
   }
-  // colunas de 14 dias: data em texto em cima, botão embaixo (valor ou bolinha)
+  // grade de dias (60 dias até hoje), rola pro lado com ‹ › sem mexer ao clicar; data em texto em cima de cada botão
+  let pnGdScroll = null;
   function pnGradeDias(itens, atual){
-    // itens: [{ iso, rotulo (texto do botão), classe, titulo }]
-    return `<div class="pn-dias">${itens.map(it => {
+    return `<div class="pn-gd"><button type="button" class="pn-lc-seta e" data-gd-seta="-1" aria-label="Dias anteriores">‹</button><button type="button" class="pn-lc-seta d" data-gd-seta="1" aria-label="Dias seguintes">›</button><div class="pn-gd-scroll"><div class="pn-dias" style="width:${itens.length * 38}px">${itens.map(it => {
       const dd = it.iso.slice(8,10), mm = it.iso.slice(5,7);
       return `<div class="pn-dia${it.iso === atual ? ' sel' : ''}"><span class="pn-dia-d"><b>${dd}</b>/${mm}</span><button type="button" class="pn-dia-b ${it.classe || ''}" data-ir-dia="${it.iso}" title="${it.titulo || ''}">${it.rotulo}</button></div>`;
-    }).join('')}</div>`;
+    }).join('')}</div></div></div>`;
   }
   // gráfico de linha com uma bolinha clicável em cada dia; janela fixa de dias, rola pro lado (não muda ao clicar)
   let pnLcScroll = null;
@@ -9498,6 +9499,7 @@
       // séries curtas pros quadros do resumo (pessoas e concluídas por dia, últimos 14 dias)
       const diaISO = k => { const d = new Date(data + 'T12:00:00'); d.setDate(d.getDate() - k); return d.toISOString().slice(0,10); };
       const pessoasDia = iso => (equipeEmpState.registros || []).filter(r => r.data === iso && r.qtd > 0 && (!filtroObra || r.obra === filtroObra || !/^(Pequis|Buritis)$/i.test(r.obra))).reduce((n, r) => n + r.qtd, 0);
+      const hojeISO = k => { const d = new Date(todayStr() + 'T12:00:00'); d.setDate(d.getDate() - k); return d.toISOString().slice(0,10); };
       const isosLc = []; for(let k = 59; k >= 0; k--){ const d = new Date(todayStr() + 'T12:00:00'); d.setDate(d.getDate() - k); isosLc.push(d.toISOString().slice(0,10)); }
       const serFrentes = isosLc.map(iso => pnFrentes(iso, filtroObra).filter(f => f.status === 'andamento').length);
       const serPessoas = [], serConcl = [];
@@ -9541,18 +9543,18 @@
 
       const linhasEmp = empresas.length ? empresas.map(g => {
         const chave = 'emp:' + g.empresa, aberto = pnAbertos.has(chave);
-        const dias = []; for(let k = 13; k >= 0; k--){ const iso = diaISO(k); const n = (equipeEmpState.registros || []).filter(r => r.data === iso && r.empresa === g.empresa && r.qtd > 0 && (!filtroObra || r.obra === filtroObra || !/^(Pequis|Buritis)$/i.test(r.obra))).reduce((a, r) => a + r.qtd, 0); dias.push({ iso, rotulo: n || '–', classe: n ? 'tem' : 'nao', titulo: n ? n + ' pessoa(s)' : 'sem equipe' }); }
+        const dias = []; for(let k = 59; k >= 0; k--){ const iso = hojeISO(k); const n = (equipeEmpState.registros || []).filter(r => r.data === iso && r.empresa === g.empresa && r.qtd > 0 && (!filtroObra || r.obra === filtroObra || !/^(Pequis|Buritis)$/i.test(r.obra))).reduce((a, r) => a + r.qtd, 0); dias.push({ iso, rotulo: n || '–', classe: n ? 'tem' : 'nao', titulo: n ? n + ' pessoa(s)' : 'sem equipe' }); }
         const tot = dias.reduce((a, d) => a + (Number(d.rotulo) || 0), 0), diasCom = dias.filter(d => d.classe === 'tem').length;
         return `<div class="pn-row pn-exp${aberto ? ' aberto' : ''}" role="button" tabindex="0" data-pn-exp="${esc(chave)}" title="Ver pessoas por dia"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(pnEmpresa(g.empresa))}</div><div class="pn-t2">${esc(g.servs.map(pnTitulo).join(', '))}</div></div><div class="pn-rt"><b>${g.qtd}</b><span>${g.qtd === 1 ? 'pessoa' : 'pessoas'}</span></div><span class="pn-chev" aria-hidden="true">▾</span></div>
-        <div class="pn-det" data-pn-det="${esc(chave)}"${aberto ? '' : ' hidden'}><div class="pn-det-t">Pessoas por dia · últimos 14 dias <em>(${diasCom} dias com equipe · ${tot} pessoas-dia)</em></div>${pnGradeDias(dias, data)}</div>`; }).join('')
+        <div class="pn-det" data-pn-det="${esc(chave)}"${aberto ? '' : ' hidden'}><div class="pn-det-t">Pessoas por dia · últimos 60 dias <em>(${diasCom} dias com equipe · ${tot} pessoas-dia)</em></div>${pnGradeDias(dias, data)}</div>`; }).join('')
         : (pres.pessoasNomes.length ? pres.pessoasNomes.map(n => `<div class="pn-row"><div class="pn-ic">${PN_IC.gente}</div><div class="pn-tx"><div class="pn-t1">${esc(n)}</div></div></div>`).join('') : '<div class="pn-vazio">Sem equipe lançada nesse dia.</div>');
       const linhasEq = pres.equipComStatus.length ? pres.equipComStatus.map(eq => {
         const chave = 'eq:' + eq.nome, aberto = pnAbertos.has(chave);
         const cad = equipState.equipamentos.find(x => x.nome === eq.nome);
-        const dias = []; for(let k = 13; k >= 0; k--){ const iso = diaISO(k); const pr = cad ? equipState.presencas.find(x => x.equipamentoId === cad.id && x.date === iso) : null; const par = pr && pr.status === 'parado'; dias.push({ iso, rotulo: pr ? (par ? '⚠' : '✓') : '–', classe: pr ? (par ? 'parado' : 'tem') : 'nao', titulo: pr ? (par ? 'Parado' + (pr.motivoParado ? ': ' + esc(pr.motivoParado) : '') : 'Operando') : 'não lançado' }); }
+        const dias = []; for(let k = 59; k >= 0; k--){ const iso = hojeISO(k); const pr = cad ? equipState.presencas.find(x => x.equipamentoId === cad.id && x.date === iso) : null; const par = pr && pr.status === 'parado'; dias.push({ iso, rotulo: pr ? (par ? '⚠' : '✓') : '–', classe: pr ? (par ? 'parado' : 'tem') : 'nao', titulo: pr ? (par ? 'Parado' + (pr.motivoParado ? ': ' + esc(pr.motivoParado) : '') : 'Operando') : 'não lançado' }); }
         const op = dias.filter(d => d.classe === 'tem').length, pa = dias.filter(d => d.classe === 'parado').length;
         return `<div class="pn-row pn-exp${aberto ? ' aberto' : ''}" role="button" tabindex="0" data-pn-exp="${esc(chave)}" title="Ver dia a dia"><div class="pn-ic ${eq.status === 'parado' ? 'late' : 'ok'}">${pnIconeMaq(eq.nome)}</div><div class="pn-tx"><div class="pn-t1">${esc(eq.nome)}</div>${eq.status === 'parado' && eq.motivo ? `<div class="pn-t2">${esc(eq.motivo)}</div>` : ''}</div><div class="pn-rt"><span class="pn-tag ${eq.status === 'parado' ? 'late' : 'ok'}">${eq.status === 'parado' ? 'Parado' : 'Operando'}</span></div><span class="pn-chev" aria-hidden="true">▾</span></div>
-        <div class="pn-det" data-pn-det="${esc(chave)}"${aberto ? '' : ' hidden'}><div class="pn-det-t">Dia a dia · últimos 14 dias <em>(${op} operando${pa ? ' · ' + pa + ' parado' + (pa > 1 ? 's' : '') : ''})</em></div>${pnGradeDias(dias, data)}</div>`; }).join('')
+        <div class="pn-det" data-pn-det="${esc(chave)}"${aberto ? '' : ' hidden'}><div class="pn-det-t">Dia a dia · últimos 60 dias <em>(${op} operando${pa ? ' · ' + pa + ' parado' + (pa > 1 ? 's' : '') : ''})</em></div>${pnGradeDias(dias, data)}</div>`; }).join('')
         : '<div class="pn-vazio">Nenhum equipamento lançado nesse dia.</div>';
 
       el.innerHTML = hero + `
@@ -9571,9 +9573,16 @@
       }));
       el.querySelectorAll('.pn-go').forEach(r => r.addEventListener('keydown', ev => { if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); r.click(); } }));
       el.querySelectorAll('[data-pn-exp]').forEach(r => {
-        const alt = () => { const k = r.dataset.pnExp; const det = Array.from(el.querySelectorAll('[data-pn-det]')).find(d => d.dataset.pnDet === k); if(!det) return; const abre = det.hidden; det.hidden = !abre; r.classList.toggle('aberto', abre); if(abre) pnAbertos.add(k); else pnAbertos.delete(k); };
+        const alt = () => { const k = r.dataset.pnExp; const det = Array.from(el.querySelectorAll('[data-pn-det]')).find(d => d.dataset.pnDet === k); if(!det) return; const abre = det.hidden; det.hidden = !abre; r.classList.toggle('aberto', abre); if(abre){ const sc2 = det.querySelector('.pn-gd-scroll'); if(sc2) sc2.scrollLeft = (pnGdScroll == null) ? sc2.scrollWidth : pnGdScroll; } if(abre) pnAbertos.add(k); else pnAbertos.delete(k); };
         r.addEventListener('click', alt);
         r.addEventListener('keydown', ev => { if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); alt(); } });
+      });
+      el.querySelectorAll('.pn-gd').forEach(gd => {
+        const sc = gd.querySelector('.pn-gd-scroll');
+        const pos = () => { sc.scrollLeft = (pnGdScroll == null) ? sc.scrollWidth : pnGdScroll; };
+        pos(); if(gd.closest('[hidden]')) { /* aberto depois: reposiciona ao abrir */ }
+        sc.addEventListener('scroll', () => { pnGdScroll = sc.scrollLeft; }, { passive:true });
+        gd.querySelectorAll('[data-gd-seta]').forEach(b => b.addEventListener('click', () => sc.scrollBy({ left: Number(b.dataset.gdSeta) * 38 * 7, behavior:'smooth' })));
       });
       (function ligarLinhaDias(){
         const sc = el.querySelector('#pn-lc-scroll'); if(!sc) return;
