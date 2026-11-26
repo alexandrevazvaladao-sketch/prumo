@@ -993,7 +993,7 @@
   .pn-hero .pn-dias{ margin-top:10px; } .pn-hero .pn-dia-b{ height:16px; max-width:16px; border-radius:50%; }
   @media (max-width:640px){ .pn-det{ padding-left:14px; } .pn-dia-d{ font-size:9px; } .pn-dia-d b{ font-size:10px; } .pn-dias{ gap:2px; } }
   .pn-lc{ position:relative; margin-top:8px; }
-  .pn-lc-scroll{ overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -ms-overflow-style:none; cursor:grab; padding:2px 0 6px; }
+  .pn-lc-scroll{ overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -ms-overflow-style:none; padding:2px 0 6px; }
   .pn-lc-scroll::-webkit-scrollbar{ display:none; }
   .pn-lc-in{ position:relative; }
   .pn-lc-labs{ position:relative; height:15px; }
@@ -1394,7 +1394,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.25.127';
+  const APP_VERSION = 'v2026.11.26.128';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9443,7 +9443,7 @@
     }).join('')}</div>`;
   }
   // gráfico de linha com uma bolinha clicável em cada dia; janela fixa de dias, rola pro lado (não muda ao clicar)
-  let pnLcScroll = null, pnLcOff = null;
+  let pnLcScroll = null;
   const PN_LC_DIA = 36; // largura de cada dia (px)
   function pnLinhaDias(isos, serie, atual){
     const n = serie.length, mx = Math.max(1, ...serie), mn = Math.min(...serie), rg = Math.max(1, mx - mn);
@@ -9519,7 +9519,7 @@
       const hero = `
         <div class="pn-box pn-hero">
           <div>
-            <div class="pn-lbl"><span>Frentes em execução${ehHoje ? '' : ' em ' + dataBonita}</span><span>60 dias · arraste ou use ‹ ›</span></div>
+            <div class="pn-lbl"><span>Frentes em execução${ehHoje ? '' : ' em ' + dataBonita}</span><span>60 dias · use ‹ ›</span></div>
             <div class="pn-big">${emExec.length}${delta ? `<small class="${delta > 0 ? 'up' : 'down'}">${delta > 0 ? '▲ +' : '▼ '}${delta} em 7 dias</small>` : '<small>igual a 7 dias atrás</small>'}</div>
             ${pnLinhaDias(isosLc, serFrentes, data)}
           </div>
@@ -9580,14 +9580,6 @@
         sc.scrollLeft = (pnLcScroll == null) ? sc.scrollWidth : pnLcScroll;
         sc.addEventListener('scroll', () => { pnLcScroll = sc.scrollLeft; }, { passive:true });
         el.querySelectorAll('[data-lc-seta]').forEach(b => b.addEventListener('click', () => sc.scrollBy({ left: Number(b.dataset.lcSeta) * PN_LC_DIA * 7, behavior:'smooth' })));
-        let arr = false, x0 = 0, s0 = 0, mov = false;
-        sc.addEventListener('pointerdown', ev => { if(ev.pointerType !== 'mouse') return; arr = true; mov = false; x0 = ev.clientX; s0 = sc.scrollLeft; });
-        if(pnLcOff) pnLcOff();
-        const mv = ev => { if(!arr) return; const dx = ev.clientX - x0; if(Math.abs(dx) > 4) mov = true; if(mov) sc.scrollLeft = s0 - dx; };
-        const up = () => { arr = false; };
-        window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up);
-        pnLcOff = () => { window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); };
-        sc.addEventListener('click', ev => { if(mov){ ev.stopPropagation(); ev.preventDefault(); mov = false; } }, true);
       })();
       el.querySelectorAll('[data-ir-dia]').forEach(b => b.addEventListener('click', ev => { ev.stopPropagation(); irParaDiaApontamento(b.dataset.irDia); }));
       const bm = el.querySelector('[data-pn="mapa"]');
