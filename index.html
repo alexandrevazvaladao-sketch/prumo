@@ -1395,7 +1395,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.129';
+  const APP_VERSION = 'v2026.11.26.130';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -9430,7 +9430,16 @@
   }
   // Painel: linhas expansíveis (por dia) e bolinhas de dia clicáveis
   const pnAbertos = new Set();
+  let pnUltimoClique = { iso: '', t: 0 };
   function irParaDiaApontamento(iso){
+    const agora = Date.now(), duplo = pnUltimoClique.iso === iso && agora - pnUltimoClique.t < 450;
+    pnUltimoClique = { iso, t: duplo ? 0 : agora };
+    if(duplo){ // dois cliques no mesmo dia: mostra o histórico inteiro
+      diaSelecionado = null;
+      const f0 = document.getElementById('dob-filtro-data'); if(f0) f0.value = '';
+      render();
+      return;
+    }
     diaSelecionado = iso;
     const f = document.getElementById('dob-filtro-data'); if(f) f.value = iso;
     render(); // o painel já resume o dia: não rola a tela
@@ -10486,6 +10495,9 @@
         if(side === 'home'){
           fecharTudoExceto(null);
           homeEls.forEach(el => el.style.display = '');
+          // clicar em Diário mostra o histórico inteiro (tira o filtro de dia)
+          diaSelecionado = null; const fd = document.getElementById('dob-filtro-data'); if(fd) fd.value = '';
+          render();
           window.scrollTo({top:0, behavior:'smooth'});
           return;
         }
