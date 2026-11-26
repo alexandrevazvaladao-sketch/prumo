@@ -1404,7 +1404,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.140';
+  const APP_VERSION = 'v2026.11.26.141';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -1861,7 +1861,7 @@
 
   async function processarArquivosUauBee(fileList){
     const arquivos = Array.from(fileList || []).filter(f => /\.rdf$/i.test(f.name));
-    if(!arquivos.length){ alert('Selecione arquivo(s) .rdf exportados do UAU (Medição por Obra ou Contratos por Obra).'); return; }
+    if(!arquivos.length){ dobAlert('Selecione arquivo(s) .rdf exportados do UAU (Medição por Obra ou Contratos por Obra).'); return; }
     let comFalha = [];
     for(const file of arquivos){
       try{
@@ -1899,7 +1899,7 @@
     }
     saveUauBeeState();
     renderUauBee();
-    if(comFalha.length) alert('Não consegui ler: ' + comFalha.join(', ') + '\n(confira se é o relatório "Planilha de Medição por Obra" ou "Contratos por Obra" exportado em .rdf)');
+    if(comFalha.length) dobAlert('Não consegui ler: ' + comFalha.join(', ') + '\n(confira se é o relatório "Planilha de Medição por Obra" ou "Contratos por Obra" exportado em .rdf)');
   }
 
   function copiarTextoUauBee(texto, btnEl){
@@ -2095,8 +2095,8 @@
     });
     const limparBtn = document.getElementById('dob-uaubee-limpar');
     if(limparBtn){
-      limparBtn.addEventListener('click', () => {
-        if(!confirm('Apagar todos os dados UAU → BEE importados? Isso não afeta os arquivos originais no seu computador.')) return;
+      limparBtn.addEventListener('click', async () => {
+        if(!await dobConfirm('Apagar todos os dados UAU → BEE importados? Isso não afeta os arquivos originais no seu computador.')) return;
         uauBeeState = { items: [], contratos: [] };
         saveUauBeeState();
         renderUauBee();
@@ -3495,12 +3495,12 @@
     nuvemStatus();
   }
   function nuvemEntrar(){
-    if(!nuvem.auth){ alert('A nuvem ainda não carregou. Aguarde um instante e tente de novo.'); return; }
+    if(!nuvem.auth){ dobAlert('A nuvem ainda não carregou. Aguarde um instante e tente de novo.'); return; }
     const prov = new firebase.auth.GoogleAuthProvider();
     prov.setCustomParameters({ prompt: 'select_account' });
     nuvem.auth.signInWithPopup(prov).catch(err => {
       if(err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) nuvem.auth.signInWithRedirect(prov);
-      else if(err && err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') alert('Não foi possível entrar: ' + (err.message || err.code));
+      else if(err && err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') dobAlert('Não foi possível entrar: ' + (err.message || err.code));
     });
   }
   function nuvemSair(){ if(nuvem.auth) nuvem.auth.signOut().then(() => location.reload(), () => location.reload()); else location.reload(); }
@@ -3637,7 +3637,7 @@
     if(!nuvem.dono) return;
     let lista = [];
     try{ const q = await nuvem.db.collection('historico').orderBy('em', 'desc').limit(150).get(); q.forEach(d => lista.push(d.data())); }
-    catch(e){ alert('Não foi possível carregar o histórico: ' + (e.message || e)); return; }
+    catch(e){ dobAlert('Não foi possível carregar o histórico: ' + (e.message || e)); return; }
     const ov = document.createElement('div');
     ov.style.cssText = 'position:fixed;inset:0;background:rgba(22,35,61,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;';
     const fmt = (t) => { const d = new Date(t); return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); };
@@ -3654,7 +3654,7 @@
     if(!nuvem.admin) return;
     let lista = [];
     try{ const q = await nuvem.db.collection('usuarios').get(); q.forEach(d => lista.push(Object.assign({ uid: d.id }, d.data()))); }
-    catch(e){ alert('Não foi possível carregar os usuários: ' + (e.message || e)); return; }
+    catch(e){ dobAlert('Não foi possível carregar os usuários: ' + (e.message || e)); return; }
     lista.sort((a, b) => String(a.nome || a.usuario).localeCompare(String(b.nome || b.usuario)));
     const ov = document.createElement('div');
     ov.style.cssText = 'position:fixed;inset:0;background:rgba(22,35,61,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;';
@@ -4970,17 +4970,17 @@
       salvar();
     }));
     container.querySelectorAll('.dob-met-del').forEach(b => b.addEventListener('click', () => { const i = passos.findIndex(x => x.id === b.dataset.id); if(i >= 0){ passos.splice(i, 1); salvar(); } }));
-    container.querySelectorAll('.dob-met-add').forEach(b => b.addEventListener('click', () => {
-      const nome = prompt('Nome do novo passo:'); if(!nome || !nome.trim()) return;
+    container.querySelectorAll('.dob-met-add').forEach(b => b.addEventListener('click', async () => {
+      const nome = await dobPrompt('Nome do novo passo:'); if(!nome || !nome.trim()) return;
       let ult = -1; passos.forEach((p, i) => { if(p.fase === b.dataset.fase) ult = i; });
       passos.splice(ult + 1, 0, { id:'p' + Date.now().toString(36), fase:b.dataset.fase, nome:nome.trim(), macro:'' }); salvar();
     }));
-    document.getElementById('dob-met-nova-fase').addEventListener('click', () => {
-      const f = prompt('Nome da nova fase (ex.: 9. Paisagismo):'); if(!f || !f.trim()) return;
-      const nome = prompt('Primeiro passo dessa fase:'); if(!nome || !nome.trim()) return;
+    document.getElementById('dob-met-nova-fase').addEventListener('click', async () => {
+      const f = await dobPrompt('Nome da nova fase (ex.: 9. Paisagismo):'); if(!f || !f.trim()) return;
+      const nome = await dobPrompt('Primeiro passo dessa fase:'); if(!nome || !nome.trim()) return;
       passos.push({ id:'p' + Date.now().toString(36), fase:f.trim(), nome:nome.trim(), macro:'' }); salvar();
     });
-    container.querySelector('.dob-met-reset').addEventListener('click', () => { if(!confirm('Voltar à sequência proposta? Suas alterações nesta tela serão perdidas.')) return; mapaState.metodoPassos = []; salvar(); });
+    container.querySelector('.dob-met-reset').addEventListener('click', async () => { if(!await dobConfirm('Voltar à sequência proposta? Suas alterações nesta tela serão perdidas.')) return; mapaState.metodoPassos = []; salvar(); });
   }
 
   // ===== Catálogo de custos por tipo de serviço =====
@@ -5204,8 +5204,8 @@
     });
     container.querySelectorAll('.dob-cat-mat-del').forEach(b => b.addEventListener('click', () => { const x = cust(); if(!x) return; x.materiais.splice(+b.dataset.i, 1); saveMapaState(true); renderCatalogo(); }));
     const be = document.getElementById('dob-cat-excluir');
-    if(be) be.addEventListener('click', () => {
-      if(!confirm('Excluir "' + s.nome + '" do catálogo?')) return;
+    if(be) be.addEventListener('click', async () => {
+      if(!await dobConfirm('Excluir "' + s.nome + '" do catálogo?')) return;
       apagarChaveMapa('catalogoCustom', s.id); catalogoSel = 'radier'; saveMapaState(true); renderCatalogo();
     });
   }
@@ -5553,7 +5553,7 @@
   }
   function baixarImagemMapa(servico, obra, planta){
     const imgEl = document.getElementById('dob-mapa-rede-img');
-    if(!imgEl){ alert('Não achei a imagem do mapa pra baixar.'); return; }
+    if(!imgEl){ dobAlert('Não achei a imagem do mapa pra baixar.'); return; }
     const gerar = () => {
       const w = imgEl.naturalWidth || 1000;
       const h = imgEl.naturalHeight || Math.round(w * 1.414);
@@ -5727,6 +5727,50 @@
       overlay.addEventListener('click', (ev) => { if(ev.target === overlay) finalizar(); });
     });
   }
+  // ===== Diálogos próprios (no lugar de alert/confirm/prompt nativos, que travam no celular) =====
+  function dobDialogo(tipo, msg, valor){
+    return new Promise(resolve => {
+      const ov = document.createElement('div');
+      ov.style.cssText = 'position:fixed;inset:0;background:rgba(20,24,32,.5);z-index:200000;display:flex;align-items:center;justify-content:center;padding:16px;';
+      const esc = (t) => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+      ov.innerHTML = `<div role="dialog" aria-modal="true" style="background:#fff;border-radius:14px;max-width:420px;width:100%;padding:18px 18px 14px;box-shadow:0 10px 40px rgba(0,0,0,.3);font-size:15px;color:#1c2430;">
+        <div style="white-space:pre-wrap;line-height:1.45;margin-bottom:${tipo === 'prompt' ? '10' : '16'}px;">${esc(msg)}</div>
+        ${tipo === 'prompt' ? `<input type="text" id="dob-dlg-in" value="${esc(valor)}" style="width:100%;box-sizing:border-box;font:inherit;padding:10px;border:1px solid #c9cfd8;border-radius:8px;margin-bottom:14px;">` : ''}
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+          ${tipo === 'alert' ? '' : '<button type="button" class="dob-btn secundario" id="dob-dlg-nao" style="min-width:90px;">Cancelar</button>'}
+          <button type="button" class="dob-btn" id="dob-dlg-ok" style="min-width:90px;">${tipo === 'confirm' ? 'Confirmar' : 'OK'}</button></div></div>`;
+      document.body.appendChild(ov);
+      const inp = ov.querySelector('#dob-dlg-in');
+      const fim = (v) => { ov.remove(); document.removeEventListener('keydown', tecla, true); resolve(v); };
+      const ok = () => fim(tipo === 'prompt' ? inp.value : true);
+      const nao = () => fim(tipo === 'prompt' ? null : false);
+      const tecla = (ev) => { if(ev.key === 'Escape'){ ev.stopPropagation(); (tipo === 'alert' ? ok : nao)(); } else if(ev.key === 'Enter' && (tipo !== 'prompt' || document.activeElement === inp)){ ev.preventDefault(); ok(); } };
+      document.addEventListener('keydown', tecla, true);
+      ov.querySelector('#dob-dlg-ok').addEventListener('click', ok);
+      const bn = ov.querySelector('#dob-dlg-nao'); if(bn) bn.addEventListener('click', nao);
+      ov.addEventListener('click', (ev) => { if(ev.target === ov) (tipo === 'alert' ? ok : nao)(); });
+      setTimeout(() => { if(inp){ inp.focus(); inp.select(); } else ov.querySelector('#dob-dlg-ok').focus(); }, 30);
+    });
+  }
+  const dobAlert = (m) => dobDialogo('alert', m);
+  const dobConfirm = (m) => dobDialogo('confirm', m);
+  const dobPrompt = (m, v) => dobDialogo('prompt', m, v || '');
+
+  // ===== Registro de erros (para eu poder diagnosticar sem você mandar print) =====
+  const DOB_LOG_KEY = 'dob:erros';
+  function dobLogErro(tipo, msg, onde){
+    try{
+      const lista = JSON.parse(localStorage.getItem(DOB_LOG_KEY) || '[]');
+      const txt = String(msg || '').slice(0, 300);
+      const ult = lista[lista.length - 1];
+      if(ult && ult.m === txt){ ult.n = (ult.n || 1) + 1; ult.t = Date.now(); }
+      else lista.push({ t: Date.now(), k: tipo, m: txt, o: String(onde || '').slice(0, 120), v: (typeof APP_VERSION !== 'undefined' ? APP_VERSION : '') });
+      localStorage.setItem(DOB_LOG_KEY, JSON.stringify(lista.slice(-40)));
+    }catch(e){ /* sem espaço: ignora */ }
+  }
+  window.addEventListener('error', (ev) => dobLogErro('erro', ev.message, (ev.filename || '').split('/').pop() + ':' + ev.lineno));
+  window.addEventListener('unhandledrejection', (ev) => dobLogErro('promessa', ev.reason && (ev.reason.message || ev.reason), ''));
+
   function mostrarToastSalvo(msg, opts){
     const erro = !!(opts && opts.erro);
     const antigo = document.getElementById('dob-toast-salvo');
@@ -6933,14 +6977,14 @@
       renderGrid();
     });
 
-    document.getElementById('dob-mapa-editar-servico').addEventListener('click', () => {
+    document.getElementById('dob-mapa-editar-servico').addEventListener('click', async () => {
       const sel = document.getElementById('dob-mapa-servico');
       const nomeAtual = sel.value;
       if(!nomeAtual) return;
-      const novoNome = prompt('Novo nome para este serviço:', nomeAtual);
+      const novoNome = await dobPrompt('Novo nome para este serviço:', nomeAtual);
       if(!novoNome || !novoNome.trim() || novoNome.trim() === nomeAtual) return;
       const novoNomeLimpo = novoNome.trim();
-      if(mapaState.servicos.includes(novoNomeLimpo)){ alert('Já existe um serviço com esse nome.'); return; }
+      if(mapaState.servicos.includes(novoNomeLimpo)){ dobAlert('Já existe um serviço com esse nome.'); return; }
       const idx = mapaState.servicos.indexOf(nomeAtual);
       if(idx >= 0) mapaState.servicos[idx] = novoNomeLimpo;
       mapaState.tipoPorServico[novoNomeLimpo] = mapaState.tipoPorServico[nomeAtual] || 'bloco';
@@ -7008,7 +7052,7 @@
     document.getElementById('dob-mapa-escopo-servico').addEventListener('click', () => {
       const servico = document.getElementById('dob-mapa-servico').value;
       if(!servico) return;
-      if((mapaState.tipoPorServico[servico] || 'bloco') !== 'bloco'){ alert('Escopo por blocos só está disponível pra serviços do tipo "Blocos residenciais" por enquanto.'); return; }
+      if((mapaState.tipoPorServico[servico] || 'bloco') !== 'bloco'){ dobAlert('Escopo por blocos só está disponível pra serviços do tipo "Blocos residenciais" por enquanto.'); return; }
       const obraAtual = document.getElementById('dob-mapa-obra').value;
       const blocosDaObraAtual = BLOCOS_MAPA.filter(b => b.obra === obraAtual && b.cat === 'bloco');
       const escopoAtualIds = escopoDoServico(servico, obraAtual);
@@ -7042,8 +7086,8 @@
       overlay.addEventListener('click', (ev) => { if(ev.target === overlay) fechar(); });
       overlay.querySelector('#dob-esc-todos').addEventListener('click', () => checks().forEach(c => c.checked = true));
       overlay.querySelector('#dob-esc-limpar').addEventListener('click', () => checks().forEach(c => c.checked = false));
-      overlay.querySelector('#dob-esc-nenhum').addEventListener('click', () => {
-        const ok = confirm(`Nenhum bloco: "${servico}" passa a ser desenhado direto no mapa (tipo Redes/desenho), sem marcar blocos. Continuar?`);
+      overlay.querySelector('#dob-esc-nenhum').addEventListener('click', async () => {
+        const ok = await dobConfirm(`Nenhum bloco: "${servico}" passa a ser desenhado direto no mapa (tipo Redes/desenho), sem marcar blocos. Continuar?`);
         if(!ok) return;
         mapaState.tipoPorServico[servico] = 'rede';
         if(mapaState.escopoPorServico && mapaState.escopoPorServico[servico]){
@@ -7059,7 +7103,7 @@
       });
       overlay.querySelector('#dob-esc-salvar').addEventListener('click', () => {
         const ids = checks().filter(c => c.checked).map(c => c.dataset.escBloco);
-        if(ids.length === 0){ alert('Marque pelo menos um bloco, ou use "N · Nenhum bloco" se for desenhar no mapa.'); return; }
+        if(ids.length === 0){ dobAlert('Marque pelo menos um bloco, ou use "N · Nenhum bloco" se for desenhar no mapa.'); return; }
         if(!mapaState.escopoPorServico[servico]) mapaState.escopoPorServico[servico] = {};
         if(ids.length === blocosDaObraAtual.length){
           delete mapaState.escopoPorServico[servico][obraAtual];
@@ -7080,7 +7124,7 @@
       if(!servico) return;
       const tipo = mapaState.tipoPorServico[servico] || 'bloco';
       const opcoes = ordenarServicos(mapaState.servicos.filter(s => s !== servico && mapaState.tipoPorServico[s] === tipo));
-      if(opcoes.length === 0){ alert('Não há outros serviços do mesmo tipo de mapa pra escolher como pré-requisito.'); return; }
+      if(opcoes.length === 0){ dobAlert('Não há outros serviços do mesmo tipo de mapa pra escolher como pré-requisito.'); return; }
       const atuais = new Set(prereqsDoServico(servico));
       const overlay = document.createElement('div');
       overlay.style.cssText = 'position:fixed; inset:0; background:rgba(20,20,20,0.45); z-index:100000; display:flex; align-items:center; justify-content:center; padding:16px;';
@@ -7123,11 +7167,11 @@
       abrirGerenciadorFotosServico(servico);
     });
 
-    document.getElementById('dob-mapa-excluir-servico').addEventListener('click', () => {
+    document.getElementById('dob-mapa-excluir-servico').addEventListener('click', async () => {
       const sel = document.getElementById('dob-mapa-servico');
       const nomeAtual = sel.value;
       if(!nomeAtual) return;
-      const confirmou = confirm(`Deseja mesmo excluir o serviço "${nomeAtual}"? Isso vai apagar todas as marcações (cores) e desenhos feitos nele em todos os mapas. Essa ação não pode ser desfeita, e esse serviço não vai mais aparecer, nem depois de sincronizar.`);
+      const confirmou = await dobConfirm(`Deseja mesmo excluir o serviço "${nomeAtual}"? Isso vai apagar todas as marcações (cores) e desenhos feitos nele em todos os mapas. Essa ação não pode ser desfeita, e esse serviço não vai mais aparecer, nem depois de sincronizar.`);
       if(!confirmou) return;
       mapaState.servicos = mapaState.servicos.filter(s => s !== nomeAtual);
       delete mapaState.tipoPorServico[nomeAtual];
@@ -7551,7 +7595,7 @@
     document.getElementById('dob-setup-salvar').addEventListener('click', () => {
       const val = document.getElementById('dob-setup-clientid').value.trim();
       if(!val.endsWith('.apps.googleusercontent.com')){
-        alert('Isso não parece um Client ID válido. Ele deve terminar em .apps.googleusercontent.com');
+        dobAlert('Isso não parece um Client ID válido. Ele deve terminar em .apps.googleusercontent.com');
         return;
       }
       clientId = val;
@@ -7751,7 +7795,7 @@
     btn.style.display = pendentes > 0 ? 'inline-flex' : 'none';
     btn.textContent = `🔧 Reparar ${pendentes} miniatura${pendentes === 1 ? '' : 's'}`;
   }
-  // Pequeno modal (não usa prompt()/alert() nativos, que travam o app) pra escolher a data
+  // Pequeno modal (não usa prompt()/dobAlert() nativos, que travam o app) pra escolher a data
   // e confirmar a recuperação.
   function perguntarDataRecuperacao(){
     return new Promise(resolve => {
@@ -7859,7 +7903,7 @@
   }
 
   document.getElementById('dob-btn-conectar').addEventListener('click', () => {
-    if(!tokenClient){ alert('Configuração ainda não carregada. Aguarde um instante e tente de novo.'); return; }
+    if(!tokenClient){ dobAlert('Configuração ainda não carregada. Aguarde um instante e tente de novo.'); return; }
     tokenClient.requestAccessToken({ prompt: '' });
   });
   document.getElementById('dob-btn-sync-fotos').addEventListener('click', () => { sincronizarFotosLocaisPendentes(); });
@@ -7897,6 +7941,7 @@
         ${(nuvem.editor && driveFotos && accessToken) ? '<button type="button" class="dob-btn secundario" id="dob-cfg-migrar">☁️ Mover ' + driveFotos + ' foto(s) do Drive para o banco</button>' : ''}
         <button type="button" class="dob-btn secundario" id="dob-cfg-modo">${document.body.classList.contains('dob-compacto') ? 'Modo simples: ligado (desligar)' : 'Modo simples: desligado (ligar)'}</button>
         ${[['dob-btn-sync-fotos','📤 Sincronizar fotos locais'],['dob-btn-reparar-thumbs','🔧 Reparar miniaturas'],['dob-btn-recuperar-fotos','🔄 Recuperar fotos do Drive']].filter(([id]) => { const el = document.getElementById(id); return el && el.style.display !== 'none'; }).map(([id, t]) => `<button type="button" class="dob-btn secundario" data-cfg-proxy="${id}">${t}</button>`).join('')}
+        <button type="button" class="dob-btn secundario" id="dob-cfg-erros">🧾 Registro de erros do app</button>
         <button type="button" class="dob-btn secundario" id="dob-cfg-atualizar">🔄 Procurar atualização do app</button>
         <div id="dob-cfg-atualizar-msg" style="min-height:16px;font-size:12px;color:var(--muted,#767e8c);">Versão instalada: ${APP_VERSION}</div>
         <button type="button" class="dob-btn secundario" id="dob-cfg-fechar">Fechar</button>
@@ -7909,6 +7954,18 @@
     const bmodo = $('dob-cfg-modo');
     if(bmodo) bmodo.addEventListener('click', () => { const t = document.getElementById('dob-modo-compacto-toggle'); if(t) t.click(); fechar(); });
     ov.querySelectorAll('[data-cfg-proxy]').forEach(bt => bt.addEventListener('click', () => { const t = document.getElementById(bt.dataset.cfgProxy); fechar(); if(t) t.click(); }));
+    const berr = $('dob-cfg-erros');
+    if(berr) berr.addEventListener('click', () => {
+      let lista = []; try{ lista = JSON.parse(localStorage.getItem(DOB_LOG_KEY) || '[]'); }catch(e){ /* vazio */ }
+      const txt = lista.length ? lista.slice().reverse().map(x => new Date(x.t).toLocaleString('pt-BR') + ' · ' + x.v.replace('v2026.', 'v') + ' · ' + x.m + (x.o ? ' (' + x.o + ')' : '') + (x.n > 1 ? ' ×' + x.n : '')).join('\n') : 'Nenhum erro registrado.';
+      const ov2 = document.createElement('div');
+      ov2.style.cssText = 'position:fixed;inset:0;background:rgba(20,24,32,.5);z-index:200000;display:flex;align-items:center;justify-content:center;padding:16px;';
+      ov2.innerHTML = `<div style="background:#fff;border-radius:14px;max-width:560px;width:100%;max-height:80vh;display:flex;flex-direction:column;padding:16px;gap:10px;"><b>Registro de erros</b><textarea readonly style="flex:1;min-height:220px;font:12px/1.4 monospace;border:1px solid #c9cfd8;border-radius:8px;padding:8px;">${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</textarea><div style="display:flex;gap:8px;justify-content:flex-end;"><button type="button" class="dob-btn secundario" id="e-limpa">Limpar</button><button type="button" class="dob-btn secundario" id="e-copia">Copiar</button><button type="button" class="dob-btn" id="e-fecha">Fechar</button></div></div>`;
+      document.body.appendChild(ov2);
+      ov2.querySelector('#e-fecha').addEventListener('click', () => ov2.remove());
+      ov2.querySelector('#e-limpa').addEventListener('click', () => { try{ localStorage.removeItem(DOB_LOG_KEY); }catch(e){ /* ignora */ } ov2.remove(); });
+      ov2.querySelector('#e-copia').addEventListener('click', () => { const t = ov2.querySelector('textarea'); t.select(); try{ navigator.clipboard.writeText(txt); }catch(e){ document.execCommand('copy'); } });
+    });
     const bat = $('dob-cfg-atualizar');
     if(bat) bat.addEventListener('click', async () => {
       const m = $('dob-cfg-atualizar-msg');
@@ -8233,18 +8290,18 @@
       equipEl.querySelectorAll('[data-motivo]').forEach(inp => inp.addEventListener('change', () => {
         setStatusEquipNaData(inp.dataset.motivo, document.getElementById('dob-f-data').value || todayStr(), 'parado', inp.value.trim());
       }));
-      equipEl.querySelectorAll('[data-eqedit]').forEach(btn => btn.addEventListener('click', () => {
+      equipEl.querySelectorAll('[data-eqedit]').forEach(btn => btn.addEventListener('click', async () => {
         const id = btn.dataset.eqedit;
         const eq = equipState.equipamentos.find(e => e.id === id);
         if(!eq) return;
-        const novoNome = prompt('Novo nome/identificação para este equipamento:', eq.nome);
+        const novoNome = await dobPrompt('Novo nome/identificação para este equipamento:', eq.nome);
         if(!novoNome || !novoNome.trim()) return;
         eq.nome = novoNome.trim();
         saveEquipState();
         renderChamadaListas();
       }));
-      equipEl.querySelectorAll('[data-eqdel]').forEach(btn => btn.addEventListener('click', () => {
-        if(!confirm('Excluir este equipamento cadastrado? Ele não vai mais aparecer, nem depois de sincronizar.')) return;
+      equipEl.querySelectorAll('[data-eqdel]').forEach(btn => btn.addEventListener('click', async () => {
+        if(!await dobConfirm('Excluir este equipamento cadastrado? Ele não vai mais aparecer, nem depois de sincronizar.')) return;
         const id = btn.dataset.eqdel;
         equipState.equipamentos = equipState.equipamentos.filter(e => e.id !== id);
         equipState.presencas = equipState.presencas.filter(p => p.equipamentoId !== id);
@@ -8264,18 +8321,18 @@
       moEl.querySelectorAll('[data-mochk]').forEach(cb => cb.addEventListener('change', () => {
         togglePresencaMaoObraNaData(cb.dataset.mochk, document.getElementById('dob-f-data').value || todayStr());
       }));
-      moEl.querySelectorAll('[data-moedit]').forEach(btn => btn.addEventListener('click', () => {
+      moEl.querySelectorAll('[data-moedit]').forEach(btn => btn.addEventListener('click', async () => {
         const id = btn.dataset.moedit;
         const p = maoObraState.pessoas.find(x => x.id === id);
         if(!p) return;
-        const novoNome = prompt('Novo nome para esta pessoa/empresa:', p.nome);
+        const novoNome = await dobPrompt('Novo nome para esta pessoa/empresa:', p.nome);
         if(!novoNome || !novoNome.trim()) return;
         p.nome = novoNome.trim();
         saveMaoObraState();
         renderChamadaListas();
       }));
-      moEl.querySelectorAll('[data-model]').forEach(btn => btn.addEventListener('click', () => {
-        if(!confirm('Excluir esta pessoa/empresa cadastrada? Ela não vai mais aparecer, nem depois de sincronizar.')) return;
+      moEl.querySelectorAll('[data-model]').forEach(btn => btn.addEventListener('click', async () => {
+        if(!await dobConfirm('Excluir esta pessoa/empresa cadastrada? Ela não vai mais aparecer, nem depois de sincronizar.')) return;
         const id = btn.dataset.model;
         maoObraState.pessoas = maoObraState.pessoas.filter(p => p.id !== id);
         maoObraState.presencas = maoObraState.presencas.filter(p => p.pessoaId !== id);
@@ -8463,7 +8520,7 @@
     document.getElementById('dob-f-servico-add').addEventListener('click', () => {
       const contratoId = document.getElementById('dob-f-contrato-sel').value;
       const itemId = document.getElementById('dob-f-item-sel').value;
-      if(!contratoId || !itemId){ alert('Selecione um contrato e um item.'); return; }
+      if(!contratoId || !itemId){ dobAlert('Selecione um contrato e um item.'); return; }
       const contrato = contratosState.contratos.find(c => c.id === contratoId);
       const item = contratosState.itens.find(i => i.id === itemId);
       if(!contrato || !item) return;
@@ -8486,7 +8543,7 @@
       const contratoId = document.getElementById('dob-f-item-contrato-sel').value;
       const desc = document.getElementById('dob-f-novo-item-desc').value.trim();
       const macroCod = document.getElementById('dob-f-novo-item-macro').value;
-      if(!contratoId || !desc){ alert('Preencha contrato e descrição do item.'); return; }
+      if(!contratoId || !desc){ dobAlert('Preencha contrato e descrição do item.'); return; }
       const macro = MACRO_SERVICOS_REF.find(m => m.cod === macroCod);
       contratosState.itens.push({ id: 'i'+Date.now()+Math.random().toString(36).slice(2,6), contratoId, descricao: desc, macroCod: macroCod || '', macroDesc: macro ? macro.desc : '' });
       saveContratosState();
@@ -8529,7 +8586,7 @@
       popularSelectsServico();
       atualizarItensDoContrato();
       renderItensPendentes();
-      alert(`Importado: ${novosContratos} contrato(s) novo(s), ${novosItens} item(ns) novo(s). Agora é só atribuir o macro-serviço de cada item na lista abaixo (itens que já têm macro-serviço marcado na tela "UAU → BEE" já vêm preenchidos).`);
+      dobAlert(`Importado: ${novosContratos} contrato(s) novo(s), ${novosItens} item(ns) novo(s). Agora é só atribuir o macro-serviço de cada item na lista abaixo (itens que já têm macro-serviço marcado na tela "UAU → BEE" já vêm preenchidos).`);
     });
 
     function renderItensPendentes(){
@@ -8623,9 +8680,9 @@
       }
     });
 
-    document.getElementById('dob-f-cancelar').addEventListener('click', () => {
+    document.getElementById('dob-f-cancelar').addEventListener('click', async () => {
       const temConteudo = document.getElementById('dob-f-texto').value.trim() || draft.itensVinculados.length || draft.fotos.length;
-      if(temConteudo && !confirm('Sair sem salvar? O que você preencheu vai ser perdido.')) return;
+      if(temConteudo && !await dobConfirm('Sair sem salvar? O que você preencheu vai ser perdido.')) return;
       formularioSujo = false;
       formContainer.innerHTML='';
     });
@@ -8663,7 +8720,7 @@
       draft.ocorrencia = document.getElementById('dob-f-ocorrencia').checked;
       draft.texto = document.getElementById('dob-f-texto').value.trim();
       const temConteudo = draft.texto || draft.equipamentos || draft.maodeobra || draft.fotos.length > 0;
-      if(!temConteudo){ alert('Preencha ao menos um campo ou adicione uma foto antes de salvar.'); return; }
+      if(!temConteudo){ dobAlert('Preencha ao menos um campo ou adicione uma foto antes de salvar.'); return; }
       // Espera a sincronização com o Drive terminar de verdade antes de avisar "salvo" e fechar
       // o formulário — antes disso aqui era "dispara e esquece", e o apontamento podia nunca
       // chegar no Drive (nem aparecer em outro aparelho) se a pessoa saísse da tela logo depois
@@ -8685,7 +8742,7 @@
       }catch(e){
         btnSalvar.disabled = false;
         btnSalvar.textContent = textoOriginalBtn;
-        alert('Erro ao salvar o apontamento (espaço local pode estar cheio).');
+        dobAlert('Erro ao salvar o apontamento (espaço local pode estar cheio).');
       }
     });
 
@@ -9790,8 +9847,8 @@
       if(entry) excluirFotoCampo(entry, parseInt(btn.dataset.fidx));
     }));
     listaEl.querySelectorAll('.dob-editar').forEach(btn => btn.addEventListener('click', () => { const entry = entries.find(x => x.id === btn.dataset.id); if(entry) openForm(entry); }));
-    listaEl.querySelectorAll('.dob-excluir').forEach(btn => btn.addEventListener('click', () => {
-      if(confirm('Excluir este apontamento permanentemente? (Fotos já enviadas ao Drive continuam lá.)')){ deleteEntryLocal(btn.dataset.id); loadEntries(); }
+    listaEl.querySelectorAll('.dob-excluir').forEach(btn => btn.addEventListener('click', async () => {
+      if(await dobConfirm('Excluir este apontamento permanentemente? (Fotos já enviadas ao Drive continuam lá.)')){ deleteEntryLocal(btn.dataset.id); loadEntries(); }
     }));
     listaEl.querySelectorAll('.dob-completar-registro').forEach(btn => btn.addEventListener('click', () => { openForm(null, btn.dataset.data); }));
   }
@@ -10276,7 +10333,7 @@
 
   async function excluirFotoCampo(entry, idx){
     if(!entry || !entry.fotos || !entry.fotos[idx]) return;
-    if(!confirm('Excluir esta foto? Essa ação não pode ser desfeita.')) return;
+    if(!await dobConfirm('Excluir esta foto? Essa ação não pode ser desfeita.')) return;
     const foto = normalizeFoto(entry.fotos[idx]);
     entry.fotos.splice(idx, 1);
     await saveEntry(entry);
