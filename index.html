@@ -1413,7 +1413,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.142';
+  const APP_VERSION = 'v2026.11.26.143';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -3391,6 +3391,8 @@
         }
         const json = JSON.stringify(estado);
         if(json.length > 900000) throw new Error('Dados grandes demais para a nuvem (' + json.length + ' caracteres)');
+        nuvem.tamanho = json.length;
+        if(json.length > 630000 && !nuvem.avisouTam){ nuvem.avisouTam = true; try{ mostrarToastSalvo('O Mapa já usa ' + Math.round(json.length / 9000) + '% do limite da nuvem — avise para dividirmos os dados', { erro: true }); }catch(e){ /* ignora */ } }
         const novo = remRev + 1;
         tx.set(ref, { json, rev: novo, atualizadoEm: firebase.firestore.FieldValue.serverTimestamp(), por: nuvem.user.email || '' });
         escrito = { estado, rev: novo };
@@ -4949,6 +4951,14 @@
       ${regs.map(r => `<div class="dob-met-vis"><b>${visitasDataBr(r.data)} · ${catEsc(r.obra)}</b>${r.o.imp ? ` <span class="vis-imp-tag vis-imp-${r.o.imp}">${imp[r.o.imp]}</span>` : ''}<div>${catEsc(r.o.txt || '')}</div></div>`).join('')}
       ${fotos.length ? `<div class="dob-met-fotos">${fotos.map(f => `<img src="${f.thumb || f.data}" alt="" loading="lazy">`).join('')}</div>` : ''}`;
   }
+  function metodoOrcamentoHtml(p){
+    if(!p.macro) return '';
+    if(!custoEtapaDados){ if(!custoEtapaCarregando) custoEtapaGarantirDados().then(() => { if(metodoAberto && custoEtapaDados) renderMetodo(); }); return ''; }
+    let tot = 0, n = 0;
+    custoEtapaDados.macros.forEach(m => m.itens.forEach(i => { if(i.cod === p.macro || String(i.cod).indexOf(p.macro + '.') === 0){ tot += i.total || 0; n++; } }));
+    if(!tot) return '';
+    return `<div class="dob-met-orc">Orçamento de Anápolis no macro ${catEsc(p.macro)}: <b>${catR(tot, 0)}</b> <span>(${n} itens — este total é dividido entre todos os passos do mesmo macro)</span></div>`;
+  }
   function metodoDetalheHtml(p, d){
     const o = d.obras || {};
     const num = (x) => { const n = parseFloat(String(x == null ? '' : x).replace(/\./g, '').replace(',', '.')); return isFinite(n) ? n : null; };
@@ -4961,6 +4971,7 @@
         <input class="dob-met-od" data-id="${p.id}" data-obra="${catEsc(ob)}" data-c="obs" placeholder="Observação (equipe, prazo, qualidade)" value="${catEsc(r.obs || '')}">${cmp}</div>`; }).join('');
     const ta = (campo, rot, ph) => `<label class="dob-met-lb">${rot}<textarea class="dob-met-dt" data-id="${p.id}" data-campo="${campo}" rows="3" placeholder="${ph}">${catEsc(d[campo] || '')}</textarea></label>`;
     return `<li class="dob-met-det">${ta('como', 'Como é executada (o que observei)', 'O que vi: sequência, equipe, equipamentos, tempo de espera…')}${ta('qualidade', 'Sinais de boa execução (o que reparei)', 'O que indica se está bem feito ou mal feito: prumo, acabamento, retrabalho…')}${ta('comprar', 'Informações para a compra (para o custo)', 'O que descobri sobre escopo, material x mão de obra, unidade de medição e preço pago…')}
+      ${metodoOrcamentoHtml(p)}
       <div class="dob-met-lb">Comparação entre obras</div>${linhas}${metodoVisitasHtml(p)}</li>`;
   }
   function renderMetodo(){
@@ -4996,6 +5007,7 @@
 .dob-met-obra>b{grid-row:span 2;font-size:12.5px}
 .dob-met-obra>.dob-met-od:last-of-type{grid-column:2 / 4}
 .dob-met-custo{display:flex;gap:6px}
+.dob-met-orc{font-size:12.5px;background:#f3f5f8;border-radius:8px;padding:8px 10px;font-weight:400}.dob-met-orc span{color:var(--muted)}
 .dob-met-vis{font-size:13px;font-weight:400;border-top:1px solid var(--line);padding-top:6px}
 .dob-met-vis b{font-size:12.5px}
 .vis-imp-tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:10px;font-weight:700;margin-left:6px}
