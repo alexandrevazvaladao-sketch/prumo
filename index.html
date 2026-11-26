@@ -662,6 +662,8 @@
   .dob-resumo-semana-card.alerta .v{ color:#993c1d; }
   .dob-pd-in{ width:100%; min-width:46px; border:none; background:transparent; text-align:center; font:inherit; padding:7px 2px; color:var(--ink); }
   .dob-pd-in:focus{ outline:2px solid var(--clay,#24518f); background:#fff; }
+  .dob-pd-in{ -moz-appearance:textfield; appearance:textfield; }
+  .dob-pd-in::-webkit-outer-spin-button, .dob-pd-in::-webkit-inner-spin-button{ -webkit-appearance:none; appearance:none; margin:0; display:none; }
   .dob-pd-cel.hoje, .dob-pd-th-dia.hoje{ background:#fff6e5; }
   .dob-pd-prev{ text-align:center; font-weight:700; color:var(--ink-soft); padding:0 6px; }
   .dob-pd-ok{ text-align:center; padding:4px 8px; white-space:nowrap; }
@@ -1400,7 +1402,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.135';
+  const APP_VERSION = 'v2026.11.26.136';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
