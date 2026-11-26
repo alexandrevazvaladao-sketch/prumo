@@ -1222,6 +1222,8 @@
 .vis-badge.vis-ag{ background:#e6eef8; color:#1f4e8c; } .vis-badge.vis-ok{ background:#e2f1e9; color:#23704a; } .vis-badge.vis-atras{ background:#f8e5e1; color:#a63a26; }
 .vis-detalhe{ padding:16px 18px 18px; background:#fafbfc; border-bottom:1px solid var(--line); }
 .vis-lbl{ display:block; font-size:12px; font-weight:600; color:var(--ink-soft); } .vis-dica{ display:block; font-weight:400; font-size:11.5px; color:var(--muted); margin:1px 0 6px; }
+.vis-notas-txt{ white-space:pre-wrap; background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:14px; line-height:1.45; }
+.vis-local{ position:absolute; left:6px; bottom:6px; background:rgba(138,90,0,.9); color:#fff; font-size:10px; padding:2px 6px; border-radius:8px; }
 .vis-fotos{ display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:8px; margin:8px 0; }
 .vis-foto{ position:relative; border-radius:6px; overflow:hidden; border:1px solid var(--line); }
 .vis-foto img{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; cursor:pointer; }
@@ -1402,7 +1404,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.136';
+  const APP_VERSION = 'v2026.11.26.137';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -3266,6 +3268,7 @@
     }
     t.textContent = txt;
     mapaSalvoAtualizar();
+    try{ visitasStatusAtualizar(); }catch(e){ /* ignora */ }
     if(login){ login.style.display = nuvem.user ? 'none' : ''; login.textContent = 'Entrar'; }
     if(sair) sair.style.display = nuvem.user ? '' : 'none';
     if(ed) ed.style.display = nuvem.dono ? '' : 'none';
@@ -3383,6 +3386,7 @@
       else { clearTimeout(nuvem.timer); nuvem.timer = setTimeout(nuvemGravar, 300); }
     }catch(e){
       nuvem.erro = String(e && e.message || e);
+      if(/grandes demais/.test(nuvem.erro)){ try{ visitasSubirLocais(); }catch(e2){ /* ignora */ } }
       clearTimeout(nuvem.timer); nuvem.timer = setTimeout(nuvemGravar, 15000);
     }finally{
       nuvem.gravando = false; nuvemStatus();
@@ -4615,7 +4619,7 @@
   });
 
   // ===== Visitas às outras obras (Vera Cruz e Miramar): meta de pelo menos 1 visita por mês em cada; registro do que foi coletado =====
-  let visitasAberto = false, visitasSel = '', visitasEnviando = false, visitasEnviandoLista = [];
+  let visitasAberto = false, visitasSel = '', visitasEnviando = false, visitasEnviandoLista = [], visitasEditNotas = '';
   const VISITAS_OBRAS = [['Vera Cruz', 'vc'], ['Miramar', 'mi']];
   const VISITAS_INICIAIS = ['2026-11-25', '2026-12-21'];
   const VISITAS_DIAS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
@@ -4686,6 +4690,20 @@
   window.addEventListener('online', () => setTimeout(visitasSubirLocais, 1500));
   document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') setTimeout(visitasSubirLocais, 3000); });
   setInterval(visitasSubirLocais, 60000);
+  function visitasStatusAtualizar(){
+    const bar = document.getElementById('dob-vis-salvo'); if(!bar) return;
+    const txt = document.getElementById('dob-vis-salvo-txt'), btn = document.getElementById('dob-vis-salvar-agora');
+    const locais = visitasLista().reduce((n, v) => n + (v.fotos || []).filter(f => f && f.type === 'local').length, 0);
+    let cor, fundo, msg, mostrarBtn = false;
+    if(!nuvem.user){ cor = '#2c3c5c'; fundo = '#eef1f6'; msg = '👁 Sem login — nada é enviado para o PC. Entre no menu (Entrar).'; }
+    else if(!nuvem.editor){ cor = '#2c3c5c'; fundo = '#eef1f6'; msg = '👁 Só visualização — o que você anota aqui NÃO vai para a nuvem.'; }
+    else if(nuvem.erro){ cor = '#b3261e'; fundo = '#fdecea'; msg = '⚠️ Não salvou na nuvem: ' + nuvem.erro; mostrarBtn = true; }
+    else if(nuvem.gravando || nuvem.sujo){ cor = '#8a5a00'; fundo = '#fff4d6'; msg = '⏳ Enviando para a nuvem…'; mostrarBtn = true; }
+    else if(locais){ cor = '#8a5a00'; fundo = '#fff4d6'; msg = '⏳ ' + locais + ' foto(s) só neste aparelho — aguardando subir para a nuvem'; mostrarBtn = true; }
+    else { cor = '#1b6e3c'; fundo = '#e6f4ea'; msg = '✅ Tudo salvo na nuvem' + (nuvem.salvoEm ? ' às ' + nuvem.salvoEm : ''); }
+    bar.style.background = fundo; bar.style.color = cor; if(txt) txt.textContent = msg;
+    if(btn){ btn.style.display = mostrarBtn ? '' : 'none'; btn.onclick = async () => { btn.disabled = true; try{ await visitasSubirLocais(); }catch(e){} nuvemSalvarLocal(); nuvemAgendarGravacao(true); btn.disabled = false; if(visitasAberto) renderVisitas(); }; }
+  }
   function renderVisitas(){
     const c = document.getElementById('dob-visitas-container');
     if(!c) return;
@@ -4721,11 +4739,17 @@
       if(!ativo) return linha;
       const fotosV = v.fotos || [];
       return linha + `<div class="vis-detalhe">
-        <label class="vis-lbl">Anotações
-          <span class="vis-dica">O que está rodando, métodos usados, o que achei bom ou diferente</span>
-          <textarea class="dob-input dob-vis-campo" data-id="${v.id}" data-campo="notas" rows="6" style="width:100%;">${paredeEsc(v.notas || '')}</textarea></label>
+        <div class="vis-lbl">Anotações</div>
+        ${(temN && visitasEditNotas !== v.id) ? `<div class="vis-notas-txt">${paredeEsc(v.notas)}</div>
+          <div class="vis-acoes" style="margin:8px 0 0;grid-template-columns:1fr;"><button type="button" class="dob-btn pequeno secundario dob-vis-notas-edit" data-id="${v.id}">Editar anotações</button></div>`
+        : `<span class="vis-dica">O que está rodando, métodos usados, o que achei bom ou diferente</span>
+          <textarea class="dob-input" id="dob-vis-notas-ta" data-id="${v.id}" rows="6" style="width:100%;">${paredeEsc(v.notas || '')}</textarea>
+          <div class="vis-acoes" style="margin:8px 0 0;">
+            <button type="button" class="dob-btn pequeno dob-vis-notas-salvar" data-id="${v.id}">Salvar anotações</button>
+            ${temN ? `<button type="button" class="dob-btn pequeno secundario dob-vis-notas-cancel" data-id="${v.id}">Cancelar</button>` : '<span></span>'}
+          </div>`}
         <div class="vis-lbl" style="margin-top:14px;">Fotos</div>
-        ${(fotosV.length || visitasEnviandoLista.some(x => x.id === v.id)) ? `<div class="vis-fotos">${fotosV.map((fo, i) => `<div class="vis-foto"><img data-vis-abrir="${i}" src="${fo.thumb || fo.data || ''}" alt="" /><button type="button" class="dob-vis-fdel" data-i="${i}" title="Remover foto">×</button></div>`).join('')}${visitasEnviandoLista.filter(x => x.id === v.id).map(x => `<div class="vis-foto enviando" title="Enviando…">${x.thumb ? `<img src="${x.thumb}" alt="" />` : '<div class="vis-foto-vazio"></div>'}<span class="vis-spin" aria-label="Enviando"></span></div>`).join('')}</div>` : '<div class="dob-dica" style="margin:4px 0 8px;">Nenhuma foto registrada.</div>'}
+        ${(fotosV.length || visitasEnviandoLista.some(x => x.id === v.id)) ? `<div class="vis-fotos">${fotosV.map((fo, i) => `<div class="vis-foto"><img data-vis-abrir="${i}" src="${fo.thumb || fo.data || ''}" alt="" />${fo.type === 'local' ? '<span class="vis-local" title="Só neste aparelho">só aqui</span>' : ''}<button type="button" class="dob-vis-fdel" data-i="${i}" title="Remover foto">×</button></div>`).join('')}${visitasEnviandoLista.filter(x => x.id === v.id).map(x => `<div class="vis-foto enviando" title="Enviando…">${x.thumb ? `<img src="${x.thumb}" alt="" />` : '<div class="vis-foto-vazio"></div>'}<span class="vis-spin" aria-label="Enviando"></span></div>`).join('')}</div>` : '<div class="dob-dica" style="margin:4px 0 8px;">Nenhuma foto registrada.</div>'}
         <div class="vis-acoes">
           <label class="dob-btn pequeno" for="dob-vis-foto-cam" style="cursor:pointer;">Tirar foto</label>
           <label class="dob-btn pequeno secundario" for="dob-vis-foto-gal" style="cursor:pointer;">Enviar da galeria</label>
@@ -4742,9 +4766,11 @@
     c.innerHTML = `<div class="vis-wrap">
       <div class="vis-topo"><div><h3 class="vis-tit">Visitas às obras</h3><div class="vis-sub">Meta: 1 visita por mês em cada obra</div></div>
         <div class="vis-novo"><input type="date" id="dob-vis-data" class="dob-input" aria-label="Data da nova visita" /><button type="button" class="dob-btn pequeno" id="dob-vis-add">Adicionar dia (Vera Cruz e Miramar)</button></div></div>
+      <div id="dob-vis-salvo" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 12px;border-radius:8px;margin:0 0 12px;font-size:12.5px;font-weight:600;"><span id="dob-vis-salvo-txt" style="flex:1 1 200px;"></span><button type="button" class="dob-btn pequeno secundario" id="dob-vis-salvar-agora" style="display:none;">Sincronizar agora</button></div>
       <div class="vis-resumos">${resumo}</div>
       <div class="vis-tabela"><div class="vis-cab"><span>Data</span><span>Obra</span><span>Prazo</span><span>Registro</span><span>Situação</span><span></span></div>${linhas}</div></div>`;
-    c.querySelectorAll('.dob-vis-chip').forEach(b => b.addEventListener('click', () => { visitasSel = visitasSel === b.dataset.id ? '' : b.dataset.id; renderVisitas(); }));
+    c.querySelectorAll('.dob-vis-chip').forEach(b => b.addEventListener('click', () => { visitasSel = visitasSel === b.dataset.id ? '' : b.dataset.id; visitasEditNotas = ''; renderVisitas(); }));
+    visitasStatusAtualizar();
     const fotoIn = (id) => { const el = document.getElementById(id); if(el) el.addEventListener('change', async (ev) => { const fs = Array.from(ev.target.files || []); ev.target.value = ''; await visitasAddFotos(sel, fs); }); };
     fotoIn('dob-vis-foto-cam'); fotoIn('dob-vis-foto-gal');
     c.querySelectorAll('[data-vis-abrir]').forEach(el => el.addEventListener('click', () => openLightbox(((mapaState.visitas || {})[sel].fotos || []).map(normalizeFoto), Number(el.dataset.visAbrir))));
@@ -4752,6 +4778,13 @@
       if(b.dataset.confirma !== '1'){ b.dataset.confirma = '1'; b.textContent = '?'; b.style.width = 'auto'; b.style.padding = '0 6px'; b.title = 'Toque de novo para remover'; return; }
       const v = Object.assign({}, mapaState.visitas[sel]); v.fotos = (v.fotos || []).filter((_, i) => i !== Number(b.dataset.i)); v.atualizadoEm = new Date().toISOString();
       mapaState.visitas[sel] = v; saveMapaState(true); renderVisitas();
+    }));
+    c.querySelectorAll('.dob-vis-notas-edit').forEach(b => b.addEventListener('click', () => { visitasEditNotas = b.dataset.id; renderVisitas(); const t = document.getElementById('dob-vis-notas-ta'); if(t) t.focus(); }));
+    c.querySelectorAll('.dob-vis-notas-cancel').forEach(b => b.addEventListener('click', () => { visitasEditNotas = ''; renderVisitas(); }));
+    c.querySelectorAll('.dob-vis-notas-salvar').forEach(b => b.addEventListener('click', () => {
+      const t = document.getElementById('dob-vis-notas-ta'); if(!t) return;
+      visitasSalvar(b.dataset.id, 'notas', t.value.trim()); visitasEditNotas = '';
+      mostrarToastSalvo('Anotações salvas'); renderVisitas();
     }));
     c.querySelectorAll('.dob-vis-campo').forEach(el => el.addEventListener('change', () => { visitasSalvar(el.dataset.id, el.dataset.campo, el.value); if(el.dataset.campo === 'data') renderVisitas(); }));
     c.querySelectorAll('.dob-vis-status').forEach(b => b.addEventListener('click', () => { const v = (mapaState.visitas || {})[b.dataset.id]; visitasSalvar(b.dataset.id, 'status', v && v.status === 'realizada' ? 'agendada' : 'realizada'); renderVisitas(); }));
