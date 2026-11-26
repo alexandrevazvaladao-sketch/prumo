@@ -1224,6 +1224,9 @@
 .vis-foto{ position:relative; border-radius:6px; overflow:hidden; border:1px solid var(--line); }
 .vis-foto img{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; cursor:pointer; }
 .vis-foto button{ position:absolute; top:4px; right:4px; border:0; border-radius:4px; width:22px; height:22px; background:rgba(17,28,51,.7); color:#fff; cursor:pointer; line-height:1; }
+.vis-foto.enviando img{ opacity:.45; cursor:default; } .vis-foto-vazio{ aspect-ratio:4/3; background:#e6eaf0; }
+.vis-spin{ position:absolute; left:50%; top:50%; width:30px; height:30px; margin:-15px 0 0 -15px; border-radius:50%; border:3.5px solid rgba(255,255,255,.9); border-top-color:#24518f; box-shadow:0 0 0 1px rgba(0,0,0,.08); animation:vis-gira .8s linear infinite; }
+@keyframes vis-gira{ to{ transform:rotate(360deg); } }
 .vis-acoes{ display:grid !important; grid-template-columns:1fr 1fr; gap:10px; margin:8px 0 !important; width:100%; box-sizing:border-box; }
 .vis-acoes .dob-btn{ display:flex !important; align-items:center; justify-content:center; text-align:center; width:100%; box-sizing:border-box; min-height:46px; margin:0 !important; padding:8px 12px; line-height:1.2; }
 .vis-rodape .vis-acoes{ margin-left:0 !important; flex:1 1 100%; }
@@ -1397,7 +1400,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.134';
+  const APP_VERSION = 'v2026.11.26.135';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -4610,7 +4613,7 @@
   });
 
   // ===== Visitas às outras obras (Vera Cruz e Miramar): meta de pelo menos 1 visita por mês em cada; registro do que foi coletado =====
-  let visitasAberto = false, visitasSel = '', visitasEnviando = false;
+  let visitasAberto = false, visitasSel = '', visitasEnviando = false, visitasEnviandoLista = [];
   const VISITAS_OBRAS = [['Vera Cruz', 'vc'], ['Miramar', 'mi']];
   const VISITAS_INICIAIS = ['2026-11-25', '2026-12-21'];
   const VISITAS_DIAS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
@@ -4633,11 +4636,16 @@
   }
   async function visitasAddFotos(id, files){
     if(!id || !files.length) return;
-    visitasEnviando = true; renderVisitas();
+    // miniaturas na hora, com o círculo de carregamento, enquanto cada foto sobe
+    const pend = files.map(file => ({ id, file, thumb: '' }));
+    visitasEnviandoLista = visitasEnviandoLista.concat(pend); visitasEnviando = true; renderVisitas();
+    await Promise.all(pend.map(async it => { try{ it.thumb = await compressImage(it.file, 180, 0.5); }catch(e){ it.thumb = ''; } }));
+    renderVisitas();
     let falhas = 0;
-    for(const file of files){
+    for(const it of pend){
+      const file = it.file;
       try{
-        const [fullRes, thumbRes] = await Promise.all([ compressImage(file, 1600, 0.82), compressImage(file, 180, 0.5) ]);
+        const [fullRes, thumbRes] = await Promise.all([ compressImage(file, 1600, 0.82), it.thumb ? Promise.resolve(it.thumb) : compressImage(file, 180, 0.5) ]);
         let foto;
         try{
           if(nuvem.editor){ foto = { type: 'nuvem', id: await uploadFotoNuvem(fullRes), thumb: thumbRes }; }
@@ -4648,8 +4656,9 @@
         v.fotos = (v.fotos || []).concat([foto]); v.atualizadoEm = new Date().toISOString();
         mapaState.visitas[id] = v; saveMapaState(true);
       }catch(e){ falhas++; }
+      visitasEnviandoLista = visitasEnviandoLista.filter(x => x !== it); renderVisitas();
     }
-    visitasEnviando = false; renderVisitas();
+    visitasEnviando = visitasEnviandoLista.length > 0; renderVisitas();
     if(falhas) mostrarToastSalvo(falhas + ' foto(s) não foram salvas — tenta de novo', { erro: true });
   }
   // fotos de visita que ficaram só no aparelho (sem sinal na hora): sobe pra nuvem quando der
@@ -4714,8 +4723,7 @@
           <span class="vis-dica">O que está rodando, métodos usados, o que achei bom ou diferente</span>
           <textarea class="dob-input dob-vis-campo" data-id="${v.id}" data-campo="notas" rows="6" style="width:100%;">${paredeEsc(v.notas || '')}</textarea></label>
         <div class="vis-lbl" style="margin-top:14px;">Fotos</div>
-        ${visitasEnviando ? '<div class="dob-dica">Enviando foto…</div>' : ''}
-        ${fotosV.length ? `<div class="vis-fotos">${fotosV.map((fo, i) => `<div class="vis-foto"><img data-vis-abrir="${i}" src="${fo.thumb || fo.data || ''}" alt="" /><button type="button" class="dob-vis-fdel" data-i="${i}" title="Remover foto">×</button></div>`).join('')}</div>` : '<div class="dob-dica" style="margin:4px 0 8px;">Nenhuma foto registrada.</div>'}
+        ${(fotosV.length || visitasEnviandoLista.some(x => x.id === v.id)) ? `<div class="vis-fotos">${fotosV.map((fo, i) => `<div class="vis-foto"><img data-vis-abrir="${i}" src="${fo.thumb || fo.data || ''}" alt="" /><button type="button" class="dob-vis-fdel" data-i="${i}" title="Remover foto">×</button></div>`).join('')}${visitasEnviandoLista.filter(x => x.id === v.id).map(x => `<div class="vis-foto enviando" title="Enviando…">${x.thumb ? `<img src="${x.thumb}" alt="" />` : '<div class="vis-foto-vazio"></div>'}<span class="vis-spin" aria-label="Enviando"></span></div>`).join('')}</div>` : '<div class="dob-dica" style="margin:4px 0 8px;">Nenhuma foto registrada.</div>'}
         <div class="vis-acoes">
           <label class="dob-btn pequeno" for="dob-vis-foto-cam" style="cursor:pointer;">Tirar foto</label>
           <label class="dob-btn pequeno secundario" for="dob-vis-foto-gal" style="cursor:pointer;">Enviar da galeria</label>
