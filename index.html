@@ -1404,7 +1404,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.138';
+  const APP_VERSION = 'v2026.11.26.139';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -3197,7 +3197,7 @@
   var nuvem = { db: null, auth: null, user: null, editor: false, dono: false, rev: null, revEnviado: null, existe: false, sujo: false, seq: 0, timer: null, gravando: false, ok: false, erro: '', authPronto: false, primeiro: null, primeiroOk: null };
 
   function normalizarMapa(o){
-    const base = { servicos: [], tipoPorServico: {}, blocosPorObra: {}, estados: [], desenhos: [], rotacoes: {}, servicosExcluidos: [], escopoPorServico: {}, prereqPorServico: {}, macroPorServico: {}, catalogoCustom: {}, metodoOrdem: {}, metodoPassos: [], custoEtapa: {}, producaoDia: {}, apagados: {} };
+    const base = { servicos: [], tipoPorServico: {}, blocosPorObra: {}, estados: [], desenhos: [], rotacoes: {}, servicosExcluidos: [], escopoPorServico: {}, prereqPorServico: {}, macroPorServico: {}, catalogoCustom: {}, metodoOrdem: {}, metodoPassos: [], metodoDetalhes: {}, custoEtapa: {}, producaoDia: {}, apagados: {} };
     return Object.assign(base, o || {});
   }
   // Apagar uma chave de um mapa (escopo, custos, catálogo...) precisa deixar um "túmulo": sem ele, na mesclagem com a
@@ -3237,7 +3237,7 @@
     return Object.assign(extra, {
       servicos, tipoPorServico, escopoPorServico, prereqPorServico, servicosExcluidos,
       blocosPorObra: mescla('blocosPorObra'), estados: Object.values(estadoPorChave), desenhos: Object.values(desenhoPorId),
-      rotacoes: mescla('rotacoes'), beeLancado: mescla('beeLancado'), visitas: mescla('visitas'), visitasInit: !!(remote.visitasInit || local.visitasInit), macroPorServico: mescla('macroPorServico'), catalogoCustom: mescla('catalogoCustom'),
+      rotacoes: mescla('rotacoes'), beeLancado: mescla('beeLancado'), visitas: mescla('visitas'), metodoDetalhes: mescla('metodoDetalhes'), visitasInit: !!(remote.visitasInit || local.visitasInit), macroPorServico: mescla('macroPorServico'), catalogoCustom: mescla('catalogoCustom'),
       metodoOrdem: mescla('metodoOrdem'), metodoPassos: (local.metodoPassos && local.metodoPassos.length) ? local.metodoPassos : (remote.metodoPassos || []),
       custoEtapa: mescla('custoEtapa'), producaoDia: mescla('producaoDia'), apagados
     });
@@ -4900,6 +4900,22 @@
     }
     return mapaState.metodoPassos;
   }
+  const metodoDetAbertos = new Set();
+  const METODO_OBRAS = ['Anápolis', 'Miramar', 'Vera Cruz'];
+  function metodoDetalheHtml(p, d){
+    const o = d.obras || {};
+    const num = (x) => { const n = parseFloat(String(x == null ? '' : x).replace(/\./g, '').replace(',', '.')); return isFinite(n) ? n : null; };
+    const base = num((o['Anápolis'] || {}).custo);
+    const linhas = METODO_OBRAS.map(ob => { const r = o[ob] || {}; const c = num(r.custo);
+      let cmp = ''; if(ob !== 'Anápolis' && base && c){ const df = (c - base) / base * 100; cmp = `<span class="dob-met-cmp ${df > 0 ? 'mais' : 'menos'}">${df > 0 ? '+' : ''}${df.toFixed(1).replace('.', ',')}% vs Anápolis</span>`; }
+      return `<div class="dob-met-obra"><b>${catEsc(ob)}</b>
+        <input class="dob-met-od" data-id="${p.id}" data-obra="${catEsc(ob)}" data-c="metodo" placeholder="Como executam" value="${catEsc(r.metodo || '')}">
+        <span class="dob-met-custo"><input class="dob-met-od" inputmode="decimal" data-id="${p.id}" data-obra="${catEsc(ob)}" data-c="custo" placeholder="Custo R$" value="${catEsc(r.custo || '')}"><input class="dob-met-od" data-id="${p.id}" data-obra="${catEsc(ob)}" data-c="un" placeholder="por (m², bloco…)" value="${catEsc(r.un || '')}"></span>
+        <input class="dob-met-od" data-id="${p.id}" data-obra="${catEsc(ob)}" data-c="obs" placeholder="Observação (equipe, prazo, qualidade)" value="${catEsc(r.obs || '')}">${cmp}</div>`; }).join('');
+    const ta = (campo, rot, ph) => `<label class="dob-met-lb">${rot}<textarea class="dob-met-dt" data-id="${p.id}" data-campo="${campo}" rows="3" placeholder="${ph}">${catEsc(d[campo] || '')}</textarea></label>`;
+    return `<li class="dob-met-det">${ta('como', 'Como funciona esta etapa', 'Sequência de execução, equipe, equipamentos, tempo de cura/espera…')}${ta('qualidade', 'O que conferir (qualidade)', 'Pontos de inspeção: prumo, nível, cobrimento, cura, acabamento…')}${ta('comprar', 'Como comprar a execução', 'Escopo da empreitada, o que é material x mão de obra, unidade de medição, cuidados no contrato…')}
+      <div class="dob-met-lb">Comparação entre obras</div>${linhas}</li>`;
+  }
   function renderMetodo(){
     const container = document.getElementById('dob-metodo-container');
     if(!container) return;
@@ -4910,9 +4926,11 @@
     let n = 0;
     const blocos = fases.map(f => {
       const linhas = passos.map((p, idx) => { if(p.fase !== f) return ''; n++;
+        const det = (mapaState.metodoDetalhes || {})[p.id] || {}; const abertoDet = metodoDetAbertos.has(p.id);
+        const preench = !!(det.como || det.qualidade || det.comprar || Object.values(det.obras || {}).some(o => o && (o.metodo || o.custo || o.obs)));
         return `<li class="dob-met-item"><span class="dob-met-n">${n}</span>
           <div class="dob-met-txt"><input class="dob-met-nome" data-id="${p.id}" value="${catEsc(p.nome)}"><select class="dob-met-macro" data-id="${p.id}">${macroOpts(p.macro)}</select></div>
-          <div class="dob-met-bt"><button type="button" class="dob-btn secundario pequeno dob-met-mv" data-i="${idx}" data-d="-1" ${idx===0?'disabled':''}>↑</button><button type="button" class="dob-btn secundario pequeno dob-met-mv" data-i="${idx}" data-d="1" ${idx===passos.length-1?'disabled':''}>↓</button><button type="button" class="dob-btn secundario pequeno dob-met-del" data-id="${p.id}">✕</button></div></li>`; }).join('');
+          <div class="dob-met-bt"><button type="button" class="dob-btn ${preench ? '' : 'secundario'} pequeno dob-met-det-bt" data-id="${p.id}" title="Como funciona, qualidade e comparação entre obras">${abertoDet ? 'Fechar' : 'Detalhes'}</button><button type="button" class="dob-btn secundario pequeno dob-met-mv" data-i="${idx}" data-d="-1" ${idx===0?'disabled':''}>↑</button><button type="button" class="dob-btn secundario pequeno dob-met-mv" data-i="${idx}" data-d="1" ${idx===passos.length-1?'disabled':''}>↓</button><button type="button" class="dob-btn secundario pequeno dob-met-del" data-id="${p.id}">✕</button></div></li>${abertoDet ? metodoDetalheHtml(p, det) : ''}`; }).join('');
       return `<div class="dob-card" style="margin-top:14px"><h3 style="margin-top:0">${catEsc(f)}</h3><ol class="dob-met-lista">${linhas}</ol><button type="button" class="dob-btn secundario pequeno dob-met-add" data-fase="${catEsc(f)}">+ Passo nesta fase</button></div>`;
     }).join('');
     container.innerHTML = `<style>
@@ -4924,12 +4942,26 @@
 .dob-met-nome:focus,.dob-met-nome:hover{border-color:var(--line);background:#fff}
 .dob-met-macro{font:inherit;font-size:12px;color:var(--muted);border:none;background:transparent;max-width:100%;padding:0 6px}
 .dob-met-bt{display:flex;gap:4px}
+.dob-met-det{border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px 12px;margin:-2px 0 4px 42px;display:flex;flex-direction:column;gap:10px}
+.dob-met-lb{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:var(--ink-text)}
+.dob-met-dt,.dob-met-od{font:inherit;font-weight:400;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;box-sizing:border-box;background:#fff}
+.dob-met-obra{display:grid;grid-template-columns:90px 1fr 1.2fr;gap:6px;align-items:center;border-top:1px solid var(--line);padding-top:8px}
+.dob-met-obra>b{grid-row:span 2;font-size:12.5px}
+.dob-met-obra>.dob-met-od:last-of-type{grid-column:2 / 4}
+.dob-met-custo{display:flex;gap:6px}
+.dob-met-cmp{grid-column:2 / 4;font-size:12px;font-weight:700}
+.dob-met-cmp.mais{color:#b4472e}.dob-met-cmp.menos{color:#1b6e3c}
+@media(max-width:600px){.dob-met-det{margin-left:0}.dob-met-obra{grid-template-columns:1fr}.dob-met-obra>b{grid-row:auto}.dob-met-obra>.dob-met-od:last-of-type,.dob-met-cmp{grid-column:auto}}
 @media(max-width:600px){.dob-met-item{flex-wrap:wrap}.dob-met-bt{width:100%;justify-content:flex-end}}
 </style>
 <div class="dob-card" style="margin-top:16px"><h3 style="margin-top:0">Método construtivo — passo a passo</h3><p style="color:var(--muted);font-size:13px;margin:0 0 10px">Sequência proposta a partir do planejamento LB00, da terraplenagem à entrega. Clique no nome para renomear, troque o macroserviço, mova com ↑ ↓ ou exclua com ✕. Fica salvo e sincroniza com o Drive.</p><button type="button" class="dob-btn secundario pequeno" id="dob-met-nova-fase">+ Nova fase</button> <button type="button" class="dob-btn secundario pequeno dob-met-reset">Voltar à proposta inicial</button></div>${blocos}`;
     const salvar = () => { saveMapaState(true); renderMetodo(); };
     container.querySelectorAll('.dob-met-nome').forEach(i => i.addEventListener('change', () => { const p = passos.find(x => x.id === i.dataset.id); if(p && i.value.trim()){ p.nome = i.value.trim(); saveMapaState(true); } }));
     container.querySelectorAll('.dob-met-macro').forEach(s => s.addEventListener('change', () => { const p = passos.find(x => x.id === s.dataset.id); if(p){ p.macro = s.value; saveMapaState(true); } }));
+    container.querySelectorAll('.dob-met-det-bt').forEach(b => b.addEventListener('click', () => { const id = b.dataset.id; metodoDetAbertos.has(id) ? metodoDetAbertos.delete(id) : metodoDetAbertos.add(id); renderMetodo(); }));
+    const detGet = (id) => { mapaState.metodoDetalhes = mapaState.metodoDetalhes || {}; return (mapaState.metodoDetalhes[id] = Object.assign({}, mapaState.metodoDetalhes[id])); };
+    container.querySelectorAll('.dob-met-dt').forEach(t => t.addEventListener('change', () => { detGet(t.dataset.id)[t.dataset.campo] = t.value.trim(); saveMapaState(true); }));
+    container.querySelectorAll('.dob-met-od').forEach(i => i.addEventListener('change', () => { const d = detGet(i.dataset.id); d.obras = Object.assign({}, d.obras); d.obras[i.dataset.obra] = Object.assign({}, d.obras[i.dataset.obra], { [i.dataset.c]: i.value.trim() }); saveMapaState(true); if(i.dataset.c === 'custo') renderMetodo(); }));
     container.querySelectorAll('.dob-met-mv').forEach(b => b.addEventListener('click', () => {
       const i = +b.dataset.i, j = i + (+b.dataset.d); if(j < 0 || j >= passos.length) return;
       // ao cruzar o limite de uma fase, o passo passa para a fase vizinha
