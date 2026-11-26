@@ -1396,7 +1396,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.132';
+  const APP_VERSION = 'v2026.11.26.133';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
@@ -3813,7 +3813,11 @@
     if(!nuvem.db || !nuvem.editor || !nuvem.user) throw new Error('sem permissão para salvar fotos');
     const dados = dataUrl.length > 950000 ? await reduzirDataUrlAteCaber(dataUrl) : dataUrl;
     const id = idFixo || ('f' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7));
-    await nuvem.db.doc('fotos/' + id).set({ dados, por: nuvem.rotulo || '', atualizadoEm: Date.now() });
+    // sem sinal bom o Firestore deixa a gravação na fila e a promessa nunca volta: limita a espera (a tela não fica presa em "Enviando foto…")
+    await Promise.race([
+      nuvem.db.doc('fotos/' + id).set({ dados, por: nuvem.rotulo || '', atualizadoEm: Date.now() }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('tempo esgotado ao enviar a foto (sem sinal?)')), 30000))
+    ]);
     fotoNuvemCache[id] = dados;
     return id;
   }
@@ -4647,6 +4651,29 @@
     visitasEnviando = false; renderVisitas();
     if(falhas) mostrarToastSalvo(falhas + ' foto(s) não foram salvas — tenta de novo', { erro: true });
   }
+  // fotos de visita que ficaram só no aparelho (sem sinal na hora): sobe pra nuvem quando der
+  let visitasSubindoLocais = false;
+  async function visitasSubirLocais(){
+    if(visitasSubindoLocais || !nuvem.editor || !nuvem.db || !navigator.onLine) return;
+    visitasSubindoLocais = true; let mudou = false;
+    try{
+      for(const [id, v0] of Object.entries(mapaState.visitas || {})){
+        const fotos = (v0.fotos || []).map(normalizeFoto); let alterou = false;
+        for(let i = 0; i < fotos.length; i++){
+          const f = fotos[i];
+          if(f && f.type === 'local' && f.data){
+            try{ const thumb = await compressImage(await (await fetch(f.data)).blob(), 180, 0.5).catch(() => ''); fotos[i] = { type: 'nuvem', id: await uploadFotoNuvem(f.data), thumb: thumb || f.data }; alterou = true; }
+            catch(e){ /* tenta de novo mais tarde */ }
+          }
+        }
+        if(alterou){ mapaState.visitas[id] = Object.assign({}, v0, { fotos, atualizadoEm: new Date().toISOString() }); mudou = true; }
+      }
+      if(mudou){ saveMapaState(true); if(visitasAberto) renderVisitas(); }
+    }finally{ visitasSubindoLocais = false; }
+  }
+  window.addEventListener('online', () => setTimeout(visitasSubirLocais, 1500));
+  document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') setTimeout(visitasSubirLocais, 3000); });
+  setInterval(visitasSubirLocais, 60000);
   function renderVisitas(){
     const c = document.getElementById('dob-visitas-container');
     if(!c) return;
