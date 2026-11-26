@@ -1224,7 +1224,8 @@
 .vis-foto{ position:relative; border-radius:6px; overflow:hidden; border:1px solid var(--line); }
 .vis-foto img{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; cursor:pointer; }
 .vis-foto button{ position:absolute; top:4px; right:4px; border:0; border-radius:4px; width:22px; height:22px; background:rgba(17,28,51,.7); color:#fff; cursor:pointer; line-height:1; }
-.vis-acoes{ display:flex; gap:8px; flex-wrap:wrap; margin:8px 0; }
+.vis-acoes{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:8px 0; }
+.vis-acoes .dob-btn{ min-width:150px; text-align:center; justify-content:center; }
 .vis-rodape{ display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; margin-top:14px; padding-top:14px; border-top:1px solid var(--line); }
 @media (max-width:720px){
   .vis-cab{ display:none; }
@@ -1395,7 +1396,7 @@
   // Versão do app — muda este texto toda vez que o index.html é alterado/publicado.
   // Aparece no topo da tela pra confirmar que o aparelho está com a versão mais nova
   // (útil pra saber se um celular/PWA ainda está com algo em cache).
-  const APP_VERSION = 'v2026.11.26.131';
+  const APP_VERSION = 'v2026.11.26.132';
   const versaoEl = document.getElementById('dob-versao');
   if(versaoEl) versaoEl.textContent = APP_VERSION;
 
